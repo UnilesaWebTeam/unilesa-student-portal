@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Semester Results &amp; Academic Transcript — UNILESA Student Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Libre+Barcode+39+Text&family=Courier+Prime:wght@700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* ==================== RESULTS SPECIFIC STYLES ==================== */
+    
+    /* 1. Academic Results Hero Card */
+    .results-hero {
+      background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-900) 45%, var(--navy-800) 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px -5px rgba(10, 23, 48, 0.35);
+      border: 1px solid rgba(205, 164, 52, 0.3);
+    }
+    .results-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(205,164,52,0.22), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-info-side {
+      z-index: 1;
+      max-width: 620px;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(205, 164, 52, 0.22);
+      border: 1px solid rgba(224, 193, 104, 0.45);
+      color: var(--gold-400);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .results-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin: 0 0 0.4rem;
+      color: var(--white);
+      line-height: 1.2;
+    }
+    .results-hero p {
+      font-size: 0.88rem;
+      color: var(--grey-300);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .hero-action-side {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: flex-end;
+      z-index: 1;
+      flex-shrink: 0;
+    }
+
+    /* 2. Top Metric Stats 4-Grid */
+    .results-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.2rem;
+    }
+    .stat-card-result {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      padding: 1.2rem 1.4rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card-result::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--gold-500);
+    }
+    .stat-card-result.green::before { background: #22C55E; }
+    .stat-card-result.blue::before { background: #3B82F6; }
+    .stat-card-result.navy::before { background: var(--navy-900); }
+
+    .stat-title-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--grey-500);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .stat-value-main {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--navy-950);
+      line-height: 1.1;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: baseline;
+      gap: 0.3rem;
+    }
+    .stat-value-sub {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--grey-500);
+    }
+    .stat-footer-text {
+      font-size: 0.74rem;
+      color: var(--grey-600);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* 3. Level & Term Selectors */
+    .level-selector-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      padding: 1rem 1.2rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+    .level-pills-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+    }
+    .level-pill-btn {
+      padding: 0.55rem 1.1rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: 1px solid var(--grey-300);
+      background: #F8FAFC;
+      color: var(--grey-700);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .level-pill-btn:hover {
+      border-color: var(--gold-500);
+      background: #FFFDF8;
+    }
+    .level-pill-btn.active {
+      background: var(--navy-950);
+      color: var(--white);
+      border-color: var(--navy-950);
+      box-shadow: 0 4px 12px rgba(10, 23, 48, 0.2);
+    }
+    .level-badge {
+      font-size: 0.64rem;
+      padding: 0.12rem 0.4rem;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
+    .term-sub-pills-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px dashed var(--grey-200);
+      padding-top: 0.8rem;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .term-sub-pills {
+      display: flex;
+      gap: 0.4rem;
+      background: var(--grey-100);
+      padding: 0.25rem;
+      border-radius: 10px;
+    }
+    .term-sub-btn {
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      color: var(--grey-600);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .term-sub-btn.active {
+      background: var(--white);
+      color: var(--navy-950);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    /* 4. Term Summary Banner Strip */
+    .term-summary-strip {
+      background: #F8FAFC;
+      border: 1px solid var(--grey-300);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .summary-metric-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .summary-metric-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--grey-500);
+      text-transform: uppercase;
+    }
+    .summary-metric-val {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--navy-950);
+    }
+
+    /* 5. Results Table & Grade Colors */
+    .results-table-container {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      box-shadow: var(--shadow-sm);
+      overflow-x: auto;
+    }
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      min-width: 900px;
+    }
+    .results-table th {
+      background: #F8FAFC;
+      color: #475569;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--grey-300);
+    }
+    .results-table td {
+      padding: 0.95rem 1rem;
+      border-bottom: 1px solid var(--grey-200);
+      font-size: 0.84rem;
+      color: var(--navy-950);
+      vertical-align: middle;
+    }
+    .results-table tr:hover td {
+      background: #FAFCFF;
+    }
+    .course-code-font {
+      font-family: 'Courier Prime', monospace;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--navy-950);
+      background: #F1F5F9;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      display: inline-block;
+      border: 1px solid #CBD5E1;
+    }
+
+    /* Grade Badges */
+    .grade-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      font-family: 'Inter', sans-serif;
+    }
+    .grade-badge.grade-A {
+      background: #DCFCE7;
+      color: #15803D;
+      border: 1px solid #86EFAC;
+    }
+    .grade-badge.grade-B {
+      background: #DBEAFE;
+      color: #1E40AF;
+      border: 1px solid #93C5FD;
+    }
+    .grade-badge.grade-C {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FDE68A;
+    }
+    .grade-badge.grade-D {
+      background: #FFEDD5;
+      color: #C2410C;
+      border: 1px solid #FED7AA;
+    }
+    .grade-badge.grade-F {
+      background: #FEE2E2;
+      color: #DC2626;
+      border: 1px solid #FCA5A5;
+    }
+
+    /* 6. CGPA Progression Chart & Term Breakdown Section */
+    .progression-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      padding: 1.4rem 1.6rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .prog-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+    .prog-view-switcher {
+      display: inline-flex;
+      background: #F1F5F9;
+      padding: 0.25rem;
+      border-radius: 10px;
+      gap: 0.25rem;
+    }
+    .prog-switch-btn {
+      padding: 0.35rem 0.8rem;
+      border-radius: 7px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      color: var(--grey-600);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
+    }
+    .prog-switch-btn.active {
+      background: var(--white);
+      color: var(--navy-950);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .chart-swipe-hint {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      background: #FAF8F0;
+      border: 1px dashed rgba(205, 164, 52, 0.4);
+      padding: 0.45rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      color: var(--gold-600);
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+    .prog-chart-scroll-track {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 0.5rem;
+      scrollbar-width: thin;
+    }
+    .prog-chart-inner {
+      min-width: 680px;
+      position: relative;
+      padding-top: 1.8rem;
+      padding-bottom: 0.5rem;
+    }
+    .benchmark-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: calc(90% + 38px); /* 4.50 / 5.00 is 90% */
+      border-top: 2px dashed rgba(205, 164, 52, 0.85);
+      z-index: 5;
+      pointer-events: none;
+    }
+    .benchmark-line-tag {
+      position: absolute;
+      right: 0;
+      top: -11px;
+      background: var(--navy-950);
+      color: var(--gold-400);
+      font-size: 0.64rem;
+      font-weight: 800;
+      padding: 0.15rem 0.55rem;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      border: 1px solid rgba(205,164,52,0.4);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+    .progression-bars-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 1.1rem;
+      align-items: flex-end;
+      height: 180px;
+      border-bottom: 2px solid var(--grey-300);
+      position: relative;
+    }
+    .prog-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+      gap: 0.45rem;
+      position: relative;
+      z-index: 2;
+    }
+    .prog-bar-val {
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--navy-950);
+      background: #F8FAFC;
+      border: 1px solid var(--grey-300);
+      padding: 0.18rem 0.45rem;
+      border-radius: 6px;
+      line-height: 1;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s ease;
+    }
+    .prog-col:hover .prog-bar-val {
+      background: var(--navy-950);
+      color: var(--gold-400);
+      border-color: var(--navy-950);
+      transform: translateY(-2px);
+    }
+    .prog-bar-fill {
+      width: 100%;
+      max-width: 44px;
+      background: linear-gradient(180deg, var(--gold-500) 0%, var(--navy-900) 100%);
+      border-radius: 6px 6px 0 0;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .prog-col:hover .prog-bar-fill {
+      filter: brightness(1.15);
+      transform: scaleY(1.02);
+      transform-origin: bottom;
+    }
+    .prog-label-stacked {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 0.45rem;
+      text-align: center;
+      gap: 0.1rem;
+    }
+    .prog-lvl-text {
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--navy-950);
+    }
+    .prog-trm-text {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--grey-600);
+    }
+
+    /* Cards Breakdown View */
+    .progression-cards-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.9rem;
+    }
+    .prog-term-card {
+      background: #F8FAFC;
+      border: 1px solid var(--grey-300);
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      transition: all 0.2s ease;
+    }
+    .prog-term-card:hover {
+      background: #FFFDF8;
+      border-color: var(--gold-500);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+    .prog-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .prog-card-title {
+      font-weight: 800;
+      font-size: 0.88rem;
+      color: var(--navy-950);
+    }
+    .prog-card-gpa {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--navy-950);
+      display: flex;
+      align-items: baseline;
+      gap: 0.2rem;
+    }
+    .prog-card-track {
+      height: 10px;
+      background: #E2E8F0;
+      border-radius: 6px;
+      position: relative;
+      overflow: visible;
+    }
+    .prog-card-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--navy-900) 0%, var(--gold-500) 100%);
+      border-radius: 6px;
+      transition: width 0.5s ease;
+    }
+    .prog-card-mark-450 {
+      position: absolute;
+      top: -3px;
+      bottom: -3px;
+      left: 90%;
+      width: 2px;
+      background: #DC2626;
+      z-index: 2;
+    }
+    .prog-card-mark-450::after {
+      content: "4.50";
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.58rem;
+      font-weight: 800;
+      color: #DC2626;
+    }
+    .prog-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: var(--grey-600);
+      font-weight: 600;
+    }
+
+    /* 7. Official Printable Statement of Results / Transcript */
+    .printable-transcript-container {
+      display: none;
+      background: #FFFFFF;
+      color: #000000;
+      padding: 2.5rem;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .trans-header {
+      text-align: center;
+      border-bottom: 2px solid #0F1F42;
+      padding-bottom: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .trans-header img {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      margin-bottom: 0.4rem;
+    }
+    .trans-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #0F1F42;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .trans-sub {
+      font-size: 0.85rem;
+      color: #475569;
+      margin: 0.2rem 0;
+      font-weight: 600;
+    }
+    .trans-tag {
+      display: inline-block;
+      background: #0F1F42;
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.8rem;
+      border-radius: 4px;
+      margin-top: 0.4rem;
+      letter-spacing: 0.05em;
+    }
+    .trans-bio {
+      display: grid;
+      grid-template-columns: 1fr 100px;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #CBD5E1;
+      padding: 1rem;
+      border-radius: 6px;
+    }
+    .trans-bio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 1rem;
+      font-size: 0.8rem;
+    }
+    .trans-bio-item span.lbl { font-weight: 700; color: #334155; display: inline-block; width: 120px; }
+    .trans-bio-item span.val { font-weight: 600; color: #0F172A; }
+    .trans-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.2rem;
+      font-size: 0.75rem;
+    }
+    .trans-table th {
+      background: #F1F5F9;
+      color: #0F172A;
+      font-weight: 800;
+      border: 1px solid #94A3B8;
+      padding: 0.45rem 0.55rem;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+    }
+    .trans-table td {
+      border: 1px solid #CBD5E1;
+      padding: 0.45rem 0.55rem;
+      color: #1E293B;
+    }
+    .trans-signatures {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #94A3B8;
+    }
+    .trans-sign-box {
+      text-align: center;
+      font-size: 0.72rem;
+    }
+    .trans-sign-line {
+      height: 35px;
+      border-bottom: 1px solid #0F172A;
+      margin-bottom: 0.4rem;
+      position: relative;
+    }
+    .trans-seal {
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: #15803D;
+      border: 1px solid #86EFAC;
+      background: #DCFCE7;
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+    }
+
+    /* Print Mode Overrides */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .printable-transcript-container, .printable-transcript-container * {
+        visibility: visible;
+      }
+      .printable-transcript-container {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 1.5cm;
+      }
+      unilesa-sidebar, unilesa-header, unilesa-mobile-nav, .results-hero, .results-stats-grid, .level-selector-card, .term-summary-strip, .results-table-container, .progression-card {
+        display: none !important;
+      }
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 992px) {
+      .results-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .progression-cards-list {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 640px) {
+      .progression-card {
+        padding: 1.1rem 1rem;
+      }
+      .prog-header-flex {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+      }
+      .prog-view-switcher {
+        width: 100%;
+        display: flex;
+      }
+      .prog-switch-btn {
+        flex: 1;
+        justify-content: center;
+      }
+      .chart-swipe-hint {
+        display: flex;
+      }
+      .progression-cards-list {
+        grid-template-columns: 1fr;
+      }
+      .results-hero {
+        padding: 1.3rem 1.2rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .hero-action-side {
+        align-items: flex-start;
+        width: 100%;
+      }
+      .hero-action-side .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .results-stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .term-sub-pills-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .term-sub-pills {
+        width: 100%;
+        display: flex;
+      }
+      .term-sub-btn {
+        flex: 1;
+        text-align: center;
+      }
+      .term-summary-strip {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.85rem;
+        padding: 0.95rem 1rem;
+      }
+      .term-summary-strip .summary-metric-item:first-child {
+        grid-column: span 2;
+        padding-bottom: 0.45rem;
+        border-bottom: 1px dashed var(--grey-300);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <unilesa-role-switcher current="student"></unilesa-role-switcher>
+
+  <div class="app-layout">
+    
+    <!-- STATIC UNILESA SIDEBAR -->
+    <unilesa-sidebar active="results"></unilesa-sidebar>
+
+    <div class="main-wrapper">
+      
+      <!-- TOP NAVIGATION BAR -->
+      <unilesa-header title="Academic Results &amp; Transcript" subtitle="Directorate of Academic Affairs &bull; Senate-Approved Academic Records"></unilesa-header>
+
+      <main class="content-container">
+        
+        <!-- 1. ACADEMIC RESULTS HERO PROFILE BANNER -->
+        <section class="results-hero">
+          <div class="hero-info-side">
+            <div class="hero-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+              <span>Faculty of Science &amp; Computing &bull; 100L &ndash; 400L Academic Records</span>
+            </div>
+            <h1>B.Sc. Computer Science Academic Results</h1>
+            <p>Official statement of results and cumulative performance progression for Jane Adaeze Doe. Verified and endorsed by the University Senate, University of Ilesa.</p>
+          </div>
+
+          <div class="hero-action-side">
+            <button type="button" class="btn btn-gold" onclick="printOfficialTranscript()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+              <span>Print Official Transcript</span>
+            </button>
+            <button type="button" class="btn btn-outline" onclick="openCgpaSimulatorModal()" style="background:rgba(255,255,255,0.12); color:#fff; border-color:rgba(255,255,255,0.35);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              <span>Target CGPA Calculator</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. ACADEMIC KPI METRICS (4 CARDS) -->
+        <section class="results-stats-grid">
+          <!-- Card 1: CGPA -->
+          <div class="stat-card-result">
+            <div class="stat-title-label">Cumulative GPA (CGPA)</div>
+            <div class="stat-value-main" id="kpiCgpa">
+              4.79 <span class="stat-value-sub">/ 5.00</span>
+            </div>
+            <div class="stat-footer-text" style="color:var(--gold-600); font-weight:700;">
+              🏆 First Class Honours Standing
+            </div>
+          </div>
+
+          <!-- Card 2: Units Passed -->
+          <div class="stat-card-result green">
+            <div class="stat-title-label">Total Credit Units Passed</div>
+            <div class="stat-value-main" id="kpiUnits">
+              131 <span class="stat-value-sub">/ 131 TCU</span>
+            </div>
+            <div class="stat-footer-text" style="color:#15803D; font-weight:700;">
+              ✓ 100% Pass Rate &bull; 0 Carryovers
+            </div>
+          </div>
+
+          <!-- Card 3: Academic Standing -->
+          <div class="stat-card-result blue">
+            <div class="stat-title-label">Academic Status</div>
+            <div class="stat-value-main" style="font-size:1.45rem;">
+              Good Standing
+            </div>
+            <div class="stat-footer-text" style="color:#1E40AF; font-weight:700;">
+              Senate Authenticated Records
+            </div>
+          </div>
+
+          <!-- Card 4: Quality Points -->
+          <div class="stat-card-result navy">
+            <div class="stat-title-label">Total Weighted Points (TWGP)</div>
+            <div class="stat-value-main" id="kpiTwgp">
+              627 <span class="stat-value-sub">Points</span>
+            </div>
+            <div class="stat-footer-text" style="color:var(--navy-900); font-weight:700;">
+              Across 8 Academic Semesters
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. LEVEL & SEMESTER SELECTOR CARD -->
+        <section class="level-selector-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--grey-500); text-transform:uppercase; letter-spacing:0.04em;">Select Academic Level</div>
+            <div style="font-size:0.75rem; color:var(--grey-600);" id="activeSessionIndicator">2025/2026 Academic Session</div>
+          </div>
+
+          <!-- Level Pills -->
+          <div class="level-pills-row">
+            <button type="button" class="level-pill-btn active" id="pill100L" onclick="selectLevel('100L')">
+              <span>100 Level</span>
+              <span class="level-badge badge-green">Completed &bull; 4.76</span>
+            </button>
+            <button type="button" class="level-pill-btn" id="pill200L" onclick="selectLevel('200L')">
+              <span>200 Level</span>
+              <span class="level-badge badge-green">Completed &bull; 4.76</span>
+            </button>
+            <button type="button" class="level-pill-btn" id="pill300L" onclick="selectLevel('300L')">
+              <span>300 Level</span>
+              <span class="level-badge badge-green">Completed &bull; 4.78</span>
+            </button>
+            <button type="button" class="level-pill-btn" id="pill400L" onclick="selectLevel('400L')">
+              <span>400 Level (Final Year)</span>
+              <span class="level-badge badge-gold">Projected &bull; 4.79</span>
+            </button>
+            <button type="button" class="level-pill-btn" id="pillAllLevels" onclick="selectAllLevelsView()">
+              <span>All Levels Combined</span>
+              <span class="level-badge badge-navy">Full Transcript</span>
+            </button>
+          </div>
+
+          <!-- Semester Sub-Pills Row -->
+          <div class="term-sub-pills-row" id="termSubRow">
+            <div class="term-sub-pills">
+              <button type="button" class="term-sub-btn active" id="subFirstTerm" onclick="selectSemester('First Semester')">First Semester</button>
+              <button type="button" class="term-sub-btn" id="subSecondTerm" onclick="selectSemester('Second Semester')">Second Semester</button>
+              <button type="button" class="term-sub-btn" id="subSessionCombined" onclick="selectSemester('Session Combined')">Full Session Combined</button>
+            </div>
+
+            <div style="font-size:0.75rem; color:var(--grey-600); display:flex; align-items:center; gap:0.5rem;" id="senateApprovalLabel">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              <span>Senate Approval: <strong>Confirmed &amp; Gazette Published</strong></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. SEMESTER PERFORMANCE SUMMARY STRIP -->
+        <section class="term-summary-strip" id="termSummaryStrip">
+          <div class="summary-metric-item">
+            <span class="summary-metric-label">Active Academic Window</span>
+            <span class="summary-metric-val" id="sumTermTitle" style="font-size:0.95rem; color:var(--navy-900);">100 Level &bull; First Semester</span>
+          </div>
+          <div class="summary-metric-item">
+            <span class="summary-metric-label">Registered Units (TCU)</span>
+            <span class="summary-metric-val" id="sumTcu">21 Units</span>
+          </div>
+          <div class="summary-metric-item">
+            <span class="summary-metric-label">Passed Units (TUP)</span>
+            <span class="summary-metric-val" id="sumTup" style="color:#15803D;">21 Units</span>
+          </div>
+          <div class="summary-metric-item">
+            <span class="summary-metric-label">Weighted Points (TWGP)</span>
+            <span class="summary-metric-val" id="sumTwgp">100 Points</span>
+          </div>
+          <div class="summary-metric-item">
+            <span class="summary-metric-label">Semester GPA</span>
+            <span class="summary-metric-val" id="sumGpa" style="color:var(--gold-600);">4.76</span>
+          </div>
+          <div class="summary-metric-item">
+            <span class="summary-metric-label">Cumulative CGPA</span>
+            <span class="summary-metric-val" id="sumCgpa" style="color:var(--navy-950);">4.76</span>
+          </div>
+        </section>
+
+        <!-- 4.5. SEARCH & GRADE FILTER BAR -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; background:var(--white); padding:0.75rem 1rem; border-radius:var(--radius-md); border:1px solid var(--grey-300); box-shadow:var(--shadow-sm);">
+          <div style="display:flex; align-items:center; gap:0.6rem; flex:1; min-width:240px; max-width:420px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--grey-500)" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="courseSearchInput" placeholder="Search course code or title (e.g., CSC 101)..." oninput="handleCourseFilter()" style="width:100%; border:none; background:transparent; font-size:0.84rem; outline:none; color:var(--navy-950);">
+          </div>
+          <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+            <label for="gradeFilterSelect" style="font-size:0.72rem; font-weight:700; color:var(--grey-600); text-transform:uppercase;">Filter Grade:</label>
+            <select id="gradeFilterSelect" onchange="handleCourseFilter()" style="padding:0.4rem 0.8rem; border-radius:8px; border:1px solid var(--grey-300); font-size:0.8rem; font-weight:600; outline:none; background:var(--white); color:var(--navy-950); cursor:pointer;">
+              <option value="ALL">All Grades (A – F)</option>
+              <option value="A">Grade A (70% - 100% &bull; GP 5.0)</option>
+              <option value="B">Grade B (60% - 69% &bull; GP 4.0)</option>
+              <option value="C">Grade C (50% - 59% &bull; GP 3.0)</option>
+              <option value="D">Grade D (45% - 49% &bull; GP 2.0)</option>
+              <option value="F">Grade F (Below 45% &bull; GP 0.0)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 5. RESULTS TABLE -->
+        <section class="results-table-container">
+          <table class="results-table" id="resultsTable">
+            <thead>
+              <tr>
+                <th style="width:40px; text-align:center;">S/N</th>
+                <th style="width:110px;">Course Code</th>
+                <th>Course Title</th>
+                <th style="width:65px; text-align:center;">Unit</th>
+                <th style="width:75px; text-align:center;">CA (30)</th>
+                <th style="width:75px; text-align:center;">Lab (20)</th>
+                <th style="width:75px; text-align:center;">Exam (50)</th>
+                <th style="width:80px; text-align:center;">Total (100)</th>
+                <th style="width:70px; text-align:center;">Grade</th>
+                <th style="width:60px; text-align:center;">GP</th>
+                <th style="width:65px; text-align:center;">WGP</th>
+                <th style="width:110px;">Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTableBody">
+              <!-- Dynamically Populated by JavaScript -->
+            </tbody>
+            <tfoot id="resultsTableFoot" style="background:#F8FAFC; font-weight:800; border-top:2px solid var(--grey-300);">
+              <!-- Total Rows -->
+            </tfoot>
+          </table>
+        </section>
+
+        <!-- 6. CGPA PROGRESSION TRAJECTORY SECTION -->
+        <section class="progression-card">
+          <div class="prog-header-flex">
+            <div>
+              <h3 style="margin:0; font-size:1.05rem; color:var(--navy-950);">CGPA &amp; Semester GPA Progression Trajectory</h3>
+              <p style="margin:0.2rem 0 0; font-size:0.75rem; color:var(--grey-500);">Performance history across 8 academic semesters compared against the 4.50 First Class benchmark.</p>
+            </div>
+            
+            <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+              <!-- View Switcher -->
+              <div class="prog-view-switcher">
+                <button type="button" class="prog-switch-btn active" id="btnProgChart" onclick="switchProgressionView('chart')">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="8" y1="17" x2="8" y2="9"></line><line x1="12" y1="17" x2="12" y2="5"></line><line x1="16" y1="17" x2="16" y2="13"></line></svg>
+                  <span>Chart Track</span>
+                </button>
+                <button type="button" class="prog-switch-btn" id="btnProgCards" onclick="switchProgressionView('cards')">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                  <span>Semester Cards</span>
+                </button>
+              </div>
+
+              <!-- Legend -->
+              <div style="display:flex; gap:0.6rem; font-size:0.72rem; font-weight:700;">
+                <span style="display:inline-flex; align-items:center; gap:0.3rem;"><span style="width:10px; height:10px; background:var(--gold-500); border-radius:2px;"></span> Semester GPA</span>
+                <span style="display:inline-flex; align-items:center; gap:0.3rem;"><span style="width:12px; height:0; border-top:2px dashed rgba(205, 164, 52, 0.9);"></span> 4.50 Benchmark</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1. Chart View Container (with smooth horizontal scroll track) -->
+          <div id="progChartContainer">
+            <div class="chart-swipe-hint">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              <span>Swipe horizontally to view all 8 academic semesters</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+            <div class="prog-chart-scroll-track">
+              <div class="prog-chart-inner">
+                <div class="benchmark-line">
+                  <span class="benchmark-line-tag">🏆 4.50 First Class Benchmark</span>
+                </div>
+                <div class="progression-bars-grid" id="progressionBarsGrid">
+                  <!-- Dynamically Populated by renderProgressionChart() -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Cards View Container (Touch-Friendly Responsive Grid) -->
+          <div id="progCardsContainer" style="display:none;">
+            <div class="progression-cards-list" id="progressionCardsGrid">
+              <!-- Dynamically Populated by renderProgressionChart() -->
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. OFFICIAL SENATE GRADING SCALE & HONOURS LEGEND -->
+        <section style="background:var(--white); border-radius:var(--radius-lg); border:1px solid var(--grey-300); padding:1.2rem 1.4rem; box-shadow:var(--shadow-sm);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem; flex-wrap:wrap; gap:0.5rem;">
+            <h4 style="margin:0; font-size:0.92rem; color:var(--navy-950); display:flex; align-items:center; gap:0.45rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              Senate Approved 5.00 CGPA Scale &amp; Degree Honours Standards
+            </h4>
+            <span style="font-size:0.72rem; color:var(--grey-500); font-weight:600;">National Universities Commission (NUC) Approved</span>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:0.85rem; font-size:0.76rem;">
+            <div style="background:#F0FDF4; border:1px solid #BBF7D0; padding:0.75rem 0.9rem; border-radius:10px;">
+              <div style="font-weight:800; color:#15803D; font-size:0.88rem;">4.50 &ndash; 5.00 CGPA</div>
+              <div style="color:#166534; font-weight:700;">🏆 First Class Honours</div>
+              <div style="color:#64748B; font-size:0.7rem; margin-top:0.25rem;">Score: 70% &ndash; 100% &bull; Grade A (GP 5.0)</div>
+            </div>
+            <div style="background:#EFF6FF; border:1px solid #BFDBFE; padding:0.75rem 0.9rem; border-radius:10px;">
+              <div style="font-weight:800; color:#1E40AF; font-size:0.88rem;">3.50 &ndash; 4.49 CGPA</div>
+              <div style="color:#1E3A8A; font-weight:700;">🎖️ Second Class Upper (2:1)</div>
+              <div style="color:#64748B; font-size:0.7rem; margin-top:0.25rem;">Score: 60% &ndash; 69% &bull; Grade B (GP 4.0)</div>
+            </div>
+            <div style="background:#FEFCE8; border:1px solid #FEF08A; padding:0.75rem 0.9rem; border-radius:10px;">
+              <div style="font-weight:800; color:#854D0E; font-size:0.88rem;">2.40 &ndash; 3.49 CGPA</div>
+              <div style="color:#713F12; font-weight:700;">Second Class Lower (2:2)</div>
+              <div style="color:#64748B; font-size:0.7rem; margin-top:0.25rem;">Score: 50% &ndash; 59% &bull; Grade C (GP 3.0)</div>
+            </div>
+            <div style="background:#FFF7ED; border:1px solid #FED7AA; padding:0.75rem 0.9rem; border-radius:10px;">
+              <div style="font-weight:800; color:#C2410C; font-size:0.88rem;">1.50 &ndash; 2.39 CGPA</div>
+              <div style="color:#9A3412; font-weight:700;">Third Class Honours</div>
+              <div style="color:#64748B; font-size:0.7rem; margin-top:0.25rem;">Score: 45% &ndash; 49% &bull; Grade D (GP 2.0)</div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- 7. CGPA TARGET SIMULATOR MODAL -->
+  <div class="modal-backdrop" id="cgpaSimulatorModal" onclick="if(event.target===this) closeModal('cgpaSimulatorModal')">
+    <div class="modal-box" style="max-width:560px;">
+      <div class="modal-header-clean">
+        <div>
+          <h3>Target CGPA &amp; Honors Forecaster</h3>
+          <div style="font-size:0.72rem; color:var(--grey-500); margin-top:0.2rem;">Simulate prospective semester grades to calculate graduation standing.</div>
+        </div>
+        <button type="button" class="modal-close-icon" onclick="closeModal('cgpaSimulatorModal')" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-content-inner">
+        <div style="display:flex; flex-direction:column; gap:1.1rem;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; background:#FAFBFD; border:1px solid var(--grey-300); border-radius:10px; padding:0.9rem;">
+            <div>
+              <div style="font-size:0.68rem; color:var(--grey-500); font-weight:700;">CURRENT CGPA</div>
+              <div style="font-size:1.3rem; font-weight:800; color:var(--navy-950);" id="simCurrentCgpa">4.79</div>
+            </div>
+            <div>
+              <div style="font-size:0.68rem; color:var(--grey-500); font-weight:700;">TOTAL CREDITS EARNED</div>
+              <div style="font-size:1.3rem; font-weight:800; color:var(--navy-950);" id="simCurrentCredits">131 Units</div>
+            </div>
+          </div>
+
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:var(--navy-950); display:block; margin-bottom:0.3rem;">Planned Remaining Credit Units</label>
+            <input type="number" id="simRemainingUnits" value="30" min="1" max="60" style="width:100%; padding:0.55rem; border-radius:8px; border:1px solid var(--grey-300); font-size:0.85rem; outline:none;" oninput="recalculateSimulation()">
+          </div>
+
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:var(--navy-950); display:block; margin-bottom:0.3rem;">Projected Average GPA for Future Semesters (<span id="simGpaValLabel">4.80</span>)</label>
+            <input type="range" id="simProjectedGpa" min="2.0" max="5.0" step="0.05" value="4.80" style="width:100%; accent-color:var(--gold-500);" oninput="recalculateSimulation()">
+          </div>
+
+          <div style="background:linear-gradient(135deg, var(--navy-950), var(--navy-900)); color:#FFF; padding:1.1rem; border-radius:12px; text-align:center;">
+            <div style="font-size:0.7rem; color:var(--gold-400); font-weight:700; text-transform:uppercase;">Forecasted Graduating CGPA</div>
+            <div style="font-size:2.2rem; font-weight:800; margin:0.2rem 0; font-family:'Inter', sans-serif;" id="simForecastResult">4.79</div>
+            <div style="font-size:0.8rem; font-weight:700; color:#86EFAC;" id="simForecastHonours">🏆 Projected Class of Degree: First Class Honours</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-sm" onclick="closeModal('cgpaSimulatorModal')">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. OFFICIAL PRINTABLE STATEMENT OF RESULT & TRANSCRIPT -->
+  <div class="printable-transcript-container" id="printableTranscript">
+    <div class="trans-header">
+      <img src="https://unilesa.edu.ng/static/frontpage/assets/img/icons/unilesa_origina.png" alt="UNILESA Crest">
+      <div class="trans-title">University of Ilesa, Osun State</div>
+      <div class="trans-sub">Directorate of Academic Affairs &bull; Senate Student Records &amp; Examination Division</div>
+      <div class="trans-tag">OFFICIAL STATEMENT OF ACADEMIC RESULTS &amp; TRANSCRIPT</div>
+      <div style="font-size:0.75rem; color:#64748B; margin-top:0.3rem;" id="printTransWindow">B.Sc. (Hons) Computer Science &bull; Comprehensive Transcript</div>
+    </div>
+
+    <div class="trans-bio">
+      <div class="trans-bio-grid">
+        <div class="trans-bio-item"><span class="lbl">Student Name:</span> <span class="val" id="transName">Jane Adaeze Doe</span></div>
+        <div class="trans-bio-item"><span class="lbl">Matric Number:</span> <span class="val" id="transMatric">UNILESA/2026/CSC/0142</span></div>
+        <div class="trans-bio-item"><span class="lbl">Faculty:</span> <span class="val">Faculty of Science &amp; Computing</span></div>
+        <div class="trans-bio-item"><span class="lbl">Department:</span> <span class="val">Computer Science</span></div>
+        <div class="trans-bio-item"><span class="lbl">Programme:</span> <span class="val">B.Sc. (Hons) Computer Science</span></div>
+        <div class="trans-bio-item"><span class="lbl">Degree Length:</span> <span class="val">4-Year Standard Degree</span></div>
+        <div class="trans-bio-item"><span class="lbl">Cumulative CGPA:</span> <span class="val" id="transCgpa">4.79 / 5.00</span></div>
+        <div class="trans-bio-item"><span class="lbl">Class of Degree:</span> <span class="val" id="transClass" style="color:#15803D; font-weight:800;">First Class Honours</span></div>
+      </div>
+      <div class="crf-passport-box">
+        <img id="transAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Student Passport">
+      </div>
+    </div>
+
+    <table class="trans-table">
+      <thead>
+        <tr>
+          <th style="width:35px; text-align:center;">S/N</th>
+          <th style="width:90px;">Course Code</th>
+          <th>Course Title</th>
+          <th style="width:50px; text-align:center;">Unit</th>
+          <th style="width:50px; text-align:center;">Score</th>
+          <th style="width:50px; text-align:center;">Grade</th>
+          <th style="width:45px; text-align:center;">GP</th>
+          <th style="width:50px; text-align:center;">WGP</th>
+          <th style="width:90px;">Remark</th>
+        </tr>
+      </thead>
+      <tbody id="transPrintTableBody">
+        <!-- Dynamically Populated for Print Transcript -->
+      </tbody>
+      <tfoot>
+        <tr style="background:#F8FAFC; font-weight:800;">
+          <td colspan="3" style="text-align:right; text-transform:uppercase;">Cumulative Summary:</td>
+          <td style="text-align:center;" id="transPrintTcu">131</td>
+          <td colspan="3" style="text-align:center;">CUMULATIVE CGPA: <span id="transPrintCgpa" style="color:#15803D;">4.79</span></td>
+          <td style="text-align:center;" id="transPrintTwgp">627</td>
+          <td style="font-size:0.7rem; color:#15803D; font-weight:800;">FIRST CLASS</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div style="font-size:0.7rem; color:#475569; font-style:italic; line-height:1.4; margin-bottom:1.5rem;">
+      <strong>Official Certification:</strong> This document represents an authenticated statement of examination grades and cumulative academic progress as officially endorsed by the Senate of the University of Ilesa, Osun State, Nigeria.
+    </div>
+
+    <div class="trans-signatures">
+      <div class="trans-sign-box">
+        <div class="trans-sign-line">
+          <div class="trans-seal">VERIFIED</div>
+        </div>
+        <strong>Dr. A. O. Babalola</strong>
+        <div>Head, Department of Computer Science</div>
+      </div>
+
+      <div class="trans-sign-box">
+        <div class="trans-sign-line">
+          <div class="trans-seal">ENDORSED</div>
+        </div>
+        <strong>Prof. O. J. Adebayo</strong>
+        <div>Dean, Faculty of Science &amp; Computing</div>
+      </div>
+
+      <div class="trans-sign-box">
+        <div class="trans-sign-line">
+          <div class="trans-seal">SEALED BY SENATE</div>
+        </div>
+        <strong>Dr. Funso Oladipo</strong>
+        <div>Academic Registrar &amp; Secretary to Senate</div>
+      </div>
+    </div>
+
+    <div class="crf-barcode-area">
+      <div class="crf-barcode-font">*UNL-RES-2026-0142-TRANS*</div>
+      <div style="font-size:0.65rem; color:#64748B; margin-top:0.2rem;">Official Security Verification Key &bull; Directorate of ICT &bull; University of Ilesa</div>
+    </div>
+  </div>
+
+  <!-- Reusable App Modals & Bottom Navigation -->
+  <unilesa-mobile-nav active="results"></unilesa-mobile-nav>
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast id="toastContainer"></unilesa-toast>
+
+  <!-- Web Component Scripts -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-sidebar.js"></script>
+  <script src="components/unilesa-header.js"></script>
+  <script src="components/unilesa-mobile-nav.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <!-- PAGE LOGIC SCRIPT -->
+  <script>
+    let selectedLevel = '100L';
+    let selectedSemester = 'First Semester';
+    let isAllLevelsView = false;
+
+    // Backward compatibility aliases
+    let selectedTerm = selectedSemester;
+    function selectTerm(t) {
+      if (t === 'First Term' || t === 'First Semester') selectSemester('First Semester');
+      else if (t === 'Second Term' || t === 'Second Semester') selectSemester('Second Semester');
+      else selectSemester('Session Combined');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAcademicResultsData();
+      renderProgressionChart();
+
+      window.addEventListener('unilesa:ict-settings-updated', () => {
+        loadAcademicResultsData();
+      });
+    });
+
+    function selectLevel(lvl) {
+      selectedLevel = lvl;
+      isAllLevelsView = false;
+
+      // Update level pills
+      document.querySelectorAll('.level-pill-btn').forEach(b => b.classList.remove('active'));
+      const pill = document.getElementById(`pill${lvl}`);
+      if (pill) pill.classList.add('active');
+
+      // Ensure semester sub row is visible
+      document.getElementById('termSubRow').style.display = 'flex';
+      
+      // Default to First Semester unless full session
+      if (selectedSemester === 'Session Combined') {
+        selectSemester('Session Combined');
+      } else {
+        selectSemester('First Semester');
+      }
+    }
+
+    function selectSemester(s) {
+      selectedSemester = s;
+      selectedTerm = s;
+      isAllLevelsView = false;
+
+      // Update semester sub buttons
+      const sub1 = document.getElementById('subFirstTerm');
+      const sub2 = document.getElementById('subSecondTerm');
+      const subAll = document.getElementById('subSessionCombined');
+      if (sub1) sub1.classList.toggle('active', s === 'First Semester' || s === 'First Term');
+      if (sub2) sub2.classList.toggle('active', s === 'Second Semester' || s === 'Second Term');
+      if (subAll) subAll.classList.toggle('active', s === 'Session Combined');
+
+      loadAcademicResultsData();
+    }
+
+    function selectAllLevelsView() {
+      isAllLevelsView = true;
+
+      document.querySelectorAll('.level-pill-btn').forEach(b => b.classList.remove('active'));
+      const pill = document.getElementById('pillAllLevels');
+      if (pill) pill.classList.add('active');
+
+      // Hide semester sub row
+      document.getElementById('termSubRow').style.display = 'none';
+
+      renderAllLevelsTranscript();
+    }
+
+    function handleCourseFilter() {
+      if (isAllLevelsView) {
+        renderAllLevelsTranscript();
+      } else {
+        loadAcademicResultsData();
+      }
+    }
+
+    function getFilteredCourseList(courses) {
+      const searchInput = document.getElementById('courseSearchInput');
+      const gradeSelect = document.getElementById('gradeFilterSelect');
+      const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
+      const grade = gradeSelect ? gradeSelect.value : 'ALL';
+
+      return courses.filter(c => {
+        const matchesQuery = !query || 
+          c.code.toLowerCase().includes(query) || 
+          c.title.toLowerCase().includes(query) ||
+          (c.remark && c.remark.toLowerCase().includes(query));
+        const matchesGrade = grade === 'ALL' || c.grade === grade;
+        return matchesQuery && matchesGrade;
+      });
+    }
+
+    function loadAcademicResultsData() {
+      if (isAllLevelsView) {
+        renderAllLevelsTranscript();
+        return;
+      }
+
+      const resultsData = UniStore.getAcademicResults();
+      const overall = UniStore.getOverallCGPASummary();
+      const levelData = resultsData[selectedLevel];
+      if (!levelData) return;
+
+      const isResultsGateOpen = window.UniStore && window.UniStore.isGateOpen ? window.UniStore.isGateOpen('resultsChecking') : true;
+      const gates = window.UniStore && window.UniStore.getPortalGates ? window.UniStore.getPortalGates() : {};
+      const resultsGate = gates.resultsChecking || {};
+
+      // Update KPIs
+      document.getElementById('kpiCgpa').innerHTML = `${overall.cgpa} <span class="stat-value-sub">/ 5.00</span>`;
+      document.getElementById('kpiUnits').innerHTML = `${overall.totalCreditsPassed} <span class="stat-value-sub">/ ${overall.totalCreditsRegistered} TCU</span>`;
+      document.getElementById('kpiTwgp').innerHTML = `${overall.totalWeightedPoints} <span class="stat-value-sub">Points</span>`;
+      document.getElementById('activeSessionIndicator').textContent = levelData.session;
+
+      const tbody = document.getElementById('resultsTableBody');
+      const tfoot = document.getElementById('resultsTableFoot');
+      if (!tbody) return;
+
+      if (!isResultsGateOpen) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="12" style="text-align:center; padding:3.5rem 1.5rem; background:#FFFBEB;">
+              <div style="max-width:540px; margin:0 auto; display:flex; flex-direction:column; align-items:center; gap:0.6rem;">
+                <div style="width:48px; height:48px; border-radius:12px; background:#FEF3C7; color:#B45309; display:flex; align-items:center; justify-content:center; font-size:1.4rem;">🔒</div>
+                <h3 style="margin:0; font-size:1.15rem; font-weight:800; color:#92400E;">Results Access Restricted by Senate / ICT Directive</h3>
+                <p style="margin:0; font-size:0.84rem; color:#78350F; line-height:1.5;">${resultsGate.restrictionMessage || 'Semester results are undergoing Senate Committee validation and moderations. Official transcript viewing will be enabled once gazetted.'}</p>
+                <div style="font-family:'Fira Code', monospace; font-size:0.75rem; color:#B45309; font-weight:700; margin-top:0.2rem;">Reference: ${resultsGate.senateGazette || 'SEN/2025-2026/RES/001'}</div>
+              </div>
+            </td>
+          </tr>
+        `;
+        if (tfoot) tfoot.innerHTML = '';
+        return;
+      }
+
+      const sems = levelData.semesters || levelData.terms || {};
+
+      if (selectedSemester === 'Session Combined') {
+        // Combined First & Second Semester for selected level
+        let combinedCourses = [];
+        let combinedTcu = 0;
+        let combinedTup = 0;
+        let combinedTwgp = 0;
+
+        Object.keys(sems).forEach(sk => {
+          const s = sems[sk];
+          if (s && s.courses) {
+            combinedCourses.push(...s.courses.map(c => ({ ...c, semesterName: sk })));
+            combinedTcu += s.tcu;
+            combinedTup += s.tup;
+            combinedTwgp += s.twgp;
+          }
+        });
+
+        const gpa = combinedTcu > 0 ? (combinedTwgp / combinedTcu).toFixed(2) : '0.00';
+
+        // Update Summary Strip
+        document.getElementById('sumTermTitle').textContent = `${levelData.levelName} \u2022 Full Session`;
+        document.getElementById('sumTcu').textContent = `${combinedTcu} Units`;
+        document.getElementById('sumTup').textContent = `${combinedTup} Units`;
+        document.getElementById('sumTwgp').textContent = `${combinedTwgp} Points`;
+        document.getElementById('sumGpa').textContent = gpa;
+        document.getElementById('sumCgpa').textContent = overall.cgpa;
+
+        const filtered = getFilteredCourseList(combinedCourses);
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:2rem; color:var(--grey-500);">No courses match your search or filter criteria.</td></tr>`;
+        } else {
+          tbody.innerHTML = filtered.map((c, i) => renderResultRow(c, i + 1, c.semesterName || c.termName)).join('');
+        }
+
+        tfoot.innerHTML = `
+          <tr>
+            <td colspan="3" style="text-align:right;">SESSION TOTAL:</td>
+            <td style="text-align:center;">${combinedTcu}</td>
+            <td colspan="6" style="text-align:center; color:#15803D;">SESSION GPA: ${gpa} &bull; CGPA: ${overall.cgpa}</td>
+            <td style="text-align:center;">${combinedTwgp}</td>
+            <td style="color:#15803D;">PASSED</td>
+          </tr>
+        `;
+      } else {
+        // Single Semester
+        const semKey = (selectedSemester === 'First Semester' || selectedSemester === 'First Term') ? 'First Semester' : 'Second Semester';
+        const semData = sems[semKey] || sems[selectedSemester] || sems['First Semester'] || sems['First Term'] || {};
+        const courses = semData.courses || [];
+
+        // Update Summary Strip
+        document.getElementById('sumTermTitle').textContent = `${levelData.levelName} \u2022 ${semKey}`;
+        document.getElementById('sumTcu').textContent = `${semData.tcu || 0} Units`;
+        document.getElementById('sumTup').textContent = `${semData.tup || 0} Units`;
+        document.getElementById('sumTwgp').textContent = `${semData.twgp || 0} Points`;
+        document.getElementById('sumGpa').textContent = (semData.gpa || 0).toFixed(2);
+        document.getElementById('sumCgpa').textContent = (semData.cgpa || 0).toFixed(2);
+
+        const filtered = getFilteredCourseList(courses);
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:2rem; color:var(--grey-500);">No courses match your search or filter criteria.</td></tr>`;
+        } else {
+          tbody.innerHTML = filtered.map((c, i) => renderResultRow(c, i + 1)).join('');
+        }
+
+        tfoot.innerHTML = `
+          <tr>
+            <td colspan="3" style="text-align:right;">SEMESTER TOTAL:</td>
+            <td style="text-align:center;">${semData.tcu || 0}</td>
+            <td colspan="6" style="text-align:center; color:#15803D;">SEMESTER GPA: ${(semData.gpa || 0).toFixed(2)} &bull; CUMULATIVE CGPA: ${(semData.cgpa || 0).toFixed(2)}</td>
+            <td style="text-align:center;">${semData.twgp || 0}</td>
+            <td style="color:#15803D;">PASSED</td>
+          </tr>
+        `;
+      }
+    }
+
+    function renderResultRow(c, index, semTag = null) {
+      return `
+        <tr>
+          <td style="text-align:center; color:var(--grey-500); font-weight:700;">${index}</td>
+          <td>
+            <span class="course-code-font">${c.code}</span>
+          </td>
+          <td>
+            <div style="font-weight:700; color:var(--navy-950);">${c.title}</div>
+            ${semTag ? `<div style="font-size:0.68rem; color:var(--grey-500); margin-top:0.1rem;">${semTag}</div>` : ''}
+          </td>
+          <td style="text-align:center; font-weight:800; color:var(--navy-950);">${c.units}</td>
+          <td style="text-align:center; font-weight:600; color:var(--grey-700);">${c.ca}</td>
+          <td style="text-align:center; font-weight:600; color:var(--grey-700);">${c.lab}</td>
+          <td style="text-align:center; font-weight:600; color:var(--grey-700);">${c.exam}</td>
+          <td style="text-align:center; font-weight:800; color:var(--navy-950);">${c.total}</td>
+          <td style="text-align:center;">
+            <span class="grade-badge grade-${c.grade}">${c.grade}</span>
+          </td>
+          <td style="text-align:center; font-weight:700; color:var(--grey-700);">${c.gp}</td>
+          <td style="text-align:center; font-weight:800; color:var(--navy-950);">${c.wgp}</td>
+          <td style="font-weight:700; font-size:0.75rem; color:#15803D;">
+            <span class="badge badge-green" style="font-size:0.68rem;">${c.remark}</span>
+          </td>
+        </tr>
+      `;
+    }
+
+    function renderAllLevelsTranscript() {
+      const resultsData = UniStore.getAcademicResults();
+      const overall = UniStore.getOverallCGPASummary();
+      const tbody = document.getElementById('resultsTableBody');
+      const tfoot = document.getElementById('resultsTableFoot');
+      if (!tbody) return;
+
+      document.getElementById('sumTermTitle').textContent = `All Levels Comprehensive Transcript (100L \u2013 400L)`;
+      document.getElementById('sumTcu').textContent = `${overall.totalCreditsRegistered} Units`;
+      document.getElementById('sumTup').textContent = `${overall.totalCreditsPassed} Units`;
+      document.getElementById('sumTwgp').textContent = `${overall.totalWeightedPoints} Points`;
+      document.getElementById('sumGpa').textContent = '4.79';
+      document.getElementById('sumCgpa').textContent = overall.cgpa;
+
+      let allCourses = [];
+      const levels = ['100L', '200L', '300L', '400L'];
+      levels.forEach(lvl => {
+        const lData = resultsData[lvl];
+        if (lData) {
+          const sems = lData.semesters || lData.terms || {};
+          Object.keys(sems).forEach(sk => {
+            const s = sems[sk];
+            if (s && s.courses) {
+              s.courses.forEach(c => {
+                allCourses.push({ ...c, levelName: lvl, semesterName: sk });
+              });
+            }
+          });
+        }
+      });
+
+      const filtered = getFilteredCourseList(allCourses);
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:2rem; color:var(--grey-500);">No courses match your search or filter criteria.</td></tr>`;
+      } else {
+        tbody.innerHTML = filtered.map((c, i) => renderResultRow(c, i + 1, `${c.levelName} \u2022 ${c.semesterName || c.termName}`)).join('');
+      }
+
+      tfoot.innerHTML = `
+        <tr>
+          <td colspan="3" style="text-align:right;">OVERALL CUMULATIVE:</td>
+          <td style="text-align:center;">${overall.totalCreditsRegistered}</td>
+          <td colspan="6" style="text-align:center; color:#15803D;">CUMULATIVE CGPA: ${overall.cgpa} &bull; ${overall.degreeClass}</td>
+          <td style="text-align:center;">${overall.totalWeightedPoints}</td>
+          <td style="color:#15803D;">GRADUATED</td>
+        </tr>
+      `;
+    }
+
+    let currentProgView = 'chart';
+
+    function switchProgressionView(view) {
+      currentProgView = view;
+      const chartEl = document.getElementById('progChartContainer');
+      const cardsEl = document.getElementById('progCardsContainer');
+      const btnChart = document.getElementById('btnProgChart');
+      const btnCards = document.getElementById('btnProgCards');
+
+      if (view === 'chart') {
+        if (chartEl) chartEl.style.display = 'block';
+        if (cardsEl) cardsEl.style.display = 'none';
+        if (btnChart) btnChart.classList.add('active');
+        if (btnCards) btnCards.classList.remove('active');
+      } else {
+        if (chartEl) chartEl.style.display = 'none';
+        if (cardsEl) cardsEl.style.display = 'block';
+        if (btnChart) btnChart.classList.remove('active');
+        if (btnCards) btnCards.classList.add('active');
+      }
+    }
+
+    function renderProgressionChart() {
+      const overall = UniStore.getOverallCGPASummary();
+      const container = document.getElementById('progressionBarsGrid');
+      const cardsContainer = document.getElementById('progressionCardsGrid');
+
+      const history = overall.semesterHistory || overall.termHistory || [];
+
+      if (container) {
+        container.innerHTML = history.map(h => {
+          // Height scaled against max 5.0 (100% = 5.0)
+          const heightPercent = Math.min(100, Math.round((h.gpa / 5.0) * 100));
+          const semLabel = h.semester || h.term;
+          return `
+            <div class="prog-col">
+              <div class="prog-bar-val">${h.gpa.toFixed(2)}</div>
+              <div class="prog-bar-fill" style="height: ${heightPercent}%;"></div>
+              <div class="prog-label-stacked">
+                <span class="prog-lvl-text">${h.level}</span>
+                <span class="prog-trm-text">${semLabel}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      if (cardsContainer) {
+        cardsContainer.innerHTML = history.map(h => {
+          const percent = Math.min(100, Math.round((h.gpa / 5.0) * 100));
+          const isFirstClass = h.gpa >= 4.50;
+          const diff = (h.gpa - 4.50).toFixed(2);
+          const diffText = h.gpa >= 4.50 ? `+${diff} above 1st Class` : `${diff} below 1st Class`;
+          const semLabel = h.semester || h.term;
+          return `
+            <div class="prog-term-card">
+              <div class="prog-card-top">
+                <div>
+                  <div class="prog-card-title">${h.level} &bull; ${semLabel}</div>
+                  <div style="font-size:0.68rem; color:var(--grey-500); margin-top:0.1rem;">Registered Units: ${h.units} TCU</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="prog-card-gpa">${h.gpa.toFixed(2)} <span style="font-size:0.75rem; color:var(--grey-500); font-weight:600;">/ 5.00</span></div>
+                  <span class="badge ${isFirstClass ? 'badge-green' : 'badge-gold'}" style="font-size:0.65rem;">${isFirstClass ? '🏆 First Class' : 'Second Class Upper'}</span>
+                </div>
+              </div>
+              <div class="prog-card-track">
+                <div class="prog-card-bar" style="width: ${percent}%;"></div>
+                <div class="prog-card-mark-450" title="4.50 First Class Line"></div>
+              </div>
+              <div class="prog-card-footer">
+                <span>Cumulative CGPA: <strong style="color:var(--navy-950);">${h.cgpa.toFixed(2)}</strong></span>
+                <span style="color:${isFirstClass ? '#15803D' : '#D97706'}; font-weight:700;">${diffText}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function openCgpaSimulatorModal() {
+      const overall = UniStore.getOverallCGPASummary();
+      document.getElementById('simCurrentCgpa').textContent = overall.cgpa.toFixed(2);
+      document.getElementById('simCurrentCredits').textContent = `${overall.totalCreditsPassed} Units`;
+      recalculateSimulation();
+      openModal('cgpaSimulatorModal');
+    }
+
+    function recalculateSimulation() {
+      const overall = UniStore.getOverallCGPASummary();
+      const remUnits = parseInt(document.getElementById('simRemainingUnits').value, 10) || 30;
+      const projGpa = parseFloat(document.getElementById('simProjectedGpa').value) || 4.80;
+
+      document.getElementById('simGpaValLabel').textContent = projGpa.toFixed(2);
+
+      const currentWeighted = overall.totalWeightedPoints;
+      const currentCredits = overall.totalCreditsRegistered;
+
+      const futureWeighted = remUnits * projGpa;
+      const totalCredits = currentCredits + remUnits;
+      const finalCgpa = ((currentWeighted + futureWeighted) / totalCredits).toFixed(2);
+
+      document.getElementById('simForecastResult').textContent = finalCgpa;
+
+      const honoursEl = document.getElementById('simForecastHonours');
+      if (finalCgpa >= 4.50) {
+        honoursEl.textContent = '🏆 Projected Class: First Class Honours';
+        honoursEl.style.color = '#86EFAC';
+      } else if (finalCgpa >= 3.50) {
+        honoursEl.textContent = '🎖️ Projected Class: Second Class Upper (2:1)';
+        honoursEl.style.color = '#93C5FD';
+      } else {
+        honoursEl.textContent = 'Projected Class: Second Class Lower (2:2)';
+        honoursEl.style.color = '#FDE68A';
+      }
+    }
+
+    function printOfficialTranscript() {
+      const student = UniStore.getStudent();
+      const resultsData = UniStore.getAcademicResults();
+      const overall = UniStore.getOverallCGPASummary();
+
+      document.getElementById('transName').textContent = student.fullName;
+      document.getElementById('transMatric').textContent = student.matricNumber;
+      document.getElementById('transAvatar').src = student.avatarUrl;
+      document.getElementById('transCgpa').textContent = `${overall.cgpa} / 5.00`;
+      document.getElementById('transClass').textContent = overall.degreeClass;
+      document.getElementById('transPrintTcu').textContent = overall.totalCreditsRegistered;
+      document.getElementById('transPrintCgpa').textContent = overall.cgpa;
+      document.getElementById('transPrintTwgp').textContent = overall.totalWeightedPoints;
+
+      let allCourses = [];
+      const levels = ['100L', '200L', '300L', '400L'];
+      levels.forEach(lvl => {
+        const lData = resultsData[lvl];
+        if (lData) {
+          const sems = lData.semesters || lData.terms || {};
+          Object.keys(sems).forEach(sk => {
+            const s = sems[sk];
+            if (s && s.courses) {
+              s.courses.forEach(c => {
+                allCourses.push({ ...c, levelName: lvl, semesterName: sk });
+              });
+            }
+          });
+        }
+      });
+
+      const tbody = document.getElementById('transPrintTableBody');
+      if (tbody) {
+        tbody.innerHTML = allCourses.map((c, i) => `
+          <tr>
+            <td style="text-align:center;">${i + 1}</td>
+            <td style="font-weight:700; font-family:'Courier Prime', monospace;">${c.code}</td>
+            <td style="font-weight:600;">${c.title} <span style="font-size:0.65rem; color:#64748B;">(${c.levelName} ${c.semesterName || c.termName})</span></td>
+            <td style="text-align:center; font-weight:700;">${c.units}</td>
+            <td style="text-align:center;">${c.total}</td>
+            <td style="text-align:center; font-weight:800;">${c.grade}</td>
+            <td style="text-align:center;">${c.gp}</td>
+            <td style="text-align:center; font-weight:700;">${c.wgp}</td>
+            <td style="font-size:0.68rem; color:#15803D; font-weight:700;">${c.remark}</td>
+          </tr>
+        `).join('');
+      }
+
+      window.print();
+    }
+  </script>
+</body>
+</html>

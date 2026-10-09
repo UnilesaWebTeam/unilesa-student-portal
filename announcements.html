@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Announcements &amp; News Bulletins — UNILESA Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* ==================== ANNOUNCEMENTS SPECIFIC STYLES ==================== */
+    
+    /* 1. Spotlight Banner */
+    .spotlight-card {
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 50%, #451a03 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(217, 119, 6, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .spotlight-card::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(217, 119, 6, 0.25), transparent 70%);
+      pointer-events: none;
+    }
+    .spotlight-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(217, 119, 6, 0.25);
+      border: 1px solid rgba(253, 230, 138, 0.4);
+      color: #FDE68A;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      margin-bottom: 0.65rem;
+    }
+    .spotlight-card h2 {
+      margin: 0 0 0.35rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .spotlight-card p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.45;
+      max-width: 650px;
+    }
+
+    /* 2. Controls & Filter Bar */
+    .announcement-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .category-pills {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+    .cat-btn {
+      background: var(--white);
+      border: 1.5px solid var(--grey-300);
+      padding: 0.48rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--grey-700);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .cat-btn.active, .cat-btn:hover {
+      background: var(--navy-800);
+      color: var(--white);
+      border-color: var(--navy-800);
+    }
+    .search-announcements {
+      position: relative;
+      flex: 1;
+      max-width: 320px;
+    }
+    .search-announcements input {
+      width: 100%;
+      background: var(--white);
+      border: 1.5px solid var(--grey-300);
+      border-radius: 10px;
+      padding: 0.6rem 1rem 0.6rem 2.4rem;
+      font-size: 0.82rem;
+      outline: none;
+    }
+    .search-announcements svg {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--grey-500);
+    }
+
+    /* 3. News Cards Grid */
+    .announcements-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.3rem;
+    }
+    .news-card {
+      background: var(--white);
+      border: 1px solid var(--grey-300);
+      border-radius: var(--radius-lg);
+      padding: 1.3rem 1.4rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s var(--ease-spring);
+    }
+    .news-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--gold-500);
+    }
+    .card-meta-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .news-date {
+      font-size: 0.72rem;
+      color: var(--grey-500);
+      font-weight: 600;
+    }
+    .news-card h3 {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--navy-900);
+      margin: 0 0 0.45rem;
+      line-height: 1.35;
+    }
+    .news-card p {
+      margin: 0;
+      font-size: 0.78rem;
+      color: var(--grey-600);
+      line-height: 1.5;
+    }
+    .card-foot-action {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px dashed var(--grey-200);
+      padding-top: 0.75rem;
+      margin-top: 1rem;
+    }
+    .read-link {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--gold-600);
+    }
+
+    @media (max-width: 900px) {
+      .announcements-grid { grid-template-columns: 1fr; }
+      .spotlight-card { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST NOTIFICATION ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="student"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- REUSABLE SIDEBAR COMPONENT -->
+    <unilesa-sidebar active="announcements"></unilesa-sidebar>
+
+    <!-- MAIN PAGE WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- REUSABLE TOP HEADER COMPONENT -->
+      <unilesa-header title="University Announcements &amp; Circulars" subtitle="Official News, Bulletins &bull; University of Ilesa, Osun State"></unilesa-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+
+        <!-- 1. Urgent Spotlight Banner -->
+        <section class="spotlight-card">
+          <div>
+            <span class="spotlight-tag">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              High Priority Circular
+            </span>
+            <h2>Release of First Semester 2025/2026 Examination Timetable</h2>
+            <p>
+              The Directorate of Academic Affairs announces the release of the final examination timetable. Students are instructed to verify course registrations and print their official Examination Dockets before the clearance portal closes.
+            </p>
+          </div>
+
+          <div>
+            <button type="button" class="btn btn-gold" onclick="openMemoModal(0)">
+              Read Official Memo &rarr;
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. Category Filter & Search Bar -->
+        <div class="announcement-controls">
+          <div class="category-pills">
+            <button type="button" class="cat-btn active" onclick="filterCategory('all', this)">All Broadcasts (7)</button>
+            <button type="button" class="cat-btn" onclick="filterCategory('academic', this)">Academic &amp; Exams</button>
+            <button type="button" class="cat-btn" onclick="filterCategory('bursary', this)">Fees &amp; Bursary</button>
+            <button type="button" class="cat-btn" onclick="filterCategory('health', this)">Health Services</button>
+            <button type="button" class="cat-btn" onclick="filterCategory('dsa', this)">Student Affairs</button>
+            <button type="button" class="cat-btn" onclick="filterCategory('cs', this)">Computer Science</button>
+          </div>
+
+          <div class="search-announcements">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="newsSearch" placeholder="Search notices, memos, tags..." onkeyup="searchAnnouncements()">
+          </div>
+        </div>
+
+        <!-- 3. Announcements Grid Feed -->
+        <section class="announcements-grid" id="newsGrid">
+          
+          <!-- Card 1 -->
+          <div class="news-card" data-cat="academic" onclick="openMemoModal(0)">
+            <div>
+              <div class="card-meta-top">
+                <span class="badge badge-info">Academic Affairs</span>
+                <span class="news-date">22 Sept 2026</span>
+              </div>
+              <h3>First Semester Final Examination Timetable &amp; Docket Requirements</h3>
+              <p>All undergraduate students are advised that the First Semester examinations commence on Monday, 06 October 2026. Print out your official examination docket and arrive 30 minutes early.</p>
+            </div>
+            <div class="card-foot-action">
+              <span class="read-link">Read Full Memo &rarr;</span>
+              <span class="badge badge-gold">Official Circular</span>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="news-card" data-cat="health" onclick="openMemoModal(1)">
+            <div>
+              <div class="card-meta-top">
+                <span class="badge badge-success">Health Services</span>
+                <span class="news-date">20 Sept 2026</span>
+              </div>
+              <h3>Mandatory 100L Medical Screening &amp; Clearance Certificate Verification</h3>
+              <p>All newly admitted 100 Level students who have completed their laboratory investigations and chest X-rays can now print their verified Medical Fitness Clearance Certificates directly from the portal.</p>
+            </div>
+            <div class="card-foot-action">
+              <span class="read-link">Read Full Memo &rarr;</span>
+              <span class="badge badge-success">Health Clearance</span>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="news-card" data-cat="bursary" onclick="openMemoModal(2)">
+            <div>
+              <div class="card-meta-top">
+                <span class="badge badge-warning">Bursary Directorate</span>
+                <span class="news-date">18 Sept 2026</span>
+              </div>
+              <h3>Remita School Fee Clearance Deadline &amp; Bursary Receipt Generation</h3>
+              <p>Students with outstanding departmental association or sundries fees are requested to complete payments via Remita RRR to ensure seamless semester examination clearance.</p>
+            </div>
+            <div class="card-foot-action">
+              <span class="read-link">Read Full Memo &rarr;</span>
+              <span class="badge badge-warning">Bursary Notice</span>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="news-card" data-cat="dsa" onclick="openMemoModal(3)">
+            <div>
+              <div class="card-meta-top">
+                <span class="badge badge-info">Dean of Student Affairs</span>
+                <span class="news-date">15 Sept 2026</span>
+              </div>
+              <h3>Hostel Accommodation Bed Space Verification &amp; Inventory Check</h3>
+              <p>Students resident in Queen Moremi, Prof. Olurode, and ETF Hall are reminded to complete physical inventory sign-off forms with their respective Hall Porters.</p>
+            </div>
+            <div class="card-foot-action">
+              <span class="read-link">Read Full Memo &rarr;</span>
+              <span class="badge badge-info">Hostel Welfare</span>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="news-card" data-cat="cs" onclick="openMemoModal(4)">
+            <div>
+              <div class="card-meta-top">
+                <span class="badge badge-gold">Computer Science</span>
+                <span class="news-date">14 Sept 2026</span>
+              </div>
+              <h3>UNILESA Maiden Innovation &amp; Coding Hackathon 2026 (NACOSS)</h3>
+              <p>Registration is now officially open for the University of Ilesa Annual Hackathon. Showcase software development, AI solutions, and cybersecurity innovations with cash prizes.</p>
+            </div>
+            <div class="card-foot-action">
+              <span class="read-link">Read Full Memo &rarr;</span>
+              <span class="badge badge-gold">Tech &amp; Hackathon</span>
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="news-card" data-cat="academic" onclick="openMemoModal(5)">
+            <div>
+              <div class="card-meta-top">
+                <span class="badge badge-info">SIWES Directorate</span>
+                <span class="news-date">10 Sept 2026</span>
+              </div>
+              <h3>Mandatory SIWES Pre-Placement Orientation Workshop</h3>
+              <p>Directorate of Industrial Training &amp; SIWES invites prospective students in Computer Science, Science Laboratory Technology, and Engineering to the virtual pre-placement webinar.</p>
+            </div>
+            <div class="card-foot-action">
+              <span class="read-link">Read Full Memo &rarr;</span>
+              <span class="badge badge-info">Internship</span>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ANNOUNCEMENT DETAIL MODAL -->
+  <div class="modal-backdrop" id="memoModal">
+    <div class="modal-box">
+      <div class="modal-header-clean">
+        <h3>Official University Circular</h3>
+        <button type="button" class="modal-close-icon" onclick="closeModal('memoModal')">&times;</button>
+      </div>
+      <div class="modal-content-inner">
+        <span class="badge badge-gold" id="memoRef" style="margin-bottom:0.6rem;">REF: UNILESA/DIR/ACAD/2026/041</span>
+        <h2 id="memoTitle" style="font-size:1.15rem; margin:0.3rem 0; color:var(--navy-900);">Title</h2>
+        <div style="font-size:0.75rem; color:var(--grey-500); margin-bottom:1rem;" id="memoMeta">
+          Published by Directorate of Academic Affairs &bull; 22 September 2026
+        </div>
+
+        <div id="memoContent" style="font-size:0.83rem; color:var(--grey-700); line-height:1.6; margin-bottom:1.2rem;">
+          <!-- Injected via JavaScript -->
+        </div>
+
+        <div style="background:#FAFBFD; border:1px solid var(--grey-300); border-radius:10px; padding:0.9rem; display:flex; justify-content:space-between; align-items:center;">
+          <div id="memoSignatory" style="font-size:0.75rem; color:var(--navy-900); line-height:1.4;">
+            <strong>Dr. O. F. Adewale</strong><br>
+            Director of Academic Planning &amp; Examinations
+          </div>
+          <a href="exam-timetable.html" class="btn btn-gold btn-sm" id="memoActionBtn">
+            Go to Timetable
+          </a>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline btn-sm" onclick="window.print()">Print Memo</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="closeModal('memoModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REUSABLE MOBILE BOTTOM NAV -->
+  <unilesa-mobile-nav active="announcements"></unilesa-mobile-nav>
+
+  <!-- SHARED JS LOGIC & REUSABLE COMPONENTS -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-sidebar.js"></script>
+  <script src="components/unilesa-header.js"></script>
+  <script src="components/unilesa-mobile-nav.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <!-- PAGE-SPECIFIC ANNOUNCEMENTS LOGIC -->
+  <script>
+    const memos = [
+      {
+        ref: "REF: UNILESA/DIR/ACAD/2026/041",
+        title: "First Semester Final Examination Timetable & Docket Requirements",
+        meta: "Published by Directorate of Academic Affairs • 22 September 2026",
+        body: "<p>The Directorate of Academic Affairs hereby announces to all undergraduate students that the 2025/2026 First Semester examinations will formally begin on <strong>Monday, 06 October 2026</strong> across all designated university centres.</p><p>Students are strongly advised to verify course forms and print their official Examination Dockets.</p>",
+        signatory: "<strong>Dr. O. F. Adewale</strong><br>Director of Academic Planning & Examinations",
+        link: "exam-timetable.html",
+        linkText: "View & Print Timetable"
+      },
+      {
+        ref: "REF: UNILESA/HEALTH/DIR/2026/018",
+        title: "Mandatory 100L Medical Screening & Clearance Certificate Verification",
+        meta: "Published by University Health Services Directorate • 20 September 2026",
+        body: "<p>All 100 Level undergraduate students who have completed medical laboratory tests and chest X-rays can generate and print their <strong>Official Certificate of Medical Fitness</strong>.</p>",
+        signatory: "<strong>Dr. O. A. Adebayo</strong> (MBBS, FMCPath)<br>Chief Medical Officer",
+        link: "medical-clearance.html",
+        linkText: "View Health Clearance"
+      },
+      {
+        ref: "REF: UNILESA/BURS/REV/2026/092",
+        title: "Remita School Fee Clearance Deadline & Bursary Receipt Generation",
+        meta: "Published by Directorate of Bursary • 18 September 2026",
+        body: "<p>Payment of all approved university dues and sundries must be executed through the unified Remita Payment Gateway.</p>",
+        signatory: "<strong>Mr. K. O. Babalola</strong> (FCA)<br>University Bursar",
+        link: "payments.html",
+        linkText: "Open Payments Page"
+      },
+      {
+        ref: "REF: UNILESA/DSA/HOSTEL/2026/033",
+        title: "Hostel Accommodation Bed Space Verification & Room Key Issuance",
+        meta: "Published by Dean of Student Affairs • 15 September 2026",
+        body: "<p>All students allocated bed spaces in University Halls of Residence are instructed to present their accommodation clearance slips to their respective Hall Porters.</p>",
+        signatory: "<strong>Prof. S. M. Adeleke</strong><br>Dean of Student Affairs (DSA)",
+        link: "dashboard.html",
+        linkText: "Go to Dashboard"
+      },
+      {
+        ref: "REF: UNILESA/CSC/NACOSS/2026/007",
+        title: "UNILESA Maiden Innovation & Coding Hackathon 2026 (NACOSS)",
+        meta: "Published by Department of Computer Science • 14 September 2026",
+        body: "<p>The Department of Computer Science invites all tech enthusiasts to register for the 2026 University Hackathon with exciting cash prizes and tech mentorship.</p>",
+        signatory: "<strong>Prof. E. T. Babatunde</strong><br>Head, Department of Computer Science",
+        link: "profile.html",
+        linkText: "View Profile"
+      },
+      {
+        ref: "REF: UNILESA/SIWES/ORIENTATION/2026/012",
+        title: "Mandatory SIWES Pre-Placement Orientation Workshop",
+        meta: "Published by Directorate of SIWES • 10 September 2026",
+        body: "<p>All 200L and 300L students preparing for Industrial Training are invited to the orientation webinar.</p>",
+        signatory: "<strong>Engr. T. A. Oladipo</strong><br>SIWES Coordinator",
+        link: "dashboard.html",
+        linkText: "Go to Dashboard"
+      }
+    ];
+
+    function openMemoModal(idx) {
+      const memo = memos[idx];
+      if (!memo) return;
+
+      document.getElementById('memoRef').textContent = memo.ref;
+      document.getElementById('memoTitle').textContent = memo.title;
+      document.getElementById('memoMeta').innerHTML = memo.meta;
+      document.getElementById('memoContent').innerHTML = memo.body;
+      document.getElementById('memoSignatory').innerHTML = memo.signatory;
+
+      const actionBtn = document.getElementById('memoActionBtn');
+      actionBtn.href = memo.link;
+      actionBtn.textContent = memo.linkText;
+
+      openModal('memoModal');
+    }
+
+    function filterCategory(cat, btn) {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.news-card');
+      cards.forEach(card => {
+        if (cat === 'all') {
+          card.style.display = '';
+        } else {
+          card.style.display = card.getAttribute('data-cat') === cat ? '' : 'none';
+        }
+      });
+    }
+
+    function searchAnnouncements() {
+      const input = document.getElementById('newsSearch').value.toLowerCase();
+      const cards = document.querySelectorAll('.news-card');
+      cards.forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(input) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

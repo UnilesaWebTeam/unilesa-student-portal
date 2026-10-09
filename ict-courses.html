@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Master Course Catalog — Directorate of ICT (UNILESA)</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* ==================== MASTER COURSE CATALOG STYLES ==================== */
+    .courses-hero {
+      background: linear-gradient(135deg, #050E21 0%, #0F1F42 55%, #1A365D 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 12px 30px -5px rgba(15, 31, 66, 0.25);
+      border: 1px solid rgba(205, 164, 52, 0.35);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .courses-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(205,164,52,0.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Executive KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .kpi-card {
+      background: var(--white);
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.25rem 1.35rem;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.6rem;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(15, 31, 66, 0.08);
+      border-color: #CBD5E1;
+    }
+
+    /* ==================== ULTRA-PREMIUM CUSTOM DROPDOWN FILTER BAR ==================== */
+    .filter-bar-card {
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+      position: relative;
+    }
+    .filter-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      flex: 1;
+      min-width: 0;
+    }
+    .filter-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .filter-bar-right-tools {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    /* Custom Dropdown Trigger Container */
+    .custom-dropdown-wrap {
+      position: relative;
+      display: inline-block;
+      min-width: 0;
+    }
+    .custom-dropdown-trigger {
+      height: 40px;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 10px;
+      padding: 0 0.75rem;
+      background: #FFFFFF;
+      color: var(--navy-950);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      width: auto;
+      max-width: 100%;
+      box-sizing: border-box;
+      user-select: none;
+      font-family: inherit;
+    }
+    .custom-dropdown-trigger:hover {
+      border-color: var(--navy-900);
+      background: #F8FAFC;
+    }
+    .custom-dropdown-wrap.open .custom-dropdown-trigger {
+      border-color: var(--navy-900);
+      box-shadow: 0 0 0 3px rgba(15, 31, 66, 0.1);
+      background: #FFFFFF;
+    }
+    .custom-dropdown-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .custom-dropdown-icon.lvl-icon { color: #1D4ED8; }
+    .custom-dropdown-icon.term-icon { color: #7C3AED; }
+    .custom-dropdown-icon.cat-icon { color: #059669; }
+
+    .custom-dropdown-label-group {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.82rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .custom-dropdown-label-title {
+      font-weight: 600;
+      color: #64748B;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .custom-dropdown-selected-text {
+      font-weight: 700;
+      color: var(--navy-950);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .custom-dropdown-chevron {
+      color: #64748B;
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+      transition: transform 0.22s ease;
+      flex-shrink: 0;
+    }
+    .custom-dropdown-wrap.open .custom-dropdown-chevron {
+      transform: rotate(180deg);
+      color: var(--navy-900);
+    }
+
+    /* Dropdown Floating Menu Panel */
+    .custom-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 290px;
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 14px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.14), 0 3px 8px rgba(15, 23, 42, 0.04);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scale(0.98);
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .custom-dropdown-wrap.open .custom-dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+    .custom-dropdown-header {
+      padding: 0.65rem 0.95rem 0.45rem;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #F1F5F9;
+      background: #F8FAFC;
+    }
+    .custom-dropdown-list {
+      padding: 0.4rem;
+      max-height: 290px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .custom-dropdown-item {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 0.6rem 0.75rem;
+      border-radius: 9px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.65rem;
+      text-align: left;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      box-sizing: border-box;
+    }
+    .custom-dropdown-item:hover {
+      background: #F8FAFC;
+    }
+    .custom-dropdown-item.active {
+      background: #EFF6FF;
+    }
+    .custom-item-left {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      min-width: 0;
+      flex: 1;
+    }
+    .custom-item-badge {
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 0.22rem 0.48rem;
+      border-radius: 6px;
+      min-width: 38px;
+      text-align: center;
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+    }
+    .custom-item-badge.all-badge { background: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; }
+    .custom-item-badge.lvl-100-badge { background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0; }
+    .custom-item-badge.lvl-200-badge { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+    .custom-item-badge.lvl-300-badge { background: #F5F3FF; color: #7C3AED; border: 1px solid #DDD6FE; }
+    .custom-item-badge.lvl-400-badge { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+    .custom-item-badge.lvl-500-badge { background: #FFF1F2; color: #BE123C; border: 1px solid #FECDD3; }
+    .custom-item-badge.term-1st-badge { background: #FFFBEB; color: #B45309; border: 1px solid #FDE68A; }
+    .custom-item-badge.term-2nd-badge { background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; }
+    .custom-item-badge.core-badge { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+    .custom-item-badge.elective-badge { background: #F5F3FF; color: #7C3AED; border: 1px solid #DDD6FE; }
+    .custom-item-badge.gst-badge { background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; }
+
+    .custom-item-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+      min-width: 0;
+      flex: 1;
+    }
+    .custom-item-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--navy-950);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .custom-dropdown-item.active .custom-item-name {
+      color: #1D4ED8;
+    }
+    .custom-item-desc {
+      font-size: 0.71rem;
+      font-weight: 500;
+      color: #64748B;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .custom-item-check {
+      color: #1D4ED8;
+      display: none;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .custom-dropdown-item.active .custom-item-check {
+      display: flex;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      width: 240px;
+    }
+    .search-input {
+      width: 100%;
+      height: 40px;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 10px;
+      padding: 0 0.8rem 0 2.2rem;
+      font-size: 0.82rem;
+      background: #F8FAFC;
+      color: var(--navy-950);
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    .search-input:hover {
+      background: #FFFFFF;
+      border-color: #94A3B8;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--navy-900);
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(15, 31, 66, 0.1);
+    }
+
+    /* View Mode Toggle Segmented Control */
+    .view-toggle-wrap {
+      display: inline-flex;
+      background: #F1F5F9;
+      padding: 3px;
+      border-radius: 9px;
+      border: 1px solid #CBD5E1;
+      height: 40px;
+      box-sizing: border-box;
+      align-items: center;
+    }
+    .view-toggle-btn {
+      border: none;
+      background: transparent;
+      padding: 0.35rem 0.65rem;
+      border-radius: 7px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #64748B;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      height: 32px;
+      transition: all 0.15s ease;
+    }
+    .view-toggle-btn.active {
+      background: #FFFFFF;
+      color: var(--navy-950);
+      box-shadow: 0 2px 5px rgba(15, 23, 42, 0.08);
+    }
+
+    .reset-btn {
+      height: 40px;
+      padding: 0 0.85rem;
+      border-radius: 10px;
+      border: 1.5px solid #CBD5E1;
+      background: #FFFFFF;
+      color: #64748B;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+    .reset-btn:hover {
+      border-color: var(--navy-900);
+      color: var(--navy-900);
+    }
+
+    @media (max-width: 1024px) {
+      .filter-bar-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.85rem;
+      }
+      .filter-bar-left {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.6rem;
+      }
+      .custom-dropdown-wrap {
+        width: 100%;
+      }
+      .custom-dropdown-trigger {
+        width: 100%;
+      }
+      .custom-dropdown-menu {
+        width: 100%;
+        min-width: 260px;
+      }
+      .filter-bar-right {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .search-input-wrap {
+        flex: 1;
+        width: auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .filter-bar-card {
+        padding: 0.85rem;
+        gap: 0.75rem;
+        border-radius: 12px;
+      }
+      .filter-bar-left {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.55rem;
+        width: 100%;
+      }
+      .custom-dropdown-wrap {
+        width: 100%;
+      }
+      .custom-dropdown-trigger {
+        width: 100%;
+        height: 44px;
+        padding: 0 0.85rem;
+        font-size: 0.86rem;
+        border-radius: 10px;
+      }
+      .custom-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        width: 100%;
+        min-width: 100%;
+        border-radius: 12px;
+      }
+      .custom-dropdown-item {
+        padding: 0.65rem 0.75rem;
+        min-height: 48px;
+      }
+      .filter-bar-right {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.55rem;
+        width: 100%;
+      }
+      .search-input-wrap {
+        width: 100%;
+        min-width: 100%;
+      }
+      .search-input {
+        width: 100%;
+        height: 44px;
+        font-size: 0.85rem;
+        padding: 0 0.85rem 0 2.4rem;
+      }
+      .filter-bar-right-tools {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        width: 100%;
+      }
+      .view-toggle-wrap {
+        flex: 1;
+        height: 44px;
+        display: flex;
+      }
+      .view-toggle-btn {
+        flex: 1;
+        height: 36px;
+        justify-content: center;
+        font-size: 0.8rem;
+      }
+      .reset-btn {
+        height: 44px;
+        padding: 0 1rem;
+        font-size: 0.82rem;
+        justify-content: center;
+      }
+    }
+
+    /* ==================== GRID CARDS VIEW (DEFAULT) ==================== */
+    .courses-grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .course-card-box {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 1.35rem 1.45rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .course-card-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(15, 31, 66, 0.09);
+      border-color: #CBD5E1;
+    }
+    .course-card-box::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: #CBD5E1;
+    }
+    .course-card-box.lvl-100::before { background: #10B981; }
+    .course-card-box.lvl-200::before { background: #2563EB; }
+    .course-card-box.lvl-300::before { background: #7C3AED; }
+    .course-card-box.lvl-400::before { background: #D97706; }
+    .course-card-box.lvl-500::before { background: #E11D48; }
+
+    .card-top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .course-code-pill {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--navy-950);
+      background: #F1F5F9;
+      padding: 0.25rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+    }
+    .card-badges-strip {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .course-title-main {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--navy-950);
+      line-height: 1.35;
+      margin: 0.25rem 0 0;
+    }
+    .course-meta-tags {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      font-size: 0.72rem;
+      color: #64748B;
+      margin-top: 0.5rem;
+    }
+    .meta-pill {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .card-footer-strip {
+      border-top: 1px solid #F1F5F9;
+      padding-top: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .instructor-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .instructor-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #EFF6FF;
+      color: #1D4ED8;
+      font-size: 0.7rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #BFDBFE;
+    }
+    .instructor-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #1E293B;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 150px;
+    }
+
+    /* ==================== CLEAN DATA TABLE VIEW ==================== */
+    .courses-table-container {
+      display: none;
+      background: #FFFFFF;
+      border-radius: 16px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+      overflow-x: auto;
+    }
+    .clean-course-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .clean-course-table th {
+      background: #F8FAFC;
+      border-bottom: 2px solid #E2E8F0;
+      padding: 0.85rem 1.15rem;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    .clean-course-table td {
+      padding: 0.95rem 1.15rem;
+      border-bottom: 1px solid #E2E8F0;
+      font-size: 0.84rem;
+      vertical-align: middle;
+      color: #1E293B;
+    }
+    .clean-course-table tbody tr {
+      transition: background 0.15s ease;
+    }
+    .clean-course-table tbody tr:hover {
+      background: #F8FAFC;
+    }
+
+    /* Level Badges */
+    .level-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.22rem 0.6rem;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      letter-spacing: 0.02em;
+    }
+    .level-100 { background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0; }
+    .level-200 { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+    .level-300 { background: #F5F3FF; color: #7C3AED; border: 1px solid #DDD6FE; }
+    .level-400 { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+    .level-500 { background: #FFF1F2; color: #BE123C; border: 1px solid #FECDD3; }
+
+    /* Modal Form Grids */
+    .modal-form-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.85rem;
+    }
+    .modal-form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+
+    @media (max-width: 900px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .courses-grid-container { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+      .modal-form-grid-3, .modal-form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="ict"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- ENTERPRISE ADMIN SIDEBAR COMPONENT -->
+    <unilesa-admin-sidebar active="courses"></unilesa-admin-sidebar>
+
+    <!-- MAIN PAGE WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- ENTERPRISE ADMIN TOP HEADER COMPONENT -->
+      <unilesa-admin-header title="Master Course Catalog" subtitle="Directorate of ICT &bull; Academic Curriculum &amp; Level Registry"></unilesa-admin-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+
+        <!-- 1. Command Hero -->
+        <div class="courses-hero">
+          <div>
+            <div style="font-size:0.72rem; font-weight:800; color:var(--gold-400); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.25rem;">
+              University Curriculum Database &bull; Senate Accredited Registry
+            </div>
+            <h1 style="font-family:'Playfair Display', serif; font-size:1.6rem; color:#fff; margin:0 0 0.35rem;">
+              Master Course Catalog
+            </h1>
+            <p style="font-size:0.82rem; color:rgba(255,255,255,0.85); margin:0; max-width:680px; line-height:1.45;">
+              Maintain Senate-accredited departmental courses, unit quotas, prerequisite hierarchies, and instructor allocations across all academic levels and semesters.
+            </p>
+          </div>
+          <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
+            <button type="button" class="btn btn-outline" style="background:rgba(255,255,255,0.1); color:#fff; border-color:rgba(255,255,255,0.25);" onclick="exportCatalogCSV()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Export CSV</span>
+            </button>
+            <button type="button" class="btn btn-gold" onclick="openAddCourseModal()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>Add New Course</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. KPI Metrics Strip -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:0.75rem; color:#64748B; font-weight:700;">TOTAL ACCREDITED COURSES</span>
+              <span style="font-size:0.7rem; font-weight:800; background:#EFF6FF; color:#1D4ED8; padding:0.15rem 0.5rem; border-radius:10px;" id="kpiLevelTag">All Levels</span>
+            </div>
+            <div style="font-size:1.6rem; font-weight:800; color:var(--navy-950);" id="kpiCourseCount">38 Courses</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:600;" id="kpiCourseSub">● Senate Approved 2025/2026</div>
+          </div>
+          <div class="kpi-card">
+            <div style="font-size:0.75rem; color:#64748B; font-weight:700;">FIRST SEMESTER UNITS</div>
+            <div style="font-size:1.6rem; font-weight:800; color:#1D4ED8;" id="kpiFirstTermUnits">54 Units</div>
+            <div style="font-size:0.72rem; color:#64748B; font-weight:600;">Harmattan Semester Allocation</div>
+          </div>
+          <div class="kpi-card">
+            <div style="font-size:0.75rem; color:#64748B; font-weight:700;">SECOND SEMESTER UNITS</div>
+            <div style="font-size:1.6rem; font-weight:800; color:#B45309;" id="kpiSecondTermUnits">49 Units</div>
+            <div style="font-size:0.72rem; color:#64748B; font-weight:600;">Rain Semester Allocation</div>
+          </div>
+          <div class="kpi-card">
+            <div style="font-size:0.75rem; color:#64748B; font-weight:700;">ASSIGNED INSTRUCTORS</div>
+            <div style="font-size:1.6rem; font-weight:800; color:#059669;" id="kpiLecturerCount">14 Lecturers</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:600;">Assigned &bull; Faculty of Science</div>
+          </div>
+        </div>
+
+        <!-- 3. Sleek Unified Dropdown Filter Bar -->
+        <div class="filter-bar-card">
+          <!-- Left Group: Custom Interactive Dropdown Filters -->
+          <div class="filter-bar-left">
+            <!-- 1. Academic Level Custom Dropdown -->
+            <div class="custom-dropdown-wrap" id="customLevelDropdown">
+              <button type="button" class="custom-dropdown-trigger" onclick="toggleCustomDropdown('customLevelDropdown')" aria-expanded="false" style="border-left: 3.5px solid #1D4ED8;">
+                <span class="custom-dropdown-icon lvl-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                </span>
+                <span class="custom-dropdown-label-group">
+                  <span class="custom-dropdown-label-title">Level:</span>
+                  <span class="custom-dropdown-selected-text" id="levelSelectedText">All Levels</span>
+                </span>
+                <span class="custom-dropdown-chevron">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+              </button>
+              
+              <div class="custom-dropdown-menu" id="levelDropdownMenu">
+                <div class="custom-dropdown-header">Filter by Academic Level</div>
+                <div class="custom-dropdown-list">
+                  <button type="button" class="custom-dropdown-item active" data-value="all" onclick="selectCustomOption('level', 'all', 'All Levels', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge all-badge">ALL</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">All Academic Levels</span>
+                        <span class="custom-item-desc">All curriculum tiers (100L - 500L)</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+
+                  <button type="button" class="custom-dropdown-item" data-value="100 Level" onclick="selectCustomOption('level', '100 Level', '100 Level', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge lvl-100-badge">100L</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">100 Level</span>
+                        <span class="custom-item-desc">Freshmen / Year 1 Curriculum</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+
+                  <button type="button" class="custom-dropdown-item" data-value="200 Level" onclick="selectCustomOption('level', '200 Level', '200 Level', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge lvl-200-badge">200L</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">200 Level</span>
+                        <span class="custom-item-desc">Sophomore / Year 2 Curriculum</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+
+                  <button type="button" class="custom-dropdown-item" data-value="300 Level" onclick="selectCustomOption('level', '300 Level', '300 Level', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge lvl-300-badge">300L</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">300 Level</span>
+                        <span class="custom-item-desc">Junior / SIWES Industrial Year</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+
+                  <button type="button" class="custom-dropdown-item" data-value="400 Level" onclick="selectCustomOption('level', '400 Level', '400 Level', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge lvl-400-badge">400L</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">400 Level</span>
+                        <span class="custom-item-desc">Final Year / Degree Project</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+
+                  <button type="button" class="custom-dropdown-item" data-value="500 Level" onclick="selectCustomOption('level', '500 Level', '500 Level', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge lvl-500-badge">500L</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">500 Level</span>
+                        <span class="custom-item-desc">Professional / Honors Final Year</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+                </div>
+              </div>
+              <!-- Hidden select for compatibility -->
+              <select id="levelFilterSelect" style="display:none;" onchange="handleLevelChange(this.value)">
+                <option value="all">All Academic Levels</option>
+                <option value="100 Level">100 Level</option>
+                <option value="200 Level">200 Level</option>
+                <option value="300 Level">300 Level</option>
+                <option value="400 Level">400 Level</option>
+                <option value="500 Level">500 Level</option>
+              </select>
+            </div>
+
+            <!-- 2. Semester Custom Dropdown -->
+            <div class="custom-dropdown-wrap" id="customTermDropdown">
+              <button type="button" class="custom-dropdown-trigger" onclick="toggleCustomDropdown('customTermDropdown')" aria-expanded="false" style="border-left: 3.5px solid #7C3AED;">
+                <span class="custom-dropdown-icon term-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </span>
+                <span class="custom-dropdown-label-group">
+                  <span class="custom-dropdown-label-title">Term:</span>
+                  <span class="custom-dropdown-selected-text" id="termSelectedText">All Semesters</span>
+                </span>
+                <span class="custom-dropdown-chevron">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+              </button>
+              
+              <div class="custom-dropdown-menu" id="termDropdownMenu">
+                <div class="custom-dropdown-header">Filter by Academic Semester</div>
+                <div class="custom-dropdown-list">
+                  <button type="button" class="custom-dropdown-item active" data-value="all" onclick="selectCustomOption('term', 'all', 'All Semesters', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge all-badge">ALL</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">All Semesters</span>
+                        <span class="custom-item-desc">Harmattan &amp; Rain Semesters</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+
+                  <button type="button" class="custom-dropdown-item" data-value="First Semester" onclick="selectCustomOption('term', 'First Semester', 'Harmattan (1st Sem)', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge term-1st-badge">1ST</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">First Semester</span>
+                        <span class="custom-item-desc">Harmattan Semester Curriculum</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+
+                  <button type="button" class="custom-dropdown-item" data-value="Second Semester" onclick="selectCustomOption('term', 'Second Semester', 'Rain (2nd Sem)', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge term-2nd-badge">2ND</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">Second Semester</span>
+                        <span class="custom-item-desc">Rain Semester Allocation</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+                </div>
+              </div>
+              <!-- Hidden select for compatibility -->
+              <select id="termFilterSelect" style="display:none;" onchange="handleTermChange(this.value)">
+                <option value="all">All Semesters</option>
+                <option value="First Semester">First Semester</option>
+                <option value="Second Semester">Second Semester</option>
+              </select>
+            </div>
+
+            <!-- 3. Course Category Custom Dropdown -->
+            <div class="custom-dropdown-wrap" id="customCategoryDropdown">
+              <button type="button" class="custom-dropdown-trigger" onclick="toggleCustomDropdown('customCategoryDropdown')" aria-expanded="false" style="border-left: 3.5px solid #059669;">
+                <span class="custom-dropdown-icon cat-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                </span>
+                <span class="custom-dropdown-label-group">
+                  <span class="custom-dropdown-label-title">Type:</span>
+                  <span class="custom-dropdown-selected-text" id="categorySelectedText">All Types</span>
+                </span>
+                <span class="custom-dropdown-chevron">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+              </button>
+              
+              <div class="custom-dropdown-menu" id="categoryDropdownMenu">
+                <div class="custom-dropdown-header">Filter by Course Category</div>
+                <div class="custom-dropdown-list">
+                  <button type="button" class="custom-dropdown-item active" data-value="all" onclick="selectCustomOption('category', 'all', 'All Types', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge all-badge">ALL</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">All Categories</span>
+                        <span class="custom-item-desc">Core, Electives &amp; GST</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+
+                  <button type="button" class="custom-dropdown-item" data-value="compulsory" onclick="selectCustomOption('category', 'compulsory', 'Core Courses', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge core-badge">CORE</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">Core / Compulsory</span>
+                        <span class="custom-item-desc">Mandatory Departmental Courses</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+
+                  <button type="button" class="custom-dropdown-item" data-value="elective" onclick="selectCustomOption('category', 'elective', 'Elective Courses', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge elective-badge">ELEC</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">Elective Courses</span>
+                        <span class="custom-item-desc">Specialized Optional Modules</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+
+                  <button type="button" class="custom-dropdown-item" data-value="GST" onclick="selectCustomOption('category', 'GST', 'GST / General', this)">
+                    <div class="custom-item-left">
+                      <span class="custom-item-badge gst-badge">GST</span>
+                      <div class="custom-item-text">
+                        <span class="custom-item-name">GST / General Studies</span>
+                        <span class="custom-item-desc">University-wide Required Courses</span>
+                      </div>
+                    </div>
+                    <span class="custom-item-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  </button>
+                </div>
+              </div>
+              <!-- Hidden select for compatibility -->
+              <select id="categoryFilterSelect" style="display:none;" onchange="handleCategoryChange(this.value)">
+                <option value="all">All Categories</option>
+                <option value="compulsory">Core / Compulsory</option>
+                <option value="elective">Elective Courses</option>
+                <option value="GST">GST / General Studies</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Right Group: Search, View Mode Toggle & Reset -->
+          <div class="filter-bar-right">
+            <!-- Search Input -->
+            <div class="search-input-wrap">
+              <input type="text" id="courseSearchInput" class="search-input" placeholder="Search code, title, lecturer..." oninput="handleSearchChange(this.value)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+
+            <!-- Action Tools: Switcher & Reset -->
+            <div class="filter-bar-right-tools">
+              <!-- View Mode Switcher (Cards vs Table) -->
+              <div class="view-toggle-wrap">
+                <button type="button" id="btnViewGrid" class="view-toggle-btn active" onclick="switchViewMode('grid')" title="Grid Cards View">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                  <span>Cards</span>
+                </button>
+                <button type="button" id="btnViewTable" class="view-toggle-btn" onclick="switchViewMode('table')" title="Dense Table View">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                  <span>Table</span>
+                </button>
+              </div>
+
+              <!-- Reset Button -->
+              <button type="button" class="reset-btn" onclick="resetFilters()" title="Reset all filters">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                <span>Reset</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4A. PRIMARY VIEW: Executive Interactive Grid Cards Container -->
+        <div id="coursesGridContainer" class="courses-grid-container">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+        <!-- 4B. SECONDARY VIEW: Clean Minimalist Table Container -->
+        <div id="coursesTableContainer" class="courses-table-container">
+          <table class="clean-course-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th style="text-align:center;">Level</th>
+                <th>Course Title</th>
+                <th style="text-align:center;">Units</th>
+                <th>Semester</th>
+                <th>Category</th>
+                <th>Assigned Instructor</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="cleanCourseTbody">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT COURSE MODAL -->
+  <div class="modal-backdrop" id="courseModal" onclick="if(event.target===this) closeCourseModal()">
+    <div class="modal-box" style="width:100%; max-width:600px; max-height:92vh; overflow:hidden; display:flex; flex-direction:column; border-radius:18px; box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);">
+      <div style="background:linear-gradient(135deg, #050E21 0%, #0F1F42 100%); color:#fff; padding:1.2rem 1.5rem; display:flex; justify-content:space-between; align-items:center; flex-shrink:0; border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div style="display:flex; align-items:center; gap:0.65rem;">
+          <div style="width:36px; height:36px; border-radius:10px; background:rgba(217,119,6,0.18); border:1px solid rgba(217,119,6,0.4); display:flex; align-items:center; justify-content:center; color:var(--gold-400); flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          </div>
+          <div>
+            <h3 id="courseModalTitle" style="margin:0; font-size:1.15rem; font-family:'Playfair Display', serif; color:#fff; font-weight:700;">Edit Course</h3>
+            <div style="font-size:0.72rem; color:rgba(255,255,255,0.7); margin-top:0.1rem;">Senate Curriculum Registry &bull; 2025/2026 Session</div>
+          </div>
+        </div>
+        <button type="button" onclick="closeCourseModal()" style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; cursor:pointer; line-height:1; transition:background 0.2s;" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="courseForm" onsubmit="handleCourseFormSubmit(event)" style="padding:1.4rem; display:flex; flex-direction:column; gap:0.95rem; overflow-y:auto;">
+        <input type="hidden" id="courseEditId" value="">
+        <input type="hidden" id="courseEditTerm" value="First Semester">
+        
+        <div class="modal-form-grid-3">
+          <div>
+            <label style="font-size:0.74rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Course Code *</label>
+            <input type="text" id="courseCodeInput" required placeholder="e.g. CSC 501" oninput="autoDetectLevelFromCode(this.value)" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem; font-family:'Fira Code', monospace; font-weight:700;">
+          </div>
+          <div>
+            <label style="font-size:0.74rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Academic Level *</label>
+            <select id="courseLevelSelect" required style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem; font-weight:700;">
+              <option value="100 Level">100 Level</option>
+              <option value="200 Level">200 Level</option>
+              <option value="300 Level">300 Level</option>
+              <option value="400 Level">400 Level</option>
+              <option value="500 Level">500 Level</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.74rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Credit Units *</label>
+            <select id="courseUnitsInput" required style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem; font-weight:700;">
+              <option value="1">1 Unit</option>
+              <option value="2">2 Units</option>
+              <option value="3" selected>3 Units</option>
+              <option value="4">4 Units</option>
+              <option value="6">6 Units (Project/SIWES)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:0.74rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Course Title *</label>
+          <input type="text" id="courseTitleInput" required placeholder="e.g. Advanced Machine Learning &amp; Autonomous Agents" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+        </div>
+
+        <div class="modal-form-grid-2">
+          <div>
+            <label style="font-size:0.74rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Academic Semester *</label>
+            <select id="courseTermSelect" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+              <option value="First Semester">First Semester (Harmattan)</option>
+              <option value="Second Semester">Second Semester (Rain)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.74rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Course Category *</label>
+            <select id="courseCategorySelect" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+              <option value="Core">Compulsory (Core)</option>
+              <option value="Elective">Elective Course</option>
+              <option value="GST">General Studies (GST)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-form-grid-2">
+          <div>
+            <label style="font-size:0.74rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Assigned Lecturer *</label>
+            <input type="text" id="courseLecturerInput" required placeholder="e.g. Prof. J. A. Kolawole" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+          </div>
+          <div>
+            <label style="font-size:0.74rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Prerequisite</label>
+            <input type="text" id="coursePrereqInput" placeholder="e.g. CSC 407 (or None)" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+          </div>
+        </div>
+
+        <div class="modal-form-grid-2">
+          <div>
+            <label style="font-size:0.74rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Lecture Venue</label>
+            <input type="text" id="courseVenueInput" placeholder="e.g. Advanced Research Lab" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+          </div>
+          <div>
+            <label style="font-size:0.74rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Schedule</label>
+            <input type="text" id="courseScheduleInput" placeholder="e.g. Mon 02:00 PM - 05:00 PM" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:0.74rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Course Description / Syllabus Outline</label>
+          <textarea id="courseDescInput" rows="2" placeholder="Brief outline of course content and learning objectives..." style="width:100%; border:1px solid #CBD5E1; border-radius:8px; padding:0.6rem 0.8rem; font-size:0.82rem; resize:vertical;"></textarea>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.6rem; margin-top:0.4rem;">
+          <button type="button" class="btn btn-outline" onclick="closeCourseModal()">Cancel</button>
+          <button type="submit" class="btn btn-navy" id="courseSubmitBtn">Save Course</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JS SCRIPTS & COMPONENTS -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-admin-sidebar.js"></script>
+  <script src="components/unilesa-admin-header.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <script>
+    let activeLevelFilter = 'all';
+    let activeTermFilter = 'all';
+    let activeCategoryFilter = 'all';
+    let activeSearchQuery = '';
+    let currentViewMode = 'grid'; // 'grid' or 'table'
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlLevel = urlParams.get('level');
+      if (urlLevel) {
+        activeLevelFilter = urlLevel;
+        if (document.getElementById('levelFilterSelect')) document.getElementById('levelFilterSelect').value = urlLevel;
+        if (document.getElementById('levelSelectedText')) document.getElementById('levelSelectedText').textContent = urlLevel;
+        document.querySelectorAll('#levelDropdownMenu .custom-dropdown-item').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-value') === urlLevel);
+        });
+      }
+
+      // Close dropdowns on outside click
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.custom-dropdown-wrap')) {
+          document.querySelectorAll('.custom-dropdown-wrap.open').forEach(el => {
+            el.classList.remove('open');
+            const trig = el.querySelector('.custom-dropdown-trigger');
+            if (trig) trig.setAttribute('aria-expanded', 'false');
+          });
+        }
+      });
+
+      renderCourseCatalog();
+    });
+
+    function toggleCustomDropdown(dropdownId) {
+      const wrap = document.getElementById(dropdownId);
+      if (!wrap) return;
+      const isOpen = wrap.classList.contains('open');
+      document.querySelectorAll('.custom-dropdown-wrap.open').forEach(el => {
+        if (el.id !== dropdownId) {
+          el.classList.remove('open');
+          const trig = el.querySelector('.custom-dropdown-trigger');
+          if (trig) trig.setAttribute('aria-expanded', 'false');
+        }
+      });
+      if (isOpen) {
+        wrap.classList.remove('open');
+        const trig = wrap.querySelector('.custom-dropdown-trigger');
+        if (trig) trig.setAttribute('aria-expanded', 'false');
+      } else {
+        wrap.classList.add('open');
+        const trig = wrap.querySelector('.custom-dropdown-trigger');
+        if (trig) trig.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    function selectCustomOption(type, value, displayLabel, btnEl) {
+      const menu = btnEl.closest('.custom-dropdown-menu');
+      if (menu) {
+        menu.querySelectorAll('.custom-dropdown-item').forEach(b => b.classList.remove('active'));
+        btnEl.classList.add('active');
+      }
+
+      if (type === 'level') {
+        activeLevelFilter = value;
+        if (document.getElementById('levelSelectedText')) document.getElementById('levelSelectedText').textContent = displayLabel;
+        if (document.getElementById('levelFilterSelect')) document.getElementById('levelFilterSelect').value = value;
+      } else if (type === 'term') {
+        activeTermFilter = value;
+        if (document.getElementById('termSelectedText')) document.getElementById('termSelectedText').textContent = displayLabel;
+        if (document.getElementById('termFilterSelect')) document.getElementById('termFilterSelect').value = value;
+      } else if (type === 'category') {
+        activeCategoryFilter = value;
+        if (document.getElementById('categorySelectedText')) document.getElementById('categorySelectedText').textContent = displayLabel;
+        if (document.getElementById('categoryFilterSelect')) document.getElementById('categoryFilterSelect').value = value;
+      }
+
+      const wrap = btnEl.closest('.custom-dropdown-wrap');
+      if (wrap) {
+        wrap.classList.remove('open');
+        const trig = wrap.querySelector('.custom-dropdown-trigger');
+        if (trig) trig.setAttribute('aria-expanded', 'false');
+      }
+
+      renderCourseCatalog();
+    }
+
+    function switchViewMode(mode) {
+      currentViewMode = mode;
+      const btnGrid = document.getElementById('btnViewGrid');
+      const btnTable = document.getElementById('btnViewTable');
+      const gridContainer = document.getElementById('coursesGridContainer');
+      const tableContainer = document.getElementById('coursesTableContainer');
+
+      if (mode === 'grid') {
+        btnGrid.classList.add('active');
+        btnTable.classList.remove('active');
+        gridContainer.style.display = 'grid';
+        tableContainer.style.display = 'none';
+      } else {
+        btnGrid.classList.remove('active');
+        btnTable.classList.add('active');
+        gridContainer.style.display = 'none';
+        tableContainer.style.display = 'block';
+      }
+    }
+
+    function getLevelKey(course) {
+      if (course.level) return course.level;
+      const m = (course.code || '').match(/\b([1-5])\d{2}\b/);
+      return m ? `${m[1]}00 Level` : '100 Level';
+    }
+
+    function getLevelClass(levelStr) {
+      const clean = String(levelStr).replace(/\s+/g, '').toLowerCase();
+      if (clean.includes('100')) return 'lvl-100';
+      if (clean.includes('200')) return 'lvl-200';
+      if (clean.includes('300')) return 'lvl-300';
+      if (clean.includes('400')) return 'lvl-400';
+      if (clean.includes('500')) return 'lvl-500';
+      return 'lvl-100';
+    }
+
+    function getLevelBadgeHtml(levelStr) {
+      const clean = String(levelStr).replace(/\s+/g, '').toLowerCase();
+      if (clean.includes('100')) return `<span class="level-badge level-100">100L</span>`;
+      if (clean.includes('200')) return `<span class="level-badge level-200">200L</span>`;
+      if (clean.includes('300')) return `<span class="level-badge level-300">300L</span>`;
+      if (clean.includes('400')) return `<span class="level-badge level-400">400L</span>`;
+      if (clean.includes('500')) return `<span class="level-badge level-500">500L</span>`;
+      return `<span class="level-badge" style="background:#F1F5F9; color:#475569;">${levelStr || '100L'}</span>`;
+    }
+
+    function autoDetectLevelFromCode(code) {
+      if (!code) return;
+      const m = code.match(/\b([1-5])\d{2}\b/);
+      if (m) {
+        const detectedLevel = `${m[1]}00 Level`;
+        const select = document.getElementById('courseLevelSelect');
+        if (select) select.value = detectedLevel;
+      }
+    }
+
+    function handleLevelChange(val) {
+      activeLevelFilter = val;
+      renderCourseCatalog();
+    }
+
+    function handleTermChange(val) {
+      activeTermFilter = val;
+      renderCourseCatalog();
+    }
+
+    function handleCategoryChange(val) {
+      activeCategoryFilter = val;
+      renderCourseCatalog();
+    }
+
+    function handleSearchChange(val) {
+      activeSearchQuery = val.trim();
+      renderCourseCatalog();
+    }
+
+    function resetFilters() {
+      activeLevelFilter = 'all';
+      activeTermFilter = 'all';
+      activeCategoryFilter = 'all';
+      activeSearchQuery = '';
+
+      if (document.getElementById('levelSelectedText')) document.getElementById('levelSelectedText').textContent = 'All Levels';
+      if (document.getElementById('termSelectedText')) document.getElementById('termSelectedText').textContent = 'All Semesters';
+      if (document.getElementById('categorySelectedText')) document.getElementById('categorySelectedText').textContent = 'All Types';
+
+      document.querySelectorAll('#levelDropdownMenu .custom-dropdown-item').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-value') === 'all');
+      });
+      document.querySelectorAll('#termDropdownMenu .custom-dropdown-item').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-value') === 'all');
+      });
+      document.querySelectorAll('#categoryDropdownMenu .custom-dropdown-item').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-value') === 'all');
+      });
+
+      if (document.getElementById('levelFilterSelect')) document.getElementById('levelFilterSelect').value = 'all';
+      if (document.getElementById('termFilterSelect')) document.getElementById('termFilterSelect').value = 'all';
+      if (document.getElementById('categoryFilterSelect')) document.getElementById('categoryFilterSelect').value = 'all';
+      if (document.getElementById('courseSearchInput')) document.getElementById('courseSearchInput').value = '';
+
+      renderCourseCatalog();
+      if (window.UniToast) {
+        UniToast.show('Filters Reset', 'Displaying full accredited course catalog.', 'info');
+      }
+    }
+
+    function renderCourseCatalog() {
+      if (!window.UniStore) return;
+
+      const firstTermAll = window.UniStore.getCourseCatalog('First Semester') || [];
+      const secondTermAll = window.UniStore.getCourseCatalog('Second Semester') || [];
+
+      // Combine all courses
+      const allCombined = [
+        ...firstTermAll.map(c => ({ ...c, termName: 'First Semester', level: getLevelKey(c) })),
+        ...secondTermAll.map(c => ({ ...c, termName: 'Second Semester', level: getLevelKey(c) }))
+      ];
+
+      // Filter by Level
+      let filtered = allCombined;
+      if (activeLevelFilter && activeLevelFilter !== 'all') {
+        const cleanLvl = activeLevelFilter.replace(/\s+/g, '').toLowerCase();
+        filtered = filtered.filter(c => (c.level || '').replace(/\s+/g, '').toLowerCase().includes(cleanLvl));
+      }
+
+      // Filter by Semester
+      if (activeTermFilter === 'First Semester') {
+        filtered = filtered.filter(c => c.termName === 'First Semester');
+      } else if (activeTermFilter === 'Second Semester') {
+        filtered = filtered.filter(c => c.termName === 'Second Semester');
+      }
+
+      // Filter by Category / Type
+      if (activeCategoryFilter === 'compulsory') {
+        filtered = filtered.filter(c => c.compulsory === true || c.type === 'Core');
+      } else if (activeCategoryFilter === 'elective') {
+        filtered = filtered.filter(c => c.type === 'Elective' || c.category === 'elective' || c.compulsory === false);
+      } else if (activeCategoryFilter === 'GST') {
+        filtered = filtered.filter(c => c.type === 'GST' || c.category === 'university' || (c.code && c.code.startsWith('GST')));
+      }
+
+      // Filter by Search Query
+      if (activeSearchQuery) {
+        const q = activeSearchQuery.toLowerCase();
+        filtered = filtered.filter(c => 
+          (c.code && c.code.toLowerCase().includes(q)) || 
+          (c.title && c.title.toLowerCase().includes(q)) || 
+          (c.lecturer && c.lecturer.toLowerCase().includes(q)) ||
+          (c.level && c.level.toLowerCase().includes(q)) ||
+          (c.prerequisite && c.prerequisite.toLowerCase().includes(q))
+        );
+      }
+
+      // Calculate dynamic KPIs for active filtered selection
+      const filteredFirstTerm = filtered.filter(c => c.termName === 'First Semester');
+      const filteredSecondTerm = filtered.filter(c => c.termName === 'Second Semester');
+      const firstUnits = filteredFirstTerm.reduce((sum, c) => sum + (c.units || 0), 0);
+      const secondUnits = filteredSecondTerm.reduce((sum, c) => sum + (c.units || 0), 0);
+      const uniqueLecturers = new Set(filtered.map(c => c.lecturer).filter(Boolean));
+
+      document.getElementById('kpiCourseCount').textContent = `${filtered.length} Courses`;
+      document.getElementById('kpiFirstTermUnits').textContent = `${firstUnits} Units`;
+      document.getElementById('kpiSecondTermUnits').textContent = `${secondUnits} Units`;
+      document.getElementById('kpiLecturerCount').textContent = `${uniqueLecturers.size} Lecturers`;
+      
+      const levelLabel = activeLevelFilter === 'all' ? 'All Levels' : activeLevelFilter;
+      document.getElementById('kpiLevelTag').textContent = levelLabel;
+      document.getElementById('kpiCourseSub').textContent = activeLevelFilter === 'all' 
+        ? '● Senate Approved 2025/2026' 
+        : `● Filtered for ${activeLevelFilter} Curriculum`;
+
+      // 1. Render Grid Cards View
+      renderGridCards(filtered);
+
+      // 2. Render Clean Table View
+      renderCleanTable(filtered);
+    }
+
+    function renderGridCards(courses) {
+      const gridContainer = document.getElementById('coursesGridContainer');
+      if (!gridContainer) return;
+
+      if (courses.length === 0) {
+        gridContainer.innerHTML = `
+          <div style="grid-column:1/-1; background:#fff; border-radius:16px; border:1px solid #E2E8F0; padding:3.5rem 1.5rem; text-align:center; box-shadow:0 4px 15px rgba(15,23,42,0.02);">
+            <div style="font-size:2.5rem; margin-bottom:0.6rem;">📚</div>
+            <div style="font-weight:800; font-size:1.1rem; color:var(--navy-950);">No Courses Found</div>
+            <div style="font-size:0.82rem; color:#64748B; margin:0.35rem 0 1rem;">No accredited courses matched your active filter selections.</div>
+            <button type="button" class="btn btn-outline btn-sm" onclick="resetFilters()">Reset Filter Selections</button>
+          </div>
+        `;
+        return;
+      }
+
+      gridContainer.innerHTML = courses.map(c => {
+        const levelBadge = getLevelBadgeHtml(c.level);
+        const lvlClass = getLevelClass(c.level);
+
+        const categoryPill = (c.type === 'GST' || (c.code && c.code.startsWith('GST')))
+          ? `<span style="font-size:0.68rem; font-weight:800; background:#F5F3FF; color:#7C3AED; border:1px solid #DDD6FE; padding:0.18rem 0.5rem; border-radius:6px;">GST</span>`
+          : (c.compulsory || c.type === 'Core')
+            ? `<span style="font-size:0.68rem; font-weight:800; background:#EFF6FF; color:#1D4ED8; border:1px solid #BFDBFE; padding:0.18rem 0.5rem; border-radius:6px;">CORE</span>`
+            : `<span style="font-size:0.68rem; font-weight:800; background:#FEF3C7; color:#B45309; border:1px solid #FDE68A; padding:0.18rem 0.5rem; border-radius:6px;">ELECTIVE</span>`;
+
+        const termPill = c.termName === 'First Semester'
+          ? `<span style="font-size:0.7rem; font-weight:700; color:#1D4ED8; background:#EFF6FF; padding:0.18rem 0.5rem; border-radius:6px;">Harmattan</span>`
+          : `<span style="font-size:0.7rem; font-weight:700; color:#B45309; background:#FEF3C7; padding:0.18rem 0.5rem; border-radius:6px;">Rain</span>`;
+
+        const lecturerInitials = (c.lecturer || 'ST').split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase();
+
+        return `
+          <div class="course-card-box ${lvlClass}">
+            <div>
+              <!-- Header Strip -->
+              <div class="card-top-header">
+                <span class="course-code-pill">${c.code}</span>
+                <div class="card-badges-strip">
+                  ${levelBadge}
+                  <span style="font-size:0.75rem; font-weight:800; color:var(--navy-950); background:#F8FAFC; border:1px solid #E2E8F0; padding:0.2rem 0.55rem; border-radius:6px;">
+                    ${c.units} ${c.units === 1 ? 'Unit' : 'Units'}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Title -->
+              <h3 class="course-title-main">${c.title}</h3>
+
+              <!-- Metadata Tags Strip -->
+              <div class="course-meta-tags">
+                ${categoryPill}
+                ${termPill}
+                ${c.prerequisite && c.prerequisite !== 'None' ? `<span class="meta-pill" style="color:#B45309; border-color:#FDE68A;">🔗 Prereq: ${c.prerequisite}</span>` : ''}
+                ${c.venue ? `<span class="meta-pill">📍 ${c.venue}</span>` : ''}
+              </div>
+
+              ${c.description ? `<p style="font-size:0.76rem; color:#64748B; margin:0.6rem 0 0; line-height:1.45; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${c.description}</p>` : ''}
+            </div>
+
+            <!-- Footer Strip: Lecturer + Actions -->
+            <div class="card-footer-strip">
+              <div class="instructor-box" title="${c.lecturer || 'Staff Instructor'}">
+                <div class="instructor-avatar">${lecturerInitials}</div>
+                <div class="instructor-name">${c.lecturer || 'Staff Instructor'}</div>
+              </div>
+
+              <div style="display:inline-flex; gap:0.35rem;">
+                <button type="button" class="btn btn-outline btn-sm" style="font-size:0.74rem; padding:0.3rem 0.65rem;" onclick="openEditCourseModal('${(c.id || c.code || '').replace(/'/g, "\\'")}', '${(c.termName || 'First Semester').replace(/'/g, "\\'")}')">
+                  Edit
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" style="font-size:0.74rem; padding:0.3rem 0.65rem; color:#EF4444; border-color:#FECACA;" onclick="deleteCourse('${(c.id || c.code || '').replace(/'/g, "\\'")}', '${(c.termName || 'First Semester').replace(/'/g, "\\'")}', '${(c.code || '').replace(/'/g, "\\'")}')">
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderCleanTable(courses) {
+      const tbody = document.getElementById('cleanCourseTbody');
+      if (!tbody) return;
+
+      if (courses.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:3rem; color:#64748B;">No courses found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = courses.map(c => {
+        const levelBadge = getLevelBadgeHtml(c.level);
+        const categoryBadge = (c.type === 'GST' || (c.code && c.code.startsWith('GST')))
+          ? '<span style="font-size:0.68rem; font-weight:800; background:#F5F3FF; color:#7C3AED; border:1px solid #DDD6FE; padding:0.18rem 0.5rem; border-radius:6px;">GST</span>'
+          : (c.compulsory || c.type === 'Core')
+            ? '<span style="font-size:0.68rem; font-weight:800; background:#EFF6FF; color:#1D4ED8; border:1px solid #BFDBFE; padding:0.18rem 0.5rem; border-radius:6px;">CORE</span>'
+            : '<span style="font-size:0.68rem; font-weight:800; background:#FEF3C7; color:#B45309; border:1px solid #FDE68A; padding:0.18rem 0.5rem; border-radius:6px;">ELECTIVE</span>';
+
+        return `
+          <tr>
+            <td style="font-family:'Fira Code', monospace; font-weight:800; color:var(--navy-950); white-space:nowrap;">
+              ${c.code}
+            </td>
+            <td style="text-align:center; white-space:nowrap;">
+              ${levelBadge}
+            </td>
+            <td>
+              <div style="font-weight:700; color:#1E293B;">${c.title}</div>
+              ${c.prerequisite && c.prerequisite !== 'None' ? `<div style="font-size:0.7rem; color:#B45309; margin-top:0.1rem;">Prerequisite: ${c.prerequisite}</div>` : ''}
+            </td>
+            <td style="text-align:center; font-weight:800; color:var(--navy-950); white-space:nowrap;">
+              ${c.units}
+            </td>
+            <td style="font-size:0.78rem; font-weight:600; color:#334155; white-space:nowrap;">
+              ${c.termName === 'First Semester' ? 'First Semester (Harmattan)' : 'Second Semester (Rain)'}
+            </td>
+            <td style="white-space:nowrap;">
+              ${categoryBadge}
+            </td>
+            <td style="white-space:nowrap; font-weight:600; color:#1E293B;">
+              ${c.lecturer || 'Staff Instructor'}
+            </td>
+            <td style="text-align:right; white-space:nowrap;">
+              <div style="display:inline-flex; gap:0.35rem;">
+                <button type="button" class="btn btn-outline btn-sm" style="font-size:0.72rem; padding:0.25rem 0.55rem;" onclick="openEditCourseModal('${(c.id || c.code || '').replace(/'/g, "\\'")}', '${(c.termName || 'First Semester').replace(/'/g, "\\'")}')">
+                  Edit
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" style="font-size:0.72rem; padding:0.25rem 0.55rem; color:#EF4444; border-color:#FECACA;" onclick="deleteCourse('${(c.id || c.code || '').replace(/'/g, "\\'")}', '${(c.termName || 'First Semester').replace(/'/g, "\\'")}', '${(c.code || '').replace(/'/g, "\\'")}')">
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openAddCourseModal() {
+      document.getElementById('courseModalTitle').textContent = 'Add New Course to Master Catalog';
+      document.getElementById('courseEditId').value = '';
+      document.getElementById('courseEditTerm').value = activeTermFilter !== 'all' ? activeTermFilter : 'First Semester';
+      document.getElementById('courseCodeInput').value = '';
+      document.getElementById('courseLevelSelect').value = activeLevelFilter !== 'all' ? activeLevelFilter : '100 Level';
+      document.getElementById('courseTitleInput').value = '';
+      document.getElementById('courseUnitsInput').value = '3';
+      document.getElementById('courseTermSelect').value = activeTermFilter !== 'all' ? activeTermFilter : 'First Semester';
+      document.getElementById('courseCategorySelect').value = 'Core';
+      document.getElementById('courseLecturerInput').value = '';
+      document.getElementById('coursePrereqInput').value = '';
+      document.getElementById('courseVenueInput').value = '';
+      document.getElementById('courseScheduleInput').value = '';
+      document.getElementById('courseDescInput').value = '';
+      document.getElementById('courseTermSelect').disabled = false;
+      document.getElementById('courseSubmitBtn').textContent = 'Save Course to Catalog';
+      
+      openModal('courseModal');
+    }
+
+    function openEditCourseModal(courseId, term) {
+      let targetTerm = term || 'First Semester';
+      let course = null;
+
+      if (window.UniStore) {
+        // 1. Search in the target semester catalog
+        const catalog = window.UniStore.getCourseCatalog(targetTerm) || [];
+        course = catalog.find(c => 
+          String(c.id) === String(courseId) || 
+          String(c.code).toLowerCase() === String(courseId).toLowerCase() ||
+          String(c.code).replace(/\s+/g,'').toLowerCase() === String(courseId).replace(/\s+/g,'').toLowerCase()
+        );
+
+        // 2. If not found, try the alternate semester
+        if (!course) {
+          const altTerm = targetTerm === 'First Semester' ? 'Second Semester' : 'First Semester';
+          const altCatalog = window.UniStore.getCourseCatalog(altTerm) || [];
+          course = altCatalog.find(c => 
+            String(c.id) === String(courseId) || 
+            String(c.code).toLowerCase() === String(courseId).toLowerCase() ||
+            String(c.code).replace(/\s+/g,'').toLowerCase() === String(courseId).replace(/\s+/g,'').toLowerCase()
+          );
+          if (course) {
+            targetTerm = altTerm;
+          }
+        }
+      }
+
+      if (!course) {
+        if (typeof showToast === 'function') {
+          showToast('Course Not Found', `Unable to find course details for "${courseId}".`, 'error');
+        } else {
+          alert(`Course details not found for ID: ${courseId}`);
+        }
+        return;
+      }
+
+      document.getElementById('courseModalTitle').textContent = `Edit Course: ${course.code}`;
+      document.getElementById('courseEditId').value = course.id || course.code;
+      document.getElementById('courseEditTerm').value = targetTerm;
+      document.getElementById('courseCodeInput').value = course.code || '';
+      document.getElementById('courseLevelSelect').value = course.level || getLevelKey(course);
+      document.getElementById('courseTitleInput').value = course.title || '';
+      document.getElementById('courseUnitsInput').value = String(course.units || 3);
+      document.getElementById('courseCategorySelect').value = (course.type === 'GST' || (course.code && course.code.startsWith('GST'))) 
+        ? 'GST' 
+        : (course.compulsory || course.type === 'Core' ? 'Core' : 'Elective');
+      document.getElementById('courseLecturerInput').value = course.lecturer || '';
+      document.getElementById('coursePrereqInput').value = (course.prerequisite && course.prerequisite !== 'None') ? course.prerequisite : '';
+      document.getElementById('courseVenueInput').value = course.venue || '';
+      document.getElementById('courseScheduleInput').value = course.schedule || '';
+      document.getElementById('courseDescInput').value = course.description || '';
+      document.getElementById('courseTermSelect').value = targetTerm;
+      document.getElementById('courseTermSelect').disabled = true;
+      document.getElementById('courseSubmitBtn').textContent = 'Update Course Record';
+
+      openModal('courseModal');
+    }
+
+    function closeCourseModal() {
+      closeModal('courseModal');
+    }
+
+    function handleCourseFormSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('courseEditId').value;
+      const editTerm = document.getElementById('courseEditTerm').value;
+      const selectedTerm = document.getElementById('courseTermSelect').value;
+      const term = editTerm || selectedTerm || 'First Semester';
+      const code = document.getElementById('courseCodeInput').value.trim();
+      const level = document.getElementById('courseLevelSelect').value;
+      const title = document.getElementById('courseTitleInput').value.trim();
+      const units = parseInt(document.getElementById('courseUnitsInput').value, 10) || 3;
+      const categoryVal = document.getElementById('courseCategorySelect').value;
+      const lecturer = document.getElementById('courseLecturerInput').value.trim() || 'Staff Instructor';
+      const prerequisite = document.getElementById('coursePrereqInput').value.trim() || 'None';
+      const venue = document.getElementById('courseVenueInput').value.trim() || 'Lecture Theatre';
+      const schedule = document.getElementById('courseScheduleInput').value.trim() || 'TBA';
+      const description = document.getElementById('courseDescInput').value.trim() || 'Academic course offering under UNILESA curriculum.';
+
+      if (!code || !title || !units) {
+        if (typeof showToast === 'function') {
+          showToast('Validation Error', 'Please complete all required fields (Code, Title, Units).', 'error');
+        } else {
+          alert('Please complete all required fields.');
+        }
+        return;
+      }
+
+      const isCore = categoryVal === 'Core';
+      const isGST = categoryVal === 'GST';
+
+      const payload = {
+        code,
+        level,
+        title,
+        units,
+        type: isGST ? 'GST' : (isCore ? 'Core' : 'Elective'),
+        category: isGST ? 'university' : (isCore ? 'departmental' : 'elective'),
+        compulsory: isCore || isGST,
+        lecturer,
+        prerequisite,
+        venue,
+        schedule,
+        description
+      };
+
+      if (id) {
+        // Update Course
+        if (window.UniStore && window.UniStore.updateCourseInCatalog) {
+          window.UniStore.updateCourseInCatalog({ id, ...payload }, term);
+        }
+        if (typeof showToast === 'function') {
+          showToast('Course Updated', `Successfully updated ${code} (${level}) in ${term} catalog.`, 'success');
+        }
+      } else {
+        // Add New Course
+        if (window.UniStore && window.UniStore.addCourseToCatalog) {
+          window.UniStore.addCourseToCatalog(payload, term);
+        }
+        if (typeof showToast === 'function') {
+          showToast('Course Created', `Successfully added ${code} (${level}) to ${term} catalog.`, 'success');
+        }
+      }
+
+      closeCourseModal();
+      renderCourseCatalog();
+    }
+
+    function deleteCourse(id, term, code) {
+      if (confirm(`Are you sure you want to remove course ${code} from the ${term} master catalog?`)) {
+        if (window.UniStore && window.UniStore.deleteCourseFromCatalog) {
+          window.UniStore.deleteCourseFromCatalog(id, term);
+        }
+        if (typeof showToast === 'function') {
+          showToast('Course Removed', `Successfully deleted ${code} from ${term}.`, 'info');
+        }
+        renderCourseCatalog();
+      }
+    }
+
+    function exportCatalogCSV() {
+      const firstTerm = window.UniStore.getCourseCatalog('First Semester') || [];
+      const secondTerm = window.UniStore.getCourseCatalog('Second Semester') || [];
+      const all = [
+        ...firstTerm.map(c => ({ ...c, term: 'First Semester' })),
+        ...secondTerm.map(c => ({ ...c, term: 'Second Semester' }))
+      ];
+
+      let filtered = all;
+      if (activeLevelFilter !== 'all') {
+        const cleanLvl = activeLevelFilter.replace(/\s+/g, '').toLowerCase();
+        filtered = filtered.filter(c => (c.level || getLevelKey(c)).replace(/\s+/g, '').toLowerCase().includes(cleanLvl));
+      }
+
+      let csvContent = 'data:text/csv;charset=utf-8,';
+      csvContent += 'Course Code,Level,Course Title,Credit Units,Semester,Category,Lecturer,Prerequisite,Venue\n';
+
+      filtered.forEach(c => {
+        const row = [
+          `"${c.code}"`,
+          `"${c.level || getLevelKey(c)}"`,
+          `"${c.title.replace(/"/g, '""')}"`,
+          `"${c.units}"`,
+          `"${c.term}"`,
+          `"${c.compulsory ? 'Compulsory' : 'Elective'}"`,
+          `"${(c.lecturer || 'Staff').replace(/"/g, '""')}"`,
+          `"${(c.prerequisite || 'None').replace(/"/g, '""')}"`,
+          `"${(c.venue || 'TBA').replace(/"/g, '""')}"`
+        ];
+        csvContent += row.join(',') + '\n';
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `UNI_LESA_Course_Catalog_${activeLevelFilter.replace(/\s+/g, '_')}_2025_2026.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      if (typeof showToast === 'function') {
+        showToast('Catalog Exported', `Downloaded ${filtered.length} courses as CSV.`, 'success');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Academic Calendar, Session &amp; Portal Gates — Directorate of ICT (UNILESA)</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    .gates-hero {
+      background: linear-gradient(135deg, #050E21 0%, #0F1F42 55%, #162E62 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 12px 30px -5px rgba(15, 31, 66, 0.25);
+      border: 1px solid rgba(205, 164, 52, 0.35);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .gates-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(205,164,52,0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .kpi-card {
+      background: var(--white);
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.25rem 1.35rem;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+    }
+    .section-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      border: 1px solid #E2E8F0;
+      padding: 1.6rem 1.8rem;
+      margin-bottom: 1.6rem;
+      box-shadow: 0 8px 25px -5px rgba(15, 23, 42, 0.04);
+      position: relative;
+    }
+    .section-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0F1F42 0%, #CDA434 50%, #0F1F42 100%);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+    .gates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .gate-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      border: 1.5px solid #E2E8F0;
+      padding: 1.4rem;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .gate-card:hover {
+      border-color: #CBD5E1;
+      box-shadow: 0 8px 25px rgba(15, 31, 66, 0.07);
+    }
+    .gate-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.85rem;
+    }
+    .gate-icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .gate-icon-wrap.navy { background: #EFF6FF; color: #1D4ED8; }
+    .gate-icon-wrap.emerald { background: #ECFDF5; color: #059669; }
+    .gate-icon-wrap.gold { background: #FEF3C7; color: #B45309; }
+    .gate-icon-wrap.purple { background: #F5F3FF; color: #7C3AED; }
+    .gate-icon-wrap.rose { background: #FFE4E6; color: #E11D48; }
+
+    /* Switch toggle */
+    .gate-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+    .gate-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .gate-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #CBD5E1;
+      transition: .3s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 34px;
+    }
+    .gate-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    input:checked + .gate-slider {
+      background-color: #10B981;
+    }
+    input:checked + .gate-slider:before {
+      transform: translateX(22px);
+    }
+
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.1rem;
+    }
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.1rem;
+    }
+    /* Modal Backdrop & Box Overrides */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 14, 33, 0.72);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+    .modal-backdrop.show {
+      display: flex !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    .modal-box {
+      background: #FFFFFF;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+      overflow: hidden;
+      border: 1px solid #E2E8F0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (max-width: 900px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .gates-grid { grid-template-columns: 1fr; }
+      .form-grid-3 { grid-template-columns: 1fr; }
+      .form-grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="ict"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- ENTERPRISE ADMIN SIDEBAR COMPONENT -->
+    <unilesa-admin-sidebar active="gates"></unilesa-admin-sidebar>
+
+    <!-- MAIN PAGE WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- ENTERPRISE ADMIN TOP HEADER COMPONENT -->
+      <unilesa-admin-header title="Academic Calendar &amp; Portal Gates" subtitle="Directorate of ICT &bull; Session Lifecycle, Semester Phases &amp; Gateway Controls"></unilesa-admin-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+
+        <!-- 1. Command Hero -->
+        <div class="gates-hero">
+          <div>
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+              <span class="badge badge-gold" id="heroSessionBadge" style="font-size:0.7rem; font-weight:800;">2025/2026 Academic Session</span>
+              <span class="badge" id="heroTermBadge" style="background:rgba(255,255,255,0.15); color:#fff; font-size:0.7rem;">First Semester (Harmattan)</span>
+              <span class="badge" style="background:rgba(74,222,128,0.2); color:#4ADE80; border:1px solid rgba(74,222,128,0.4); font-size:0.7rem;">
+                ● DIRECTIVE ACTIVE
+              </span>
+            </div>
+            <h1 style="font-family:'Playfair Display', serif; font-size:1.6rem; color:#fff; margin:0 0 0.35rem;">
+              Academic Session, Calendar &amp; Portal Windows
+            </h1>
+            <p style="font-size:0.82rem; color:rgba(255,255,255,0.85); margin:0; max-width:640px; line-height:1.45;">
+              Configure active university academic sessions, semester phases (Harmattan/Rain), student sections/cohorts, registration deadlines, and portal access restrictions.
+            </p>
+          </div>
+          <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
+            <button type="button" class="btn btn-gold" onclick="saveAllDirectives()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Publish All Directives</span>
+            </button>
+            <button type="button" class="btn btn-outline" style="border-color:rgba(239,68,68,0.5); color:#FCA5A5;" onclick="triggerEmergencyLockdown()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              <span>Emergency Lockdown</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. KPI Metrics -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div style="font-size:0.72rem; color:#64748B; font-weight:700; text-transform:uppercase;">Active Session</div>
+            <div style="font-size:1.4rem; font-weight:800; color:var(--navy-950); margin:0.3rem 0;" id="kpiSessionText">2025/2026</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:600;" id="kpiTermText">First Semester &bull; Undergraduate Regular</div>
+          </div>
+          <div class="kpi-card">
+            <div style="font-size:0.72rem; color:#64748B; font-weight:700; text-transform:uppercase;">Registration Window</div>
+            <div style="font-size:1.4rem; font-weight:800; color:#1D4ED8; margin:0.3rem 0;" id="kpiRegStatus">OPEN</div>
+            <div style="font-size:0.72rem; color:#64748B; font-weight:600;" id="kpiRegDeadline">Closes: 15 Nov 2026</div>
+          </div>
+          <div class="kpi-card">
+            <div style="font-size:0.72rem; color:#64748B; font-weight:700; text-transform:uppercase;">Bursary Clearance Gate</div>
+            <div style="font-size:1.4rem; font-weight:800; color:#B45309; margin:0.3rem 0;">60% Threshold</div>
+            <div style="font-size:0.72rem; color:#64748B; font-weight:600;">Enforced for Examination Dockets</div>
+          </div>
+          <div class="kpi-card">
+            <div style="font-size:0.72rem; color:#64748B; font-weight:700; text-transform:uppercase;">Active Gateways</div>
+            <div style="font-size:1.4rem; font-weight:800; color:#059669; margin:0.3rem 0;" id="kpiActiveGatesCount">4 / 5 Open</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:600;">● Normal Operation</div>
+          </div>
+        </div>
+
+        <!-- 3. Academic Calendar & Session Configuration Console -->
+        <div class="section-card">
+          <div style="border-bottom:1px solid #E2E8F0; padding-bottom:0.75rem; margin-bottom:1.2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+            <div>
+              <h2 style="font-family:'Playfair Display', serif; font-size:1.2rem; color:var(--navy-950); margin:0 0 0.2rem;">
+                Academic Session, Semester &amp; Cohort Settings
+              </h2>
+              <p style="margin:0; font-size:0.75rem; color:#64748B;">
+                Controls global session headers, semester progression, and course catalogs across all portals.
+              </p>
+            </div>
+            <span class="badge badge-navy" style="font-size:0.65rem; font-weight:800;">GLOBAL DIRECTIVE</span>
+          </div>
+
+          <form id="sessionConfigForm" onsubmit="event.preventDefault(); saveAllDirectives();">
+            <div class="form-grid-3" style="margin-bottom:1rem;">
+              
+              <!-- Session Dropdown -->
+              <div>
+                <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.3rem; display:block;">Active Academic Session *</label>
+                <select id="cfgSessionSelect" style="width:100%; height:40px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.85rem; font-size:0.84rem; font-weight:700;">
+                  <option value="2025/2026 Academic Session" selected>2025/2026 Academic Session</option>
+                  <option value="2026/2027 Academic Session">2026/2027 Academic Session</option>
+                  <option value="2027/2028 Academic Session">2027/2028 Academic Session</option>
+                  <option value="2024/2025 Academic Session (Archived)">2024/2025 Academic Session (Archived)</option>
+                </select>
+              </div>
+
+              <!-- Semester -->
+              <div>
+                <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.3rem; display:block;">Present Academic Semester *</label>
+                <select id="cfgTermSelect" style="width:100%; height:40px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.85rem; font-size:0.84rem; font-weight:700;">
+                  <option value="First Semester" selected>First Semester (Harmattan)</option>
+                  <option value="Second Semester">Second Semester (Rain)</option>
+                  <option value="Summer / Special Semester">Summer / Special Supplementary Semester</option>
+                </select>
+              </div>
+
+              <!-- Academic Section / Cohort -->
+              <div>
+                <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.3rem; display:block;">Active Section / Student Cohort *</label>
+                <select id="cfgSectionSelect" style="width:100%; height:40px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.85rem; font-size:0.84rem; font-weight:700;">
+                  <option value="Undergraduate Regular" selected>Undergraduate Regular (Full-Time)</option>
+                  <option value="Direct Entry (200L)">Direct Entry (200 Level Enrollees)</option>
+                  <option value="Postgraduate College">Postgraduate College (PGD / M.Sc / Ph.D)</option>
+                  <option value="Part-Time / Sandwich">Sandwich / Part-Time Degree Programme</option>
+                </select>
+              </div>
+
+            </div>
+
+            <div class="form-grid-3" style="margin-bottom:1rem;">
+              
+              <!-- Semester Phase -->
+              <div>
+                <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.3rem; display:block;">Current Semester Lifecycle Phase *</label>
+                <select id="cfgPhaseSelect" style="width:100%; height:40px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.85rem; font-size:0.84rem;">
+                  <option value="Lectures & Registration Phase" selected>Lectures &amp; Course Enrollment Phase</option>
+                  <option value="Mid-Semester CA Assessments">Mid-Semester Continuous Assessment (CA) Phase</option>
+                  <option value="Semester Examination Period">Semester Examination Period</option>
+                  <option value="Senate Result Moderation">Senate Result Moderation &amp; Grading</option>
+                  <option value="Vacation & Break">Session Vacation &amp; Inter-Semester Break</option>
+                </select>
+              </div>
+
+              <!-- Semester Commencement Date -->
+              <div>
+                <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.3rem; display:block;">Semester Commencement Date *</label>
+                <input type="date" id="cfgStartDateInput" value="2026-09-15" style="width:100%; height:40px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.85rem; font-size:0.84rem;">
+              </div>
+
+              <!-- Senate Gazette Ref -->
+              <div>
+                <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.3rem; display:block;">Senate Approval Gazette Ref *</label>
+                <input type="text" id="cfgSenateRefInput" value="SEN/2025-2026/RES/001" style="width:100%; height:40px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.85rem; font-size:0.84rem; font-family:'Fira Code', monospace; font-weight:700;">
+              </div>
+
+            </div>
+          </form>
+        </div>
+
+        <!-- 4. Portal Access Control Windows & Gateways -->
+        <div style="margin-bottom:0.8rem; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h2 style="font-family:'Playfair Display', serif; font-size:1.25rem; color:var(--navy-950); margin:0 0 0.2rem;">
+              Portal Lifecycle Access Gateways
+            </h2>
+            <p style="margin:0; font-size:0.75rem; color:#64748B;">
+              Individually enable, schedule, or restrict student services.
+            </p>
+          </div>
+        </div>
+
+        <div class="gates-grid">
+          
+          <!-- Gate 1: Course Registration Window -->
+          <div class="gate-card">
+            <div>
+              <div class="gate-header">
+                <div style="display:flex; align-items:center; gap:0.85rem;">
+                  <div class="gate-icon-wrap navy">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                  </div>
+                  <div>
+                    <h3 style="margin:0; font-size:0.96rem; font-weight:800; color:var(--navy-950);">Course Registration Window</h3>
+                    <span style="font-size:0.7rem; color:#64748B;">100L–500L Online Enrollment</span>
+                  </div>
+                </div>
+                <label class="gate-switch" title="Toggle Course Registration Gate">
+                  <input type="checkbox" id="gateCourseReg" checked onchange="toggleGateFromCard('courseRegistration', this.checked)">
+                  <span class="gate-slider"></span>
+                </label>
+              </div>
+
+              <p style="font-size:0.78rem; color:#475569; line-height:1.45; margin:0 0 0.85rem;">
+                Allows students to select semester courses, calculate units, and submit Course Registration Forms (CRF) for HOD approval.
+              </p>
+
+              <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.85rem; font-size:0.75rem; display:flex; flex-direction:column; gap:0.4rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="color:#64748B;">Closing Deadline:</span>
+                  <input type="date" id="regDeadlineInput" value="2026-11-15" style="border:1px solid #CBD5E1; border-radius:6px; padding:0.2rem 0.4rem; font-size:0.75rem;">
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="color:#64748B;">Late Penalty Fee (₦):</span>
+                  <input type="number" id="regPenaltyInput" value="10000" style="width:90px; border:1px solid #CBD5E1; border-radius:6px; padding:0.2rem 0.4rem; font-size:0.75rem; font-weight:700;">
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="color:#64748B;">Credit Limit (Min/Max):</span>
+                  <span style="font-weight:700; color:#1E293B;">15 Min &bull; 24 Max Units</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:1.2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <span class="badge badge-emerald" id="badgeCourseReg">Active &bull; Open</span>
+              <div style="display:flex; gap:0.4rem;">
+                <button type="button" class="btn btn-outline btn-sm" style="font-weight:700; color:var(--navy-900);" onclick="openEditGateModal('courseRegistration')">⚙️ Edit Directive</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="simulateGateStudentView('courseRegistration')">Simulate View</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gate 2: Tuition & Fee Payment Gate -->
+          <div class="gate-card">
+            <div>
+              <div class="gate-header">
+                <div style="display:flex; align-items:center; gap:0.85rem;">
+                  <div class="gate-icon-wrap emerald">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                  </div>
+                  <div>
+                    <h3 style="margin:0; font-size:0.96rem; font-weight:800; color:var(--navy-950);">Tuition Payment Gateway</h3>
+                    <span style="font-size:0.7rem; color:#64748B;">Remita, Paystack &amp; Wallet Top-ups</span>
+                  </div>
+                </div>
+                <label class="gate-switch" title="Toggle Fee Payments Gate">
+                  <input type="checkbox" id="gatePayment" checked onchange="toggleGateFromCard('tuitionPayment', this.checked)">
+                  <span class="gate-slider"></span>
+                </label>
+              </div>
+
+              <p style="font-size:0.78rem; color:#475569; line-height:1.45; margin:0 0 0.85rem;">
+                Governs tuition fee invoices, split payment installments (60%/40%), departmental dues, and Bursary ledger reconciliation.
+              </p>
+
+              <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.85rem; font-size:0.75rem; display:flex; flex-direction:column; gap:0.4rem;">
+                <div style="display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">Processor Webhook:</span>
+                  <strong style="color:#059669;" id="paymentWebhookStatusText">Remita API 200 OK</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">Split Billing:</span>
+                  <strong style="color:#1D4ED8;">60/40 Split Enabled</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">Restricted Wallet:</span>
+                  <span style="font-weight:700; color:#059669;">Enforced For Fees</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:1.2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <span class="badge badge-emerald" id="badgePayment">Active &bull; Operational</span>
+              <div style="display:flex; gap:0.4rem;">
+                <button type="button" class="btn btn-outline btn-sm" style="font-weight:700; color:var(--navy-900);" onclick="openEditGateModal('tuitionPayment')">⚙️ Edit Directive</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="simulateGateStudentView('tuitionPayment')">Simulate View</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gate 3: Exam Docket & Barcode Sealing -->
+          <div class="gate-card">
+            <div>
+              <div class="gate-header">
+                <div style="display:flex; align-items:center; gap:0.85rem;">
+                  <div class="gate-icon-wrap gold">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  </div>
+                  <div>
+                    <h3 style="margin:0; font-size:0.96rem; font-weight:800; color:var(--navy-950);">Examination Docket Gate</h3>
+                    <span style="font-size:0.7rem; color:#64748B;">Barcode Hall Pass Issuance</span>
+                  </div>
+                </div>
+                <label class="gate-switch" title="Toggle Exam Docket Gate">
+                  <input type="checkbox" id="gateExamDocket" checked onchange="toggleGateFromCard('examDocket', this.checked)">
+                  <span class="gate-slider"></span>
+                </label>
+              </div>
+
+              <p style="font-size:0.78rem; color:#475569; line-height:1.45; margin:0 0 0.85rem;">
+                Enforces the mandatory Bursary clearance threshold before students can generate and print their official examination hall pass.
+              </p>
+
+              <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.85rem; font-size:0.75rem; display:flex; flex-direction:column; gap:0.4rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="color:#64748B;">Clearance Threshold:</span>
+                  <select id="cfgClearanceThreshold" style="border:1px solid #CBD5E1; border-radius:6px; padding:0.15rem 0.4rem; font-size:0.75rem; font-weight:700;" onchange="saveAllDirectives()">
+                    <option value="60" selected>60% Settled</option>
+                    <option value="100">100% Full Payment</option>
+                    <option value="40">40% Special Grace</option>
+                    <option value="0">0% No Financial Check</option>
+                  </select>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">Biometric Security:</span>
+                  <strong style="color:#059669;">QR &amp; Barcode Embedded</strong>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:1.2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <span class="badge badge-emerald" id="badgeExamDocket">Active &bull; Cleared</span>
+              <div style="display:flex; gap:0.4rem;">
+                <button type="button" class="btn btn-outline btn-sm" style="font-weight:700; color:var(--navy-900);" onclick="openEditGateModal('examDocket')">⚙️ Edit Directive</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="simulateGateStudentView('examDocket')">Simulate View</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gate 4: Semester Results & Transcripts Gate -->
+          <div class="gate-card">
+            <div>
+              <div class="gate-header">
+                <div style="display:flex; align-items:center; gap:0.85rem;">
+                  <div class="gate-icon-wrap purple">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                  </div>
+                  <div>
+                    <h3 style="margin:0; font-size:0.96rem; font-weight:800; color:var(--navy-950);">Semester Results Publication Gate</h3>
+                    <span style="font-size:0.7rem; color:#64748B;">Senate Approval Verification</span>
+                  </div>
+                </div>
+                <label class="gate-switch" title="Toggle Results Gate">
+                  <input type="checkbox" id="gateResults" checked onchange="toggleGateFromCard('resultsChecking', this.checked)">
+                  <span class="gate-slider"></span>
+                </label>
+              </div>
+
+              <p style="font-size:0.78rem; color:#475569; line-height:1.45; margin:0 0 0.85rem;">
+                Grants or restricts student access to GPA scores, statement of results, and printable semester transcripts.
+              </p>
+
+              <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.85rem; font-size:0.75rem; display:flex; flex-direction:column; gap:0.4rem;">
+                <div style="display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">Senate Approval:</span>
+                  <strong style="color:#059669;" id="resultsSenateStatusText">Verified &bull; Unlocked</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">Transcript Sealing:</span>
+                  <strong style="color:#7C3AED;">256-bit Encrypted</strong>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:1.2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <span class="badge badge-emerald" id="badgeResults">Active &bull; Senate Approved</span>
+              <div style="display:flex; gap:0.4rem;">
+                <button type="button" class="btn btn-outline btn-sm" style="font-weight:700; color:var(--navy-900);" onclick="openEditGateModal('resultsChecking')">⚙️ Edit Directive</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="simulateGateStudentView('resultsChecking')">Simulate View</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gate 5: Hostel Accommodation Gate -->
+          <div class="gate-card">
+            <div>
+              <div class="gate-header">
+                <div style="display:flex; align-items:center; gap:0.85rem;">
+                  <div class="gate-icon-wrap rose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                  </div>
+                  <div>
+                    <h3 style="margin:0; font-size:0.96rem; font-weight:800; color:var(--navy-950);">Hostel Accommodation Gate</h3>
+                    <span style="font-size:0.7rem; color:#64748B;">Bed Space Application Portal</span>
+                  </div>
+                </div>
+                <label class="gate-switch" title="Toggle Hostel Gate">
+                  <input type="checkbox" id="gateHostel" checked onchange="toggleGateFromCard('hostelAccommodation', this.checked)">
+                  <span class="gate-slider"></span>
+                </label>
+              </div>
+
+              <p style="font-size:0.78rem; color:#475569; line-height:1.45; margin:0 0 0.85rem;">
+                Controls freshmen bed allocation in Moremi &amp; Oduduwa Halls, room mate matching, and maintenance clearance dockets.
+              </p>
+
+              <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.85rem; font-size:0.75rem; display:flex; flex-direction:column; gap:0.4rem;">
+                <div style="display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">Capacity Occupancy:</span>
+                  <strong id="hostelOccupancyText">842 / 1,000 Spaces</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">Freshmen Priority:</span>
+                  <strong style="color:#059669;">100L Guaranteed</strong>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:1.2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <span class="badge badge-emerald" id="badgeHostel">Active &bull; Open</span>
+              <div style="display:flex; gap:0.4rem;">
+                <button type="button" class="btn btn-outline btn-sm" style="font-weight:700; color:var(--navy-900);" onclick="openEditGateModal('hostelAccommodation')">⚙️ Edit Directive</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="simulateGateStudentView('hostelAccommodation')">Simulate View</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- 5. EDIT PORTAL GATE DIRECTIVE MODAL (Directly Editable by ICT) -->
+  <div class="modal-backdrop" id="editGateModal" style="display:none;">
+    <div class="modal-box" style="max-width:580px;">
+      <div style="background:linear-gradient(135deg, #050E21 0%, #0F1F42 100%); color:#fff; padding:1.2rem 1.5rem; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+        <div>
+          <h3 style="margin:0; font-size:1.15rem; font-family:'Playfair Display', serif; color:#fff;" id="editGateModalTitle">Edit Portal Gateway Policy</h3>
+          <p style="margin:0.2rem 0 0; font-size:0.72rem; color:var(--gold-400);">Calibrate registration dates, financial thresholds &amp; restrictions</p>
+        </div>
+        <button type="button" onclick="closeModal('editGateModal')" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <form id="editGateForm" onsubmit="handleEditGateSubmit(event)" style="padding:1.4rem; overflow-y:auto; display:flex; flex-direction:column; gap:1rem;">
+        <input type="hidden" id="editGateKey" value="">
+
+        <div>
+          <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Gate Directive Name *</label>
+          <input type="text" id="editGateName" required style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem; font-weight:700;">
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.9rem;">
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Gate Access State *</label>
+            <select id="editGateState" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem; font-weight:700;">
+              <option value="true">Active &bull; Open for Student Transactions</option>
+              <option value="false">Locked &bull; Restricted / Maintenance</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Closing / Expiry Deadline</label>
+            <input type="date" id="editGateDeadline" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.9rem;">
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Late Penalty Surcharge (₦)</label>
+            <input type="number" id="editGateLateFee" value="10000" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem; font-weight:700;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Bursary Clearance Threshold (%)</label>
+            <select id="editGateThreshold" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem; font-weight:700;">
+              <option value="60">60% Minimum Payment</option>
+              <option value="100">100% Full Payment Required</option>
+              <option value="40">40% Special Grace</option>
+              <option value="0">0% No Financial Check</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Senate Approval Gazette / Authority Ref</label>
+          <input type="text" id="editGateSenateRef" placeholder="e.g. SEN/2025-2026/RES/001" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem; font-family:'Fira Code', monospace;">
+        </div>
+
+        <div>
+          <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Custom Restriction / Block Message for Students</label>
+          <textarea id="editGateMessage" rows="3" style="width:100%; border:1px solid #CBD5E1; border-radius:8px; padding:0.6rem 0.8rem; font-size:0.8rem; line-height:1.4;" placeholder="Message shown to student when gate is closed..."></textarea>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #E2E8F0; padding-top:1rem; margin-top:0.5rem;">
+          <button type="button" class="btn btn-outline btn-sm" onclick="closeModal('editGateModal')">Cancel</button>
+          <button type="submit" class="btn btn-navy btn-sm">Save &amp; Synchronize Gate</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. SIMULATE GATE STUDENT VIEW MODAL -->
+  <div class="modal-backdrop" id="simulateGateModal" style="display:none;">
+    <div class="modal-box" style="max-width:620px;">
+      <div style="background:linear-gradient(135deg, #050E21 0%, #0F1F42 100%); color:#fff; padding:1.2rem 1.5rem; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #CDA434;">
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <div style="width:36px; height:36px; border-radius:10px; background:rgba(205,164,52,0.2); color:#FCD34D; display:flex; align-items:center; justify-content:center; font-size:1.1rem;">
+            👁️
+          </div>
+          <div>
+            <h3 style="margin:0; font-size:1.1rem; font-family:'Playfair Display', serif; color:#fff;" id="simModalTitle">Student Perspective Simulator</h3>
+            <p style="margin:0.15rem 0 0; font-size:0.72rem; color:var(--gold-400);">Live preview of student portal access &amp; gateway restrictions</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeModal('simulateGateModal')" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; line-height:1;">&times;</button>
+      </div>
+
+      <div style="padding:1.4rem; overflow-y:auto; max-height:calc(90vh - 120px);">
+        <!-- Student Context Banner -->
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem 1.1rem; margin-bottom:1.1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem;">
+          <div style="display:flex; align-items:center; gap:0.75rem;">
+            <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.85rem;">
+              JD
+            </div>
+            <div>
+              <div style="font-weight:800; color:var(--navy-950); font-size:0.88rem;">Jane Adaeze Doe</div>
+              <div style="font-size:0.72rem; color:#64748B;">UNILESA/2026/CSC/0142 &bull; Computer Science (100L)</div>
+            </div>
+          </div>
+          <span class="badge badge-navy" style="font-size:0.68rem; font-weight:800;">STUDENT SIMULATION</span>
+        </div>
+
+        <!-- Directive Target & Status -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:1.1rem;">
+          <div style="background:#FFFFFF; border:1px solid #CBD5E1; border-radius:10px; padding:0.75rem 0.9rem;">
+            <div style="font-size:0.68rem; font-weight:700; color:#64748B; text-transform:uppercase;">Gateway Directive</div>
+            <div style="font-size:0.88rem; font-weight:800; color:var(--navy-950); margin-top:0.2rem;" id="simGateName">Course Registration</div>
+          </div>
+          <div style="background:#FFFFFF; border:1px solid #CBD5E1; border-radius:10px; padding:0.75rem 0.9rem;">
+            <div style="font-size:0.68rem; font-weight:700; color:#64748B; text-transform:uppercase;">Live Gateway State</div>
+            <div style="margin-top:0.2rem;" id="simGateStatusBadge">
+              <span class="badge badge-emerald">ACTIVE &bull; OPEN</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Screen Viewport Frame -->
+        <div style="border:2px solid #E2E8F0; border-radius:12px; overflow:hidden; margin-bottom:1.1rem;">
+          <div style="background:#0F172A; color:#94A3B8; padding:0.5rem 0.9rem; font-size:0.7rem; font-weight:700; display:flex; justify-content:space-between; align-items:center;">
+            <span>STUDENT BROWSER VIEWPORT</span>
+            <span id="simViewportUrl" style="font-family:'Fira Code', monospace; font-size:0.65rem; color:#38BDF8;">https://portal.unilesa.edu.ng/course-registration.html</span>
+          </div>
+          <div style="padding:1.1rem; background:#FAFAFA;" id="simViewportBody">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Simulator Action Footer -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; border-top:1px solid #E2E8F0; padding-top:1rem;">
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <button type="button" class="btn btn-outline btn-sm" id="simToggleBtn" onclick="toggleSimulatedGate()">
+              Toggle Gate State
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" id="simEditBtn" onclick="editGateFromSim()">
+              ⚙️ Edit Directive Rules
+            </button>
+          </div>
+          <button type="button" class="btn btn-navy btn-sm" onclick="closeModal('simulateGateModal')">
+            Close Simulation
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS SCRIPTS & COMPONENTS -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-admin-sidebar.js"></script>
+  <script src="components/unilesa-admin-header.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <script>
+    let currentSimulatedGateKey = 'courseRegistration';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAllSettings();
+
+      window.addEventListener('unilesa:ict-settings-updated', () => {
+        loadAllSettings();
+      });
+
+      document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+        backdrop.addEventListener('click', (e) => {
+          if (e.target === backdrop) {
+            closeModal(backdrop.id);
+          }
+        });
+      });
+    });
+
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('show');
+        el.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('show');
+        el.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    }
+
+    function loadAllSettings() {
+      if (!window.UniStore) return;
+
+      const settings = window.UniStore.getIctSettings() || {};
+      const gates = window.UniStore.getPortalGates() || {};
+      
+      // 1. Session & Calendar settings
+      if (settings.activeSession) {
+        document.getElementById('cfgSessionSelect').value = settings.activeSession;
+        document.getElementById('kpiSessionText').textContent = settings.activeSession.replace(' Academic Session', '');
+        document.getElementById('heroSessionBadge').textContent = settings.activeSession;
+      }
+      const activeSem = settings.activeSemester || settings.activeTerm || 'First Semester';
+      if (activeSem) {
+        const val = (activeSem.includes('Second') || activeSem.includes('Rain')) ? 'Second Semester' : 'First Semester';
+        document.getElementById('cfgTermSelect').value = val;
+        document.getElementById('heroTermBadge').textContent = val === 'First Semester' ? 'First Semester (Harmattan)' : 'Second Semester (Rain)';
+      }
+      if (settings.activeSection) {
+        document.getElementById('cfgSectionSelect').value = settings.activeSection;
+        document.getElementById('kpiTermText').textContent = `${activeSem} • ${settings.activeSection}`;
+      }
+      if (settings.semesterPhase) {
+        document.getElementById('cfgPhaseSelect').value = settings.semesterPhase;
+      }
+      if (settings.semesterStartDate || settings.termStartDate) {
+        document.getElementById('cfgStartDateInput').value = settings.semesterStartDate || settings.termStartDate;
+      }
+      if (settings.senateGazetteRef) {
+        document.getElementById('cfgSenateRefInput').value = settings.senateGazetteRef;
+      }
+
+      // 2. Dynamic Gateway values
+      const courseGate = gates.courseRegistration || {};
+      if (document.getElementById('gateCourseReg')) {
+        document.getElementById('gateCourseReg').checked = courseGate.enabled !== undefined ? !!courseGate.enabled : (settings.portalWindows ? settings.portalWindows.courseRegistration : true);
+      }
+      if (document.getElementById('regDeadlineInput') && courseGate.deadline) {
+        document.getElementById('regDeadlineInput').value = courseGate.deadline;
+        document.getElementById('kpiRegDeadline').textContent = `Closes: ${courseGate.deadline}`;
+      }
+      if (document.getElementById('regPenaltyInput') && courseGate.lateFee !== undefined) {
+        document.getElementById('regPenaltyInput').value = courseGate.lateFee;
+      }
+
+      const paymentGate = gates.tuitionPayment || {};
+      if (document.getElementById('gatePayment')) {
+        document.getElementById('gatePayment').checked = paymentGate.enabled !== undefined ? !!paymentGate.enabled : (settings.portalWindows ? settings.portalWindows.tuitionPayment : true);
+      }
+      if (document.getElementById('paymentWebhookStatusText') && paymentGate.webhookStatus) {
+        document.getElementById('paymentWebhookStatusText').textContent = paymentGate.webhookStatus;
+      }
+
+      const docketGate = gates.examDocket || {};
+      if (document.getElementById('gateExamDocket')) {
+        document.getElementById('gateExamDocket').checked = docketGate.enabled !== undefined ? !!docketGate.enabled : (settings.portalWindows ? settings.portalWindows.examDocket : true);
+      }
+      if (document.getElementById('cfgClearanceThreshold') && docketGate.clearanceThreshold !== undefined) {
+        document.getElementById('cfgClearanceThreshold').value = String(docketGate.clearanceThreshold);
+      }
+
+      const resultsGate = gates.resultsChecking || {};
+      if (document.getElementById('gateResults')) {
+        document.getElementById('gateResults').checked = resultsGate.enabled !== undefined ? !!resultsGate.enabled : (settings.portalWindows ? settings.portalWindows.resultsChecking : true);
+      }
+      if (document.getElementById('resultsSenateStatusText')) {
+        const isApp = resultsGate.enabled !== false;
+        document.getElementById('resultsSenateStatusText').textContent = isApp ? 'Verified • Unlocked' : 'Pending Senate Moderation';
+        document.getElementById('resultsSenateStatusText').style.color = isApp ? '#059669' : '#EF4444';
+      }
+
+      const hostelGate = gates.hostelAccommodation || {};
+      if (document.getElementById('gateHostel')) {
+        document.getElementById('gateHostel').checked = hostelGate.enabled !== undefined ? !!hostelGate.enabled : (settings.portalWindows ? settings.portalWindows.hostelAccommodation : true);
+      }
+      if (document.getElementById('hostelOccupancyText')) {
+        document.getElementById('hostelOccupancyText').textContent = `${(hostelGate.allocatedSpaces || 842).toLocaleString()} / ${(hostelGate.totalSpaces || 1000).toLocaleString()} Spaces`;
+      }
+
+      updateGateBadges();
+    }
+
+    function updateGateBadges() {
+      const gates = [
+        { id: 'gateCourseReg', badge: 'badgeCourseReg' },
+        { id: 'gatePayment', badge: 'badgePayment' },
+        { id: 'gateExamDocket', badge: 'badgeExamDocket' },
+        { id: 'gateResults', badge: 'badgeResults' },
+        { id: 'gateHostel', badge: 'badgeHostel' }
+      ];
+
+      let openCount = 0;
+      gates.forEach(g => {
+        const el = document.getElementById(g.id);
+        const b = document.getElementById(g.badge);
+        if (el && b) {
+          if (el.checked) {
+            openCount++;
+            b.className = 'badge badge-emerald';
+            b.textContent = 'Active • Open';
+          } else {
+            b.className = 'badge badge-danger';
+            b.textContent = 'Locked • Restricted';
+          }
+        }
+      });
+
+      document.getElementById('kpiActiveGatesCount').textContent = `${openCount} / 5 Open`;
+      const isRegOpen = document.getElementById('gateCourseReg').checked;
+      document.getElementById('kpiRegStatus').textContent = isRegOpen ? 'OPEN' : 'CLOSED';
+      document.getElementById('kpiRegStatus').style.color = isRegOpen ? '#1D4ED8' : '#EF4444';
+    }
+
+    function toggleGateFromCard(gateKey, newState) {
+      if (!window.UniStore) return;
+      const updated = window.UniStore.togglePortalGate(gateKey, newState);
+      updateGateBadges();
+      showToast(
+        newState ? 'Gate Opened' : 'Gate Restricted',
+        `"${updated.name}" is now ${newState ? 'OPEN for all student transactions' : 'RESTRICTED by ICT Directive'}.`,
+        newState ? 'success' : 'warning'
+      );
+    }
+
+    function openEditGateModal(gateKey) {
+      if (!window.UniStore) return;
+      const gates = window.UniStore.getPortalGates();
+      const g = gates[gateKey] || { id: gateKey, name: gateKey, enabled: true };
+
+      document.getElementById('editGateKey').value = gateKey;
+      document.getElementById('editGateName').value = g.name || '';
+      document.getElementById('editGateState').value = g.enabled ? 'true' : 'false';
+      document.getElementById('editGateDeadline').value = g.deadline || '2026-11-15';
+      document.getElementById('editGateLateFee').value = g.lateFee || 10000;
+      document.getElementById('editGateThreshold').value = g.clearanceThreshold !== undefined ? g.clearanceThreshold : '60';
+      document.getElementById('editGateSenateRef').value = g.senateGazette || g.senateGazetteRef || 'SEN/2025-2026/RES/001';
+      document.getElementById('editGateMessage').value = g.restrictionMessage || '';
+
+      document.getElementById('editGateModalTitle').textContent = `Edit Directive: ${g.name || gateKey}`;
+      openModal('editGateModal');
+    }
+
+    function handleEditGateSubmit(e) {
+      e.preventDefault();
+      const key = document.getElementById('editGateKey').value;
+      const name = document.getElementById('editGateName').value.trim();
+      const enabled = document.getElementById('editGateState').value === 'true';
+      const deadline = document.getElementById('editGateDeadline').value;
+      const lateFee = parseFloat(document.getElementById('editGateLateFee').value || 10000);
+      const threshold = parseInt(document.getElementById('editGateThreshold').value || 60, 10);
+      const senateRef = document.getElementById('editGateSenateRef').value.trim();
+      const restrictionMessage = document.getElementById('editGateMessage').value.trim();
+
+      if (window.UniStore) {
+        window.UniStore.updatePortalGate(key, {
+          name,
+          enabled,
+          status: enabled ? 'OPEN' : 'LOCKED',
+          deadline,
+          lateFee,
+          clearanceThreshold: threshold,
+          senateGazette: senateRef,
+          senateGazetteRef: senateRef,
+          restrictionMessage
+        });
+      }
+
+      closeModal('editGateModal');
+      loadAllSettings();
+      showToast('Gate Directives Saved', `Updated parameters for "${name}". Synchronized across all portal modules.`, 'success');
+    }
+
+    function simulateGateStudentView(gateKey) {
+      if (!window.UniStore) return;
+      currentSimulatedGateKey = gateKey;
+      const gates = window.UniStore.getPortalGates();
+      const g = gates[gateKey] || { id: gateKey, name: gateKey, enabled: true };
+      const isOpen = !!g.enabled;
+
+      const titleMap = {
+        courseRegistration: 'Course Registration Window',
+        tuitionPayment: 'Tuition & Fee Payment Gateway',
+        examDocket: 'Examination Docket Gate',
+        resultsChecking: 'Semester Results Publication Gate',
+        hostelAccommodation: 'Hostel Accommodation Gate'
+      };
+
+      const urlMap = {
+        courseRegistration: 'https://portal.unilesa.edu.ng/course-registration.html',
+        tuitionPayment: 'https://portal.unilesa.edu.ng/payments.html',
+        examDocket: 'https://portal.unilesa.edu.ng/exam-timetable.html',
+        resultsChecking: 'https://portal.unilesa.edu.ng/results.html',
+        hostelAccommodation: 'https://portal.unilesa.edu.ng/dashboard.html#hostel'
+      };
+
+      document.getElementById('simGateName').textContent = g.name || titleMap[gateKey] || gateKey;
+      document.getElementById('simViewportUrl').textContent = urlMap[gateKey] || 'https://portal.unilesa.edu.ng';
+
+      const badgeEl = document.getElementById('simGateStatusBadge');
+      if (badgeEl) {
+        badgeEl.innerHTML = isOpen 
+          ? '<span class="badge badge-emerald" style="font-weight:800;">● ACTIVE &bull; OPEN</span>'
+          : '<span class="badge badge-danger" style="font-weight:800;">● LOCKED &bull; RESTRICTED</span>';
+      }
+
+      const toggleBtn = document.getElementById('simToggleBtn');
+      if (toggleBtn) {
+        toggleBtn.textContent = isOpen ? '🚨 Restrict This Gate' : '✓ Open This Gate';
+        toggleBtn.className = isOpen ? 'btn btn-outline btn-sm' : 'btn btn-navy btn-sm';
+        toggleBtn.style.color = isOpen ? '#DC2626' : '';
+        toggleBtn.style.borderColor = isOpen ? '#FECACA' : '';
+      }
+
+      const viewport = document.getElementById('simViewportBody');
+      if (viewport) {
+        if (isOpen) {
+          let openContent = '';
+          if (gateKey === 'courseRegistration') {
+            openContent = `
+              <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:1rem; color:#166534;">
+                <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; font-size:0.92rem; margin-bottom:0.3rem;">
+                  <span>✓ Course Enrollment Live &amp; Operational</span>
+                </div>
+                <p style="margin:0; font-size:0.78rem; line-height:1.45;">Jane Doe can select courses, calculate unit limits (15–24 Units), and submit Course Registration Forms before <strong>${g.deadline || '15 Nov 2026'}</strong>.</p>
+                <div style="margin-top:0.75rem; display:flex; gap:0.5rem;">
+                  <span class="badge badge-emerald" style="font-size:0.68rem;">Submission Permitted</span>
+                  <span class="badge badge-navy" style="font-size:0.68rem;">Late Fee: ₦${(g.lateFee || 10000).toLocaleString()}</span>
+                </div>
+              </div>
+            `;
+          } else if (gateKey === 'tuitionPayment') {
+            openContent = `
+              <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:1rem; color:#166534;">
+                <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; font-size:0.92rem; margin-bottom:0.3rem;">
+                  <span>✓ Payment Checkout Live (${g.webhookStatus || 'Remita API 200 OK'})</span>
+                </div>
+                <p style="margin:0; font-size:0.78rem; line-height:1.45;">Student can initiate card payments, generate Remita RRR invoices, and perform 60/40 installment tuition settlements.</p>
+                <div style="margin-top:0.75rem;"><span class="badge badge-emerald" style="font-size:0.68rem;">Remita IPN Online</span></div>
+              </div>
+            `;
+          } else if (gateKey === 'examDocket') {
+            openContent = `
+              <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:1rem; color:#166534;">
+                <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; font-size:0.92rem; margin-bottom:0.3rem;">
+                  <span>✓ Examination Hall Pass Docket Authorized</span>
+                </div>
+                <p style="margin:0; font-size:0.78rem; line-height:1.45;">Jane Doe has met the <strong>${g.clearanceThreshold || 60}%</strong> tuition settlement threshold. Printable 2D barcode docket is generated and signed.</p>
+                <div style="margin-top:0.75rem;"><span class="badge badge-emerald" style="font-size:0.68rem;">2D Barcode Validated</span></div>
+              </div>
+            `;
+          } else if (gateKey === 'resultsChecking') {
+            openContent = `
+              <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:1rem; color:#166534;">
+                <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; font-size:0.92rem; margin-bottom:0.3rem;">
+                  <span>✓ Senate Gazetted Results Released</span>
+                </div>
+                <p style="margin:0; font-size:0.78rem; line-height:1.45;">Official semester GPA and grade breakdown verified under Senate Gazette <strong>${g.senateGazette || 'SEN/2025-2026/RES/001'}</strong>.</p>
+                <div style="margin-top:0.75rem;"><span class="badge badge-emerald" style="font-size:0.68rem;">Official Transcript Unlocked</span></div>
+              </div>
+            `;
+          } else {
+            openContent = `
+              <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:1rem; color:#166534;">
+                <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; font-size:0.92rem; margin-bottom:0.3rem;">
+                  <span>✓ Hostel Bed-Space Allocation Active</span>
+                </div>
+                <p style="margin:0; font-size:0.78rem; line-height:1.45;">Application open for Moremi &amp; Oduduwa Halls. Bed space quota: ${g.allocatedSpaces || 842} / ${g.totalSpaces || 1000} spaces allocated.</p>
+              </div>
+            `;
+          }
+          viewport.innerHTML = openContent;
+        } else {
+          viewport.innerHTML = `
+            <div style="background:#FFFBEB; border:1.5px solid #FCD34D; border-radius:10px; padding:1.2rem; color:#78350F;">
+              <div style="display:flex; align-items:center; gap:0.6rem; font-weight:800; font-size:0.96rem; color:#B45309; margin-bottom:0.4rem;">
+                <span>🚨 ACCESS RESTRICTED BY ICT DIRECTIVE</span>
+              </div>
+              <div style="background:#FFFFFF; border:1px solid #FDE68A; border-radius:8px; padding:0.85rem; font-size:0.82rem; color:#92400E; line-height:1.45; font-style:italic; margin-bottom:0.85rem;">
+                "${g.restrictionMessage || 'This portal module is currently restricted by the Directorate of ICT / Senate Committee.'}"
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem; font-size:0.72rem; color:#92400E;">
+                <span>Student Action: <strong>Blocked / Form Submissions Disabled</strong></span>
+                <span class="badge badge-danger" style="font-size:0.65rem;">HTTP 403 / Gate Locked</span>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      openModal('simulateGateModal');
+    }
+
+    function toggleSimulatedGate() {
+      if (!window.UniStore) return;
+      const updated = window.UniStore.togglePortalGate(currentSimulatedGateKey);
+      loadAllSettings();
+      simulateGateStudentView(currentSimulatedGateKey);
+      showToast(
+        updated.enabled ? 'Gate Opened' : 'Gate Restricted',
+        `"${updated.name}" is now ${updated.enabled ? 'OPEN' : 'RESTRICTED'}.`,
+        updated.enabled ? 'success' : 'warning'
+      );
+    }
+
+    function editGateFromSim() {
+      closeModal('simulateGateModal');
+      openEditGateModal(currentSimulatedGateKey);
+    }
+
+    function saveAllDirectives() {
+      const activeSession = document.getElementById('cfgSessionSelect').value;
+      const activeTerm = document.getElementById('cfgTermSelect').value;
+      const activeSection = document.getElementById('cfgSectionSelect').value;
+      const semesterPhase = document.getElementById('cfgPhaseSelect').value;
+      const startDate = document.getElementById('cfgStartDateInput').value;
+      const senateRef = document.getElementById('cfgSenateRefInput').value;
+
+      const regDeadline = document.getElementById('regDeadlineInput').value;
+      const regPenalty = parseFloat(document.getElementById('regPenaltyInput').value || 10000);
+      const threshold = parseInt(document.getElementById('cfgClearanceThreshold').value || 60, 10);
+
+      const gates = window.UniStore ? window.UniStore.getPortalGates() : {};
+
+      if (gates.courseRegistration) {
+        gates.courseRegistration.enabled = document.getElementById('gateCourseReg').checked;
+        gates.courseRegistration.status = gates.courseRegistration.enabled ? 'OPEN' : 'LOCKED';
+        gates.courseRegistration.deadline = regDeadline;
+        gates.courseRegistration.lateFee = regPenalty;
+      }
+      if (gates.tuitionPayment) {
+        gates.tuitionPayment.enabled = document.getElementById('gatePayment').checked;
+        gates.tuitionPayment.status = gates.tuitionPayment.enabled ? 'OPEN' : 'LOCKED';
+      }
+      if (gates.examDocket) {
+        gates.examDocket.enabled = document.getElementById('gateExamDocket').checked;
+        gates.examDocket.status = gates.examDocket.enabled ? 'OPEN' : 'LOCKED';
+        gates.examDocket.clearanceThreshold = threshold;
+      }
+      if (gates.resultsChecking) {
+        gates.resultsChecking.enabled = document.getElementById('gateResults').checked;
+        gates.resultsChecking.status = gates.resultsChecking.enabled ? 'OPEN' : 'LOCKED';
+        gates.resultsChecking.senateGazette = senateRef;
+      }
+      if (gates.hostelAccommodation) {
+        gates.hostelAccommodation.enabled = document.getElementById('gateHostel').checked;
+        gates.hostelAccommodation.status = gates.hostelAccommodation.enabled ? 'OPEN' : 'LOCKED';
+      }
+
+      const updatedSettings = {
+        activeSession,
+        activeSemester: activeTerm,
+        activeTerm,
+        activeSection,
+        semesterPhase,
+        termStartDate: startDate,
+        semesterStartDate: startDate,
+        senateGazetteRef: senateRef,
+        courseRegDeadline: regDeadline,
+        lateRegFee: regPenalty,
+        clearanceThreshold: threshold,
+        portalWindows: gates,
+        lastUpdated: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+      };
+
+      if (window.UniStore) {
+        window.UniStore.setIctSettings(updatedSettings);
+
+        // Also synchronize with Student profile session & semester if appropriate
+        const student = window.UniStore.getStudent();
+        if (student) {
+          window.UniStore.setStudent({
+            academicSession: activeSession,
+            semester: activeTerm.includes('First') ? '1st Semester (Harmattan)' : '2nd Semester (Rain)'
+          });
+        }
+
+        window.UniStore.addAuditLog({
+          event: 'ACADEMIC_CALENDAR_UPDATED',
+          severity: 'Info',
+          user: 'ICT Admin (Directorate of ICT)',
+          description: `Published session "${activeSession}", semester "${activeTerm}", and portal windows.`
+        });
+      }
+
+      loadAllSettings();
+      showToast('Directives Published', `Academic session set to "${activeSession}" (${activeTerm}). All portal windows synchronized across student & staff portals.`, 'success');
+    }
+
+    function triggerEmergencyLockdown() {
+      if (confirm('🚨 EMERGENCY LOCKDOWN CONFIRMATION:\n\nAre you sure you want to immediately lock all student registration, payment, docket, and results portals for emergency maintenance?')) {
+        if (window.UniStore) {
+          const gates = window.UniStore.getPortalGates();
+          Object.keys(gates).forEach(k => {
+            gates[k].enabled = false;
+            gates[k].status = 'LOCKED';
+          });
+          window.UniStore.setPortalGates(gates);
+          window.UniStore.addAuditLog({
+            event: 'EMERGENCY_LOCKDOWN_TRIGGERED',
+            severity: 'Danger',
+            user: 'ICT Admin (Directorate of ICT)',
+            description: 'Emergency lockdown initiated. All 5 student gateways suspended.'
+          });
+        }
+        loadAllSettings();
+        showToast('EMERGENCY LOCKDOWN ACTIVE', 'All portal gates have been restricted across the university network.', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

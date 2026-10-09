@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — UNILESA Student Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;0,600;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Auth Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+
+  <style>
+    /* Login-specific form styles */
+    .field-wrap {
+      position: relative;
+      margin-bottom: 0.85rem;
+    }
+    .field-wrap input {
+      width: 100%;
+      height: 42px;
+      padding: 0.95rem 1rem 0.22rem;
+      border: 1.5px solid var(--grey-300);
+      border-radius: var(--radius-sm);
+      font-size: 0.86rem;
+      background: #FAFAFA;
+      color: var(--navy-900);
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .field-wrap input:focus {
+      background: var(--white);
+      border-color: var(--navy-800);
+      box-shadow: 0 0 0 3px rgba(15, 31, 66, 0.08);
+    }
+    .field-wrap input.invalid {
+      border-color: var(--error);
+      background: var(--error-bg);
+    }
+    .field-wrap label {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8rem;
+      color: var(--grey-500);
+      pointer-events: none;
+      transition: all 0.2s ease;
+    }
+    .field-wrap input:focus ~ label,
+    .field-wrap input:not(:placeholder-shown) ~ label {
+      top: 0.35rem;
+      transform: translateY(0);
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--navy-800);
+      letter-spacing: 0.03em;
+    }
+    .pw-toggle-btn {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--grey-500);
+      cursor: pointer;
+      padding: 0.25rem;
+      display: flex;
+    }
+    .field-error-msg {
+      display: none;
+      font-size: 0.71rem;
+      color: var(--error);
+      margin-top: 0.2rem;
+      font-weight: 600;
+    }
+    .field-error-msg.show { display: block; }
+  </style>
+</head>
+<body class="auth-page">
+
+  <!-- REUSABLE PARTICLES & MESH BACKGROUND COMPONENT -->
+  <unilesa-auth-bg></unilesa-auth-bg>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="student"></unilesa-role-switcher>
+
+  <!-- AUTH MAIN CONTAINER -->
+  <div class="auth-card">
+    
+    <!-- Left Column: Login Form -->
+    <div class="form-col">
+      
+      <!-- Top Group: Auth Header & Page Heading -->
+      <div>
+        <unilesa-auth-header></unilesa-auth-header>
+        <div style="margin: 0.8rem 0 0.6rem;">
+          <h1 style="font-family:'Playfair Display', serif; font-size:1.45rem; margin:0 0 0.18rem; color:var(--navy-900);">Sign In</h1>
+          <p style="margin:0; font-size:0.78rem; color:var(--grey-600);">Enter your Matriculation Number and Portal Password to proceed.</p>
+        </div>
+      </div>
+
+      <!-- Middle Group: Form & Controls -->
+      <div>
+        <!-- Quick Alert / Help notice -->
+        <div id="formBanner" style="display:none; padding:0.55rem 0.8rem; border-radius:8px; font-size:0.74rem; margin-bottom:0.75rem; line-height:1.4; background:var(--error-bg); border:1px solid var(--error-border); color:var(--error);">
+          <span id="formBannerText">Invalid matric number or password</span>
+        </div>
+
+        <form id="loginForm" novalidate>
+          
+          <!-- Field 1: Matric -->
+          <div class="field-wrap">
+            <input type="text" id="matric" placeholder=" " value="UNILESA/2026/CSC/0142" required autocomplete="username">
+            <label for="matric">Matriculation or Application No.</label>
+            <div class="field-error-msg" id="matricError">Please enter your Matriculation or Application number</div>
+          </div>
+
+          <!-- Field 2: Password -->
+          <div class="field-wrap">
+            <input type="password" id="password" placeholder=" " value="Temp@2026" required autocomplete="current-password">
+            <label for="password">Portal Password</label>
+            <button type="button" class="pw-toggle-btn" id="toggleBtn" aria-label="Toggle password visibility">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eyeIcon">
+                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+            <div class="field-error-msg" id="passwordError">Please enter your portal password</div>
+          </div>
+
+          <!-- First time login hint -->
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.74rem; margin-bottom:0.9rem;">
+            <span style="color:var(--grey-600);">First-time student? Default: <code>Temp@2026</code></span>
+            <a href="force-password-change.html" style="color:var(--gold-600); font-weight:700;">Reset Password</a>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-gold" id="submitBtn" style="width:100%; height:42px; font-size:0.88rem;">
+            <span id="submitLabel">Sign In to Student Portal</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Bottom Group: Support Footer -->
+      <div style="padding-top:0.65rem; text-align:center; font-size:0.71rem; color:var(--grey-500); border-top:1px solid var(--grey-200);">
+        University of Ilesa &bull; Directorate of ICT Support &bull; <a href="mailto:support@unilesa.edu.ng" style="color:var(--navy-800); font-weight:700;">support@unilesa.edu.ng</a>
+      </div>
+
+    </div>
+
+    <!-- Right Column: University Showcase Hero -->
+    <div class="hero-col">
+      <div>
+        <span class="badge badge-gold" style="margin-bottom:0.6rem;">2025/2026 Academic Portal</span>
+        <h2 style="font-family:'Playfair Display', serif; font-size:1.52rem; color:var(--white); margin:0 0 0.5rem; line-height:1.25;">
+          Empowering Academic Excellence &amp; Character
+        </h2>
+        <p style="font-size:0.79rem; color:rgba(255,255,255,0.85); line-height:1.5; margin:0;">
+          Access course registration, examination dockets, bursary fee receipts, hostel allocation, and clinical health clearance in one centralized gateway.
+        </p>
+      </div>
+
+      <!-- Middle Feature Highlight Row -->
+      <div class="hero-features-list">
+        <div class="hero-feature-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span>Real-Time First Semester Course Registration &amp; Timetable</span>
+        </div>
+        <div class="hero-feature-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>Verified JAMB CAPS Admission Letter &amp; Registry Screening</span>
+        </div>
+        <div class="hero-feature-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="6" y1="12" x2="18" y2="12"></line></svg>
+          <span>Instant Examination Docket &amp; Bursary Clearance Verification</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:0.85rem 1rem; backdrop-filter:blur(6px);">
+        <div style="font-size:0.72rem; font-weight:700; color:var(--gold-400); margin-bottom:0.2rem;">STUDENT ONBOARDING CHECKLIST</div>
+        <div style="font-size:0.72rem; color:rgba(255,255,255,0.9); line-height:1.35;">
+          1. Change Default Password &bull; 2. Upload Documents &bull; 3. Confirm Bio-Data &bull; 4. Access Portal
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- REUSABLE SCRIPT LOGIC -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-auth-bg.js"></script>
+  <script src="components/unilesa-auth-header.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <!-- PAGE-SPECIFIC LOGIN LOGIC -->
+  <script>
+    const DUMMY_ACCOUNTS = [
+      { id: "UNILESA/2026/CSC/0142", password: "Temp@2026", status: "onboarding" },
+      { id: "UNILESA/2023/NUR/0087", password: "Passw0rd!", status: "active" }
+    ];
+
+    const form = document.getElementById('loginForm');
+    const matricInput = document.getElementById('matric');
+    const passwordInput = document.getElementById('password');
+    const matricError = document.getElementById('matricError');
+    const passwordError = document.getElementById('passwordError');
+    const formBanner = document.getElementById('formBanner');
+    const formBannerText = document.getElementById('formBannerText');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitLabel = document.getElementById('submitLabel');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    const EYE_OPEN = '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"></path><circle cx="12" cy="12" r="3"></circle>';
+    const EYE_CLOSED = '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.6 21.6 0 0 1 5.06-6.06M9.9 4.24A10.4 10.4 0 0 1 12 4c7 0 11 7 11 7a21.6 21.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+
+    toggleBtn.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      eyeIcon.innerHTML = isPassword ? EYE_CLOSED : EYE_OPEN;
+    });
+
+    function clearFieldError(input, errorEl) {
+      input.classList.remove('invalid');
+      errorEl.classList.remove('show');
+    }
+
+    [matricInput, passwordInput].forEach((input, idx) => {
+      const errorEl = idx === 0 ? matricError : passwordError;
+      input.addEventListener('input', () => clearFieldError(input, errorEl));
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      formBanner.style.display = 'none';
+
+      let hasError = false;
+      if (!matricInput.value.trim()) {
+        matricInput.classList.add('invalid');
+        matricError.classList.add('show');
+        hasError = true;
+      }
+      if (!passwordInput.value.trim()) {
+        passwordInput.classList.add('invalid');
+        passwordError.classList.add('show');
+        hasError = true;
+      }
+      if (hasError) return;
+
+      submitBtn.disabled = true;
+      submitLabel.textContent = 'Verifying credentials...';
+
+      setTimeout(() => {
+        const account = DUMMY_ACCOUNTS.find(a =>
+          a.id.toLowerCase() === matricInput.value.trim().toLowerCase() &&
+          a.password === passwordInput.value
+        );
+
+        submitBtn.disabled = false;
+        submitLabel.textContent = 'Sign In to Student Portal';
+
+        if (!account) {
+          formBannerText.textContent = 'Incorrect Matriculation Number or Password. Try default: Temp@2026';
+          formBanner.style.display = 'block';
+          showToast('Authentication Error', 'Invalid login credentials. Please verify your details.', 'error');
+          return;
+        }
+
+        showToast('Login Successful', 'Welcome to UNILESA Student Portal!', 'success');
+        setTimeout(() => {
+          window.location.href = account.status === 'onboarding' ? 'force-password-change.html' : 'dashboard.html';
+        }, 800);
+      }, 700);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Lecturer &amp; HOD Console — UNILESA Academic Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    .lecturer-hero {
+      background: linear-gradient(135deg, #062419 0%, #0F3D2C 60%, #17543D 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 12px 30px -5px rgba(15, 61, 44, 0.25);
+      border: 1px solid rgba(74, 222, 128, 0.35);
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .lecturer-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(74, 222, 128, 0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .lecturer-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .lecturer-kpi-card {
+      background: var(--white);
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.25rem 1.35rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.75rem;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+    }
+    .grade-input {
+      width: 65px;
+      height: 32px;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+    .grade-input:focus {
+      border-color: #059669;
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
+    }
+    @media (max-width: 1100px) {
+      .lecturer-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .lecturer-kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST NOTIFICATION ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+
+  <!-- ROLE SWITCHER WIDGET -->
+  <unilesa-role-switcher current="lecturer"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- ADMIN SIDEBAR -->
+    <unilesa-admin-sidebar active="lecturer"></unilesa-admin-sidebar>
+
+    <!-- MAIN PAGE WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- TOP HEADER -->
+      <unilesa-admin-header title="Lecturer &amp; HOD Academic Console" subtitle="Faculty of Science &amp; Computing &bull; Department of Computer Science"></unilesa-admin-header>
+
+      <!-- MAIN CONTENT CONTAINER -->
+      <main class="content-container">
+
+        <!-- 1. Lecturer Hero Banner -->
+        <section class="lecturer-hero">
+          <div>
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+              <span class="badge" style="background:rgba(74, 222, 128, 0.2); color:#4ADE80; border:1px solid rgba(74, 222, 128, 0.4); font-size:0.68rem; font-weight:700;">
+                ● GRADE SUBMISSION WINDOW OPEN
+              </span>
+              <span class="badge badge-gold" style="font-size:0.68rem;">Session: 2025/2026 First Semester</span>
+            </div>
+            <h1 style="font-family:'Playfair Display', serif; font-size:1.55rem; color:#FFFFFF; margin:0 0 0.35rem;">
+              Dr. A. O. Babalola &bull; Course Instructor &amp; HOD
+            </h1>
+            <p style="font-size:0.82rem; color:rgba(255,255,255,0.85); margin:0; max-width:680px; line-height:1.45;">
+              Upload Continuous Assessment (CA 30%) and Examination (70%) marks, approve Course Registration Forms (CRF), and transmit certified results to Senate.
+            </p>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; position:relative; z-index:2;">
+            <button type="button" class="btn btn-gold btn-sm" onclick="saveAllGrades()" style="font-weight:800;">
+              💾 Save Draft Scores
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="transmitGradesToSenate()" style="color:#FFF; border-color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.08);">
+              🚀 Transmit to Senate
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. Academic KPIs Grid -->
+        <div class="lecturer-kpi-grid">
+          <div class="lecturer-kpi-card">
+            <span style="font-size:0.72rem; font-weight:700; color:#64748B; text-transform:uppercase;">Assigned Courses</span>
+            <div style="font-size:1.55rem; font-weight:800; color:var(--navy-950);">3 Courses</div>
+            <div style="font-size:0.74rem; color:#059669; font-weight:700;">CSC 101, CSC 103, CSC 105</div>
+          </div>
+          <div class="lecturer-kpi-card">
+            <span style="font-size:0.72rem; font-weight:700; color:#64748B; text-transform:uppercase;">Enrolled Students</span>
+            <div style="font-size:1.55rem; font-weight:800; color:var(--navy-950);">142 Students</div>
+            <div style="font-size:0.74rem; color:#64748B;">100 Level B.Sc. Computer Science</div>
+          </div>
+          <div class="lecturer-kpi-card">
+            <span style="font-size:0.72rem; font-weight:700; color:#64748B; text-transform:uppercase;">Grading Progress</span>
+            <div style="font-size:1.55rem; font-weight:800; color:#059669;">94.2%</div>
+            <div style="font-size:0.74rem; color:#64748B;">134 of 142 scores uploaded</div>
+          </div>
+          <div class="lecturer-kpi-card">
+            <span style="font-size:0.72rem; font-weight:700; color:#64748B; text-transform:uppercase;">CRF Approvals Pending</span>
+            <div style="font-size:1.55rem; font-weight:800; color:#D97706;" id="crfPendingCount">3 Pending</div>
+            <div style="font-size:0.74rem; color:#B45309; font-weight:700;">Requires HOD Clearance</div>
+          </div>
+        </div>
+
+        <!-- 3. Main Lecturer Tabs -->
+        <div class="card" style="margin-bottom:1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #E2E8F0; padding-bottom:1rem; margin-bottom:1.2rem; flex-wrap:wrap; gap:0.8rem;">
+            <div>
+              <h2 style="font-size:1.2rem; font-family:'Playfair Display', serif; margin:0 0 0.2rem; color:var(--navy-950);">
+                Continuous Assessment &amp; Examination Score Matrix
+              </h2>
+              <p style="font-size:0.76rem; color:var(--grey-600); margin:0;">
+                Editing CA (30%) or Exam (70%) instantly recalculates Total, Grade Letter, and Grade Point.
+              </p>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:0.6rem;">
+              <label style="font-size:0.75rem; font-weight:700; color:var(--grey-700);">Course:</label>
+              <select id="courseSelect" style="height:36px; border:1.5px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-weight:700; font-size:0.82rem; color:var(--navy-950);">
+                <option value="CSC101" selected>CSC 101: Introduction to Computer Science (3 Units)</option>
+                <option value="CSC103">CSC 103: Problem Solving &amp; Logic Programming (2 Units)</option>
+                <option value="CSC105">CSC 105: Introduction to Web Technologies (2 Units)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Score Sheet Table -->
+          <div class="ict-table-wrap">
+            <table class="ict-data-table">
+              <thead>
+                <tr>
+                  <th>Matric Number</th>
+                  <th>Student Full Name</th>
+                  <th style="width:90px; text-align:center;">CA (30)</th>
+                  <th style="width:90px; text-align:center;">Exam (70)</th>
+                  <th style="width:90px; text-align:center;">Total (100)</th>
+                  <th style="width:80px; text-align:center;">Grade</th>
+                  <th style="width:80px; text-align:center;">Point</th>
+                  <th>Approval Status</th>
+                  <th style="text-align:right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="gradingTbody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. Course Registration Forms (CRF) Approvals Section -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
+            <div>
+              <h2 style="font-size:1.2rem; font-family:'Playfair Display', serif; margin:0 0 0.2rem; color:var(--navy-950);">
+                Course Registration Forms (CRF) Approval Queue
+              </h2>
+              <p style="font-size:0.76rem; color:var(--grey-600); margin:0;">
+                Review student course registrations, verify credit unit compliance, and grant official HOD endorsements.
+              </p>
+            </div>
+          </div>
+
+          <div class="ict-table-wrap">
+            <table class="ict-data-table">
+              <thead>
+                <tr>
+                  <th>Matric Number</th>
+                  <th>Student Name</th>
+                  <th>Registered Units</th>
+                  <th>Bursary Clearance</th>
+                  <th>Submission Date</th>
+                  <th>CRF Status</th>
+                  <th style="text-align:right;">HOD Action</th>
+                </tr>
+              </thead>
+              <tbody id="crfQueueTbody">
+                <tr>
+                  <td><span style="font-family:'Fira Code', monospace; font-weight:700;">UNILESA/2026/CSC/0142</span></td>
+                  <td><b>Jane Adaeze Doe</b></td>
+                  <td><b>21 Units</b> (9 Courses)</td>
+                  <td><span class="badge badge-success" style="font-size:0.65rem;">● Cleared (₦185k)</span></td>
+                  <td><span style="font-size:0.75rem; color:#64748B;">24 Oct 2026, 02:15 PM</span></td>
+                  <td><span class="badge badge-success" id="janeCrfBadge">● APPROVED</span></td>
+                  <td style="text-align:right;">
+                    <button type="button" class="btn btn-outline btn-sm" style="font-size:0.7rem;" onclick="showToast('CRF Verified', 'Jane Doe CRF approved and sealed by HOD', 'success')">
+                      ✓ Endorsed
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span style="font-family:'Fira Code', monospace; font-weight:700;">UNILESA/2026/CSC/0143</span></td>
+                  <td><b>Tunde Babatunde Adeleke</b></td>
+                  <td><b>19 Units</b> (8 Courses)</td>
+                  <td><span class="badge badge-success" style="font-size:0.65rem;">● Cleared (₦185k)</span></td>
+                  <td><span style="font-size:0.75rem; color:#64748B;">Today, 08:30 AM</span></td>
+                  <td><span class="badge badge-warning" id="crfBadge143">● PENDING HOD</span></td>
+                  <td style="text-align:right;">
+                    <button type="button" class="btn btn-gold btn-sm" style="font-size:0.7rem;" onclick="approveCrf('crfBadge143', 'Tunde Adeleke')">
+                      Approve CRF
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span style="font-family:'Fira Code', monospace; font-weight:700;">UNILESA/2026/CSC/0144</span></td>
+                  <td><b>Chioma Grace Okonkwo</b></td>
+                  <td><b>23 Units</b> (10 Courses)</td>
+                  <td><span class="badge badge-success" style="font-size:0.65rem;">● Cleared (₦185k)</span></td>
+                  <td><span style="font-size:0.75rem; color:#64748B;">Today, 09:12 AM</span></td>
+                  <td><span class="badge badge-warning" id="crfBadge144">● PENDING HOD</span></td>
+                  <td style="text-align:right;">
+                    <button type="button" class="btn btn-gold btn-sm" style="font-size:0.7rem;" onclick="approveCrf('crfBadge144', 'Chioma Okonkwo')">
+                      Approve CRF
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-admin-sidebar.js"></script>
+  <script src="components/unilesa-admin-header.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <script>
+    const studentRoster = [
+      { id: '1', matric: 'UNILESA/2026/CSC/0142', name: 'Jane Adaeze Doe', ca: 28, exam: 58 },
+      { id: '2', matric: 'UNILESA/2026/CSC/0143', name: 'Tunde Babatunde Adeleke', ca: 24, exam: 52 },
+      { id: '3', matric: 'UNILESA/2026/CSC/0144', name: 'Chioma Grace Okonkwo', ca: 26, exam: 49 },
+      { id: '4', matric: 'UNILESA/2026/CSC/0145', name: 'Emmanuel Ayomide Balogun', ca: 18, exam: 36 },
+      { id: '5', matric: 'UNILESA/2026/CSC/0146', name: 'Fatima Aminu Garba', ca: 27, exam: 61 },
+      { id: '6', matric: 'UNILESA/2026/CSC/0147', name: 'Samuel Olawale Adeleke', ca: 22, exam: 48 }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderGradingTable();
+    });
+
+    function computeGrade(total) {
+      if (total >= 70) return { grade: 'A', point: 5.0, color: '#059669' };
+      if (total >= 60) return { grade: 'B', point: 4.0, color: '#2563EB' };
+      if (total >= 50) return { grade: 'C', point: 3.0, color: '#D97706' };
+      if (total >= 45) return { grade: 'D', point: 2.0, color: '#EA580C' };
+      if (total >= 40) return { grade: 'E', point: 1.0, color: '#DC2626' };
+      return { grade: 'F', point: 0.0, color: '#991B1B' };
+    }
+
+    function renderGradingTable() {
+      const tbody = document.getElementById('gradingTbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = '';
+      studentRoster.forEach((s, idx) => {
+        const total = s.ca + s.exam;
+        const g = computeGrade(total);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span style="font-family:'Fira Code', monospace; font-weight:700; font-size:0.78rem;">${s.matric}</span></td>
+          <td><b>${s.name}</b></td>
+          <td style="text-align:center;">
+            <input type="number" class="grade-input" id="ca_${idx}" value="${s.ca}" min="0" max="30" oninput="recalcRow(${idx})">
+          </td>
+          <td style="text-align:center;">
+            <input type="number" class="grade-input" id="exam_${idx}" value="${s.exam}" min="0" max="70" oninput="recalcRow(${idx})">
+          </td>
+          <td style="text-align:center; font-weight:800; font-size:0.9rem;" id="total_${idx}">${total}</td>
+          <td style="text-align:center;">
+            <span class="badge" style="background:${g.color}18; color:${g.color}; font-weight:800;" id="grade_${idx}">${g.grade}</span>
+          </td>
+          <td style="text-align:center; font-weight:800;" id="point_${idx}">${g.point.toFixed(1)}</td>
+          <td><span class="badge badge-success" style="font-size:0.65rem;">● Certified</span></td>
+          <td style="text-align:right;">
+            <button type="button" class="btn btn-outline btn-sm" style="font-size:0.7rem; padding:0.2rem 0.5rem;" onclick="showToast('Score Logged', 'Grade computed for ${s.name}', 'info')">Audit</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function recalcRow(idx) {
+      const caVal = parseInt(document.getElementById(`ca_${idx}`).value) || 0;
+      const examVal = parseInt(document.getElementById(`exam_${idx}`).value) || 0;
+      const total = Math.min(100, Math.max(0, caVal + examVal));
+
+      const g = computeGrade(total);
+      document.getElementById(`total_${idx}`).textContent = total;
+      
+      const gradeBadge = document.getElementById(`grade_${idx}`);
+      gradeBadge.textContent = g.grade;
+      gradeBadge.style.background = `${g.color}18`;
+      gradeBadge.style.color = g.color;
+
+      document.getElementById(`point_${idx}`).textContent = g.point.toFixed(1);
+    }
+
+    function saveAllGrades() {
+      showToast('Scores Saved', 'Continuous assessment & examination draft marks saved to central database.', 'success');
+    }
+
+    function transmitGradesToSenate() {
+      showToast('Submitted to Senate', 'CSC 101 official score sheets transmitted to Business Committee of Senate.', 'success');
+    }
+
+    function approveCrf(badgeId, studentName) {
+      const b = document.getElementById(badgeId);
+      if (b) {
+        b.className = 'badge badge-success';
+        b.textContent = '● APPROVED';
+      }
+      showToast('CRF Approved', `Granted official HOD endorsement for ${studentName}`, 'success');
+    }
+  </script>
+</body>
+</html>

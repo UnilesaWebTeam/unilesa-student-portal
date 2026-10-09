@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Admissions &amp; Registry — UNILESA Enterprise Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    .admissions-hero {
+      background: linear-gradient(135deg, #1E1035 0%, #3B1869 60%, #581C87 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 12px 30px -5px rgba(59, 24, 105, 0.25);
+      border: 1px solid rgba(192, 132, 252, 0.35);
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .admissions-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(192, 132, 252, 0.2), transparent 70%);
+      pointer-events: none;
+    }
+    .admissions-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .admissions-kpi-card {
+      background: var(--white);
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.25rem 1.35rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.75rem;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+    }
+    @media (max-width: 1100px) {
+      .admissions-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .admissions-kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST NOTIFICATION ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+
+  <!-- ROLE SWITCHER WIDGET -->
+  <unilesa-role-switcher current="admissions"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- ADMIN SIDEBAR -->
+    <unilesa-admin-sidebar active="admissions"></unilesa-admin-sidebar>
+
+    <!-- MAIN PAGE WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- TOP HEADER -->
+      <unilesa-admin-header title="Admissions &amp; Registry Directorate" subtitle="JAMB CAPS Integration &bull; 2025/2026 Candidate Processing Portal"></unilesa-admin-header>
+
+      <!-- MAIN CONTENT CONTAINER -->
+      <main class="content-container">
+
+        <!-- 1. Admissions Hero Banner -->
+        <section class="admissions-hero">
+          <div>
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+              <span class="badge" style="background:rgba(74, 222, 128, 0.2); color:#4ADE80; border:1px solid rgba(74, 222, 128, 0.4); font-size:0.68rem; font-weight:700;">
+                ● JAMB CAPS API CONNECTED (LIVE)
+              </span>
+              <span class="badge badge-gold" style="font-size:0.68rem;">Session: 2025/2026 Admissions</span>
+            </div>
+            <h1 style="font-family:'Playfair Display', serif; font-size:1.55rem; color:#FFFFFF; margin:0 0 0.35rem;">
+              Mr. B. K. Oladipo &bull; Senior Admissions Officer
+            </h1>
+            <p style="font-size:0.82rem; color:rgba(255,255,255,0.85); margin:0; max-width:680px; line-height:1.45;">
+              Central candidate screening engine: Validate UTME aggregates, recommend candidates on JAMB CAPS, verify O'Level credentials, and generate official UNILESA provisional admission offers.
+            </p>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; position:relative; z-index:2;">
+            <button type="button" class="btn btn-gold btn-sm" onclick="syncJambCaps()" style="font-weight:800;">
+              ⚡ Sync JAMB CAPS
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="showToast('Admissions Gazette', 'Generated 2025/2026 Merit List (Batch A) PDF', 'success')" style="color:#FFF; border-color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.08);">
+              📄 Export Merit List
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. Admissions KPIs Grid -->
+        <div class="admissions-kpi-grid">
+          <div class="admissions-kpi-card">
+            <span style="font-size:0.72rem; font-weight:700; color:#64748B; text-transform:uppercase;">Total Applicants</span>
+            <div style="font-size:1.55rem; font-weight:800; color:var(--navy-950);">3,420</div>
+            <div style="font-size:0.74rem; color:#059669; font-weight:700;">UTME (2,910) &bull; DE (510)</div>
+          </div>
+          <div class="admissions-kpi-card">
+            <span style="font-size:0.72rem; font-weight:700; color:#64748B; text-transform:uppercase;">Recommended on CAPS</span>
+            <div style="font-size:1.55rem; font-weight:800; color:#7C3AED;">1,850</div>
+            <div style="font-size:0.74rem; color:#64748B;">Pending JAMB Central Approval</div>
+          </div>
+          <div class="admissions-kpi-card">
+            <span style="font-size:0.72rem; font-weight:700; color:#64748B; text-transform:uppercase;">Accepted &amp; Matriculated</span>
+            <div style="font-size:1.55rem; font-weight:800; color:#059669;">1,240 Freshmen</div>
+            <div style="font-size:0.74rem; color:#64748B;">Matric Numbers Issued</div>
+          </div>
+          <div class="admissions-kpi-card">
+            <span style="font-size:0.72rem; font-weight:700; color:#64748B; text-transform:uppercase;">NUC Quota Utilization</span>
+            <div style="font-size:1.55rem; font-weight:800; color:#D97706;">78.4%</div>
+            <div style="font-size:0.74rem; color:#B45309; font-weight:700;">1,240 / 1,580 Maximum Capacity</div>
+          </div>
+        </div>
+
+        <!-- 3. Candidate Screening Table -->
+        <div class="card" style="margin-bottom:1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #E2E8F0; padding-bottom:1rem; margin-bottom:1.2rem; flex-wrap:wrap; gap:0.8rem;">
+            <div>
+              <h2 style="font-size:1.2rem; font-family:'Playfair Display', serif; margin:0 0 0.2rem; color:var(--navy-950);">
+                Candidate Admissions &amp; JAMB CAPS Recommendation Roster
+              </h2>
+              <p style="font-size:0.76rem; color:var(--grey-600); margin:0;">
+                Department of Computer Science (Faculty of Science &amp; Computing) — 2025/2026 Academic Session.
+              </p>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:0.6rem;">
+              <input type="text" placeholder="Search JAMB Reg or Name..." style="height:36px; border:1.5px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.82rem;" onkeyup="filterCandidates(this.value)">
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="ict-table-wrap">
+            <table class="ict-data-table">
+              <thead>
+                <tr>
+                  <th>JAMB Reg No</th>
+                  <th>Candidate Full Name</th>
+                  <th>UTME Score</th>
+                  <th>Screening Aggregate</th>
+                  <th>O'Level Status</th>
+                  <th>JAMB CAPS Status</th>
+                  <th>Official Matric Number</th>
+                  <th style="text-align:right;">Admissions Action</th>
+                </tr>
+              </thead>
+              <tbody id="candidatesTbody">
+                <tr>
+                  <td><span style="font-family:'Fira Code', monospace; font-weight:700;">202610948211EF</span></td>
+                  <td><b>Jane Adaeze Doe</b></td>
+                  <td><b>284</b></td>
+                  <td><span class="badge badge-success" style="font-weight:800;">82.5%</span></td>
+                  <td><span class="badge badge-success" style="font-size:0.65rem;">✓ 5 Distinctions (WAEC)</span></td>
+                  <td><span class="badge badge-success" style="font-size:0.65rem;">● ADMITTED (ACCEPTED)</span></td>
+                  <td><span style="font-family:'Fira Code', monospace; font-weight:700; color:#1D4ED8;">UNILESA/2026/CSC/0142</span></td>
+                  <td style="text-align:right;">
+                    <button type="button" class="btn btn-outline btn-sm" style="font-size:0.7rem;" onclick="showToast('Admission Letter', 'Official UNILESA Admission Letter printed for Jane Doe', 'success')">
+                      Offer Letter
+                    </button>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><span style="font-family:'Fira Code', monospace; font-weight:700;">202610884920AB</span></td>
+                  <td><b>Tunde Babatunde Adeleke</b></td>
+                  <td><b>271</b></td>
+                  <td><span class="badge badge-success" style="font-weight:800;">78.0%</span></td>
+                  <td><span class="badge badge-success" style="font-size:0.65rem;">✓ 6 Credits (WAEC)</span></td>
+                  <td><span class="badge badge-success" style="font-size:0.65rem;">● ADMITTED (ACCEPTED)</span></td>
+                  <td><span style="font-family:'Fira Code', monospace; font-weight:700; color:#1D4ED8;">UNILESA/2026/CSC/0143</span></td>
+                  <td style="text-align:right;">
+                    <button type="button" class="btn btn-outline btn-sm" style="font-size:0.7rem;" onclick="showToast('Admission Letter', 'Official UNILESA Admission Letter printed for Tunde Adeleke', 'success')">
+                      Offer Letter
+                    </button>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><span style="font-family:'Fira Code', monospace; font-weight:700;">202610773912CD</span></td>
+                  <td><b>Chioma Grace Okonkwo</b></td>
+                  <td><b>265</b></td>
+                  <td><span class="badge badge-success" style="font-weight:800;">76.5%</span></td>
+                  <td><span class="badge badge-success" style="font-size:0.65rem;">✓ 7 Credits (NECO)</span></td>
+                  <td><span class="badge badge-warning" id="capsStatus144" style="font-size:0.65rem;">● RECOMMENDED ON CAPS</span></td>
+                  <td><span style="font-family:'Fira Code', monospace; font-weight:700; color:#1D4ED8;" id="matric144">UNILESA/2026/CSC/0144</span></td>
+                  <td style="text-align:right;">
+                    <button type="button" class="btn btn-gold btn-sm" id="btnIssue144" style="font-size:0.7rem;" onclick="issueAdmission('capsStatus144', 'btnIssue144', 'Chioma Okonkwo')">
+                      Issue Offer Letter
+                    </button>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><span style="font-family:'Fira Code', monospace; font-weight:700;">202610552199GH</span></td>
+                  <td><b>Emmanuel Ayomide Balogun</b></td>
+                  <td><b>258</b></td>
+                  <td><span class="badge badge-gold" style="font-weight:800;">73.0%</span></td>
+                  <td><span class="badge badge-success" style="font-size:0.65rem;">✓ 5 Credits (WAEC)</span></td>
+                  <td><span class="badge badge-warning" id="capsStatus145" style="font-size:0.65rem;">● PENDING RECOMMENDATION</span></td>
+                  <td><span style="font-size:0.75rem; color:#94A3B8;" id="matric145">Pending Acceptance</span></td>
+                  <td style="text-align:right;">
+                    <button type="button" class="btn btn-gold btn-sm" id="btnRecommend145" style="font-size:0.7rem;" onclick="recommendCandidate('capsStatus145', 'btnRecommend145', 'Emmanuel Balogun')">
+                      Recommend on CAPS
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-admin-sidebar.js"></script>
+  <script src="components/unilesa-admin-header.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <script>
+    function syncJambCaps() {
+      showToast('JAMB CAPS Synced', 'Successfully pulled 142 accepted candidate records from Central Admissions Portal.', 'success');
+    }
+
+    function recommendCandidate(badgeId, btnId, name) {
+      const b = document.getElementById(badgeId);
+      const btn = document.getElementById(btnId);
+      if (b) {
+        b.className = 'badge badge-warning';
+        b.textContent = '● RECOMMENDED ON CAPS';
+      }
+      if (btn) {
+        btn.textContent = 'Issue Offer Letter';
+        btn.onclick = () => issueAdmission(badgeId, btnId, name);
+      }
+      showToast('Candidate Recommended', `${name} recommended for Vice Chancellor approval on JAMB CAPS`, 'success');
+    }
+
+    function issueAdmission(badgeId, btnId, name) {
+      const b = document.getElementById(badgeId);
+      const btn = document.getElementById(btnId);
+      if (b) {
+        b.className = 'badge badge-success';
+        b.textContent = '● ADMITTED (ACCEPTED)';
+      }
+      if (btn) {
+        btn.className = 'btn btn-outline btn-sm';
+        btn.textContent = 'Offer Letter';
+      }
+      showToast('Offer Issued', `Provisional Admission Letter generated for ${name}`, 'success');
+    }
+
+    function filterCandidates(query) {
+      const rows = document.querySelectorAll('#candidatesTbody tr');
+      rows.forEach(r => {
+        const text = r.textContent.toLowerCase();
+        r.style.display = text.includes(query.toLowerCase()) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Security Audit Trail — Directorate of ICT (UNILESA)</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    .audit-hero {
+      background: linear-gradient(135deg, #050E21 0%, #0F1F42 55%, #111827 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 12px 30px -5px rgba(15, 31, 66, 0.25);
+      border: 1px solid rgba(205, 164, 52, 0.35);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .kpi-card {
+      background: var(--white);
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.25rem 1.35rem;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+    }
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 0.65rem 0.95rem;
+    }
+    .filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      overflow-x: auto;
+    }
+    .filter-pill {
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--grey-700);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .filter-pill.active {
+      background: var(--navy-900);
+      color: var(--white);
+      border-color: var(--navy-900);
+    }
+    @media (max-width: 900px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="ict"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- ENTERPRISE ADMIN SIDEBAR COMPONENT -->
+    <unilesa-admin-sidebar active="audit"></unilesa-admin-sidebar>
+
+    <!-- MAIN PAGE WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- ENTERPRISE ADMIN TOP HEADER COMPONENT -->
+      <unilesa-admin-header title="Security Audit Trail" subtitle="Directorate of ICT &bull; System Compliance &amp; Forensic Event Stream"></unilesa-admin-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+
+        <!-- 1. Command Hero -->
+        <div class="audit-hero">
+          <div>
+            <div style="font-size:0.72rem; font-weight:800; color:var(--gold-400); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.25rem;">
+              NDPR &amp; Enterprise Compliance
+            </div>
+            <h1 style="font-family:'Playfair Display', serif; font-size:1.6rem; color:#fff; margin:0 0 0.35rem;">
+              Security Audit Trail &amp; Forensic Stream
+            </h1>
+            <p style="font-size:0.82rem; color:rgba(255,255,255,0.85); margin:0; max-width:640px; line-height:1.45;">
+              Tamper-evident administrative logs tracking biometric credential overrides, portal gate updates, financial reconciliations, and identity provisioning.
+            </p>
+          </div>
+          <div style="display:flex; gap:0.6rem; align-items:center;">
+            <button type="button" class="btn btn-gold" onclick="exportAuditLogsCsv()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Export CSV Audit</span>
+            </button>
+            <button type="button" class="btn btn-outline" style="border-color:#64748B; color:#CBD5E1;" onclick="clearAuditTrailLogs()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <span>Purge Cache</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. KPI Metrics -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div style="font-size:0.75rem; color:#64748B; font-weight:700;">TOTAL AUDIT EVENTS</div>
+            <div style="font-size:1.6rem; font-weight:800; color:var(--navy-950); margin:0.3rem 0;" id="kpiTotalAuditCount">18 Events</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:600;">● Live Capture Active</div>
+          </div>
+          <div class="kpi-card">
+            <div style="font-size:0.75rem; color:#64748B; font-weight:700;">SECURITY ALERTS</div>
+            <div style="font-size:1.6rem; font-weight:800; color:#EF4444; margin:0.3rem 0;" id="kpiSecurityCount">0 Threats</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:600;">Firewall Strict (200 OK)</div>
+          </div>
+          <div class="kpi-card">
+            <div style="font-size:0.75rem; color:#64748B; font-weight:700;">ADMIN OVERRIDES</div>
+            <div style="font-size:1.6rem; font-weight:800; color:#B45309; margin:0.3rem 0;" id="kpiOverrideCount">4 Actions</div>
+            <div style="font-size:0.72rem; color:#64748B; font-weight:600;">Password Resets &amp; Gates</div>
+          </div>
+          <div class="kpi-card">
+            <div style="font-size:0.75rem; color:#64748B; font-weight:700;">NDPR COMPLIANCE</div>
+            <div style="font-size:1.6rem; font-weight:800; color:#059669; margin:0.3rem 0;">100% SCORE</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:600;">Audit Hash SHA-256 Valid</div>
+          </div>
+        </div>
+
+        <!-- 3. Audit Table Card -->
+        <div class="card" style="background:#fff; border-radius:var(--radius-xl); border:1px solid #E2E8F0; padding:1.5rem; box-shadow:0 8px 25px -5px rgba(15,23,42,0.04);">
+          
+          <!-- Toolbar -->
+          <div class="toolbar-row">
+            <div class="filter-pills">
+              <button type="button" class="filter-pill active" onclick="filterAuditSeverity('all', this)">All Logs</button>
+              <button type="button" class="filter-pill" onclick="filterAuditSeverity('SECURITY', this)">Security Alerts</button>
+              <button type="button" class="filter-pill" onclick="filterAuditSeverity('WARNING', this)">Warnings</button>
+              <button type="button" class="filter-pill" onclick="filterAuditSeverity('INFO', this)">Informational</button>
+            </div>
+            
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+              <div style="position:relative;">
+                <input type="text" id="auditSearchInput" placeholder="Search actor, IP, or action..." oninput="filterAuditSearch()" style="width:240px; height:34px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem 0 2rem; font-size:0.78rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" style="position:absolute; left:0.65rem; top:50%; transform:translateY(-50%);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Audit Table -->
+          <div class="table-responsive" style="overflow-x:auto;">
+            <table class="table" style="width:100%; border-collapse:collapse;" id="auditTable">
+              <thead>
+                <tr style="border-bottom:2px solid #E2E8F0; background:#F8FAFC;">
+                  <th style="padding:0.75rem 1rem; font-size:0.72rem; font-weight:800; color:#475569; text-transform:uppercase;">Timestamp</th>
+                  <th style="padding:0.75rem 1rem; font-size:0.72rem; font-weight:800; color:#475569; text-transform:uppercase;">Severity</th>
+                  <th style="padding:0.75rem 1rem; font-size:0.72rem; font-weight:800; color:#475569; text-transform:uppercase;">Action Code</th>
+                  <th style="padding:0.75rem 1rem; font-size:0.72rem; font-weight:800; color:#475569; text-transform:uppercase;">Actor / Staff</th>
+                  <th style="padding:0.75rem 1rem; font-size:0.72rem; font-weight:800; color:#475569; text-transform:uppercase;">IP Address</th>
+                  <th style="padding:0.75rem 1rem; font-size:0.72rem; font-weight:800; color:#475569; text-transform:uppercase;">Event Payload Summary</th>
+                </tr>
+              </thead>
+              <tbody id="auditTbody">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- JS SCRIPTS & COMPONENTS -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-admin-sidebar.js"></script>
+  <script src="components/unilesa-admin-header.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <script>
+    let activeSeverityFilter = 'all';
+    let activeSearchQuery = '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderAuditLogs();
+    });
+
+    function renderAuditLogs() {
+      if (!window.UniStore) return;
+
+      let logs = window.UniStore.getAuditLogs() || [];
+
+      document.getElementById('kpiTotalAuditCount').textContent = `${logs.length} Events`;
+      document.getElementById('kpiSecurityCount').textContent = `${logs.filter(l => l.severity === 'SECURITY' || l.severity === 'DANGER').length} Flags`;
+      document.getElementById('kpiOverrideCount').textContent = `${logs.filter(l => l.action.includes('PASSWORD') || l.action.includes('GATES') || l.action.includes('DELETED')).length} Overrides`;
+
+      if (activeSeverityFilter !== 'all') {
+        logs = logs.filter(l => (l.severity || 'INFO') === activeSeverityFilter);
+      }
+
+      if (activeSearchQuery) {
+        const q = activeSearchQuery.toLowerCase();
+        logs = logs.filter(l => 
+          (l.action && l.action.toLowerCase().includes(q)) ||
+          (l.details && l.details.toLowerCase().includes(q)) ||
+          (l.actor && l.actor.toLowerCase().includes(q)) ||
+          (l.ip && l.ip.toLowerCase().includes(q))
+        );
+      }
+
+      const tbody = document.getElementById('auditTbody');
+      if (!tbody) return;
+
+      if (logs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2rem; color:#94A3B8;">No audit logs matched the current search filter.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = logs.map(l => {
+        let badgeClass = 'badge-navy';
+        if (l.severity === 'SECURITY' || l.severity === 'DANGER') badgeClass = 'badge-danger';
+        else if (l.severity === 'WARNING') badgeClass = 'badge-gold';
+        else if (l.severity === 'INFO') badgeClass = 'badge-emerald';
+
+        return `
+          <tr style="border-bottom:1px solid #E2E8F0; font-size:0.78rem;">
+            <td style="padding:0.75rem 1rem; font-family:'Fira Code', monospace; color:#64748B;">${l.timestamp || 'Just now'}</td>
+            <td style="padding:0.75rem 1rem;">
+              <span class="badge ${badgeClass}" style="font-size:0.62rem; font-weight:800;">${l.severity || 'INFO'}</span>
+            </td>
+            <td style="padding:0.75rem 1rem; font-family:'Fira Code', monospace; font-weight:700; color:var(--navy-950);">${l.action}</td>
+            <td style="padding:0.75rem 1rem; font-weight:600; color:#1E293B;">${l.actor || 'Engr. Babalola (ICT)'}</td>
+            <td style="padding:0.75rem 1rem; font-family:'Fira Code', monospace; color:#64748B;">${l.ip || '102.89.23.14'}</td>
+            <td style="padding:0.75rem 1rem; color:#334155;">${l.details}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterAuditSeverity(sev, btn) {
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      activeSeverityFilter = sev;
+      renderAuditLogs();
+    }
+
+    function filterAuditSearch() {
+      activeSearchQuery = document.getElementById('auditSearchInput').value.trim();
+      renderAuditLogs();
+    }
+
+    function exportAuditLogsCsv() {
+      if (!window.UniStore) return;
+      const logs = window.UniStore.getAuditLogs() || [];
+      
+      let csv = 'Timestamp,Severity,Action Code,Actor,IP Address,Details\n';
+      logs.forEach(l => {
+        const time = `"${(l.timestamp || '').replace(/"/g, '""')}"`;
+        const sev = `"${(l.severity || 'INFO').replace(/"/g, '""')}"`;
+        const act = `"${(l.action || '').replace(/"/g, '""')}"`;
+        const actor = `"${(l.actor || 'Engr. Babalola').replace(/"/g, '""')}"`;
+        const ip = `"${(l.ip || '102.89.23.14').replace(/"/g, '""')}"`;
+        const det = `"${(l.details || '').replace(/"/g, '""')}"`;
+        csv += `${time},${sev},${act},${actor},${ip},${det}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `UNILESA_Security_Audit_Logs_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Audit Log Exported', 'Downloaded complete forensic log stream as CSV.', 'success');
+    }
+
+    function clearAuditTrailLogs() {
+      if (confirm('Are you sure you want to clear the local audit log cache? Recent production logs will be archived.')) {
+        window.UniStore.addAuditLog('AUDIT_CACHE_PURGED', 'Admin cleared local session audit records', 'WARNING');
+        renderAuditLogs();
+        showToast('Audit Cache Purged', 'Session logs reset with root archive tag.', 'info');
+      }
+    }
+  </script>
+</body>
+</html>

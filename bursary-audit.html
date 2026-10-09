@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Student Clearance &amp; Arrears Audit — Directorate of Bursary | UNILESA</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* ==================== BURSARY AUDIT SPECIFIC STYLES ==================== */
+    .bursary-admin-hero {
+      background: linear-gradient(135deg, #091530 0%, #0F1F42 60%, #162E62 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 12px 30px -5px rgba(15, 31, 66, 0.2);
+      border: 1px solid rgba(205, 164, 52, 0.35);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .bursary-admin-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(205,164,52,0.2), transparent 70%);
+      pointer-events: none;
+    }
+    .bursary-hero-title h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--white);
+      margin: 0 0 0.35rem;
+      letter-spacing: -0.01em;
+    }
+    .bursary-hero-title p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.85);
+      margin: 0;
+      line-height: 1.45;
+      max-width: 680px;
+    }
+
+    /* Student Quick Selector Chips */
+    .student-selector-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      background: var(--white);
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 0.9rem 1.25rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+    }
+    .selector-label {
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--navy-950);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .student-chip {
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      border: 1px solid #E2E8F0;
+      background: #F8FAFC;
+      color: var(--grey-700);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .student-chip:hover {
+      background: #EDF2F7;
+      border-color: #CBD5E1;
+      color: var(--navy-950);
+    }
+    .student-chip.active {
+      background: #0F1F42;
+      color: #FFFFFF;
+      border-color: #0F1F42;
+      box-shadow: 0 4px 12px rgba(15, 31, 66, 0.15);
+    }
+    .student-chip .debt-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #EF4444;
+    }
+    .student-chip .clean-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+    }
+
+    /* Active Student Detail Stage (3-Column Grid) */
+    .audit-stage-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.15fr;
+      gap: 1.25rem;
+      margin-bottom: 1.6rem;
+    }
+    .audit-card {
+      background: var(--white);
+      border: 1px solid #E2E8F0;
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      box-shadow: 0 8px 25px -5px rgba(15, 23, 42, 0.04);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .audit-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+    .audit-card.arrears-card::before { background: linear-gradient(90deg, #DC2626, #EF4444); }
+    .audit-card.current-card::before { background: linear-gradient(90deg, #2563EB, #3B82F6); }
+    .audit-card.verdict-card::before { background: linear-gradient(90deg, #0F1F42, #CDA434); }
+
+    .audit-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.1rem;
+      gap: 0.5rem;
+    }
+    .audit-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--navy-950);
+      margin: 0 0 0.2rem;
+    }
+    .audit-card-sub {
+      font-size: 0.72rem;
+      color: var(--grey-600);
+      margin: 0;
+    }
+
+    .arrears-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.65rem 0;
+      border-bottom: 1px dashed #E2E8F0;
+      font-size: 0.76rem;
+    }
+    .arrears-item-row:last-child {
+      border-bottom: none;
+    }
+
+    /* Roster Table Card */
+    .bursary-section-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 8px 25px -5px rgba(15, 23, 42, 0.04);
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.6rem;
+      position: relative;
+    }
+    .bursary-section-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0F1F42 0%, #CDA434 50%, #0F1F42 100%);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+
+    .tariff-table-wrapper {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid #E2E8F0;
+      background: #FFFFFF;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tariff-table {
+      width: 100%;
+      min-width: 860px;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    /* Desktop Responsive Breakpoints */
+    @media (max-width: 1200px) {
+      .audit-stage-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 768px) {
+      .bursary-admin-hero {
+        padding: 1.4rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .bursary-section-card {
+        padding: 1.25rem;
+      }
+      .student-selector-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* Print styling for Official Clearance Certificate */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printableCertificate, #printableCertificate * {
+        visibility: visible;
+      }
+      #printableCertificate {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        padding: 2rem;
+        box-sizing: border-box;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST NOTIFICATION ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="bursary"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- ENTERPRISE ADMIN SIDEBAR COMPONENT -->
+    <unilesa-admin-sidebar active="audit"></unilesa-admin-sidebar>
+
+    <!-- MAIN PAGE WRAPPER (Desktop Offset by 260px) -->
+    <div class="main-wrapper">
+      
+      <!-- ENTERPRISE ADMIN TOP HEADER COMPONENT -->
+      <unilesa-admin-header 
+        title="Directorate of Bursary &amp; Financial Services" 
+        subtitle="Student Clearance &amp; Multi-Session Arrears Forensic Audit Station">
+      </unilesa-admin-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+        
+        <!-- 1. Bursary Administration Hero Banner -->
+        <section class="bursary-admin-hero">
+          <div class="bursary-hero-title">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+              <span class="badge badge-gold" style="font-size:0.68rem; font-weight:800;">🛡️ FORENSIC CLEARANCE STATION</span>
+              <span class="badge badge-success" style="font-size:0.68rem; font-weight:700;">● Multi-Session Ledger Reconciliation</span>
+            </div>
+            <h1>Student Clearance &amp; Arrears Audit</h1>
+            <p>
+              Perform individual student financial forensic reviews, isolate prior 2024/2025 carried forward arrears, ratify statutory waivers, and issue verified Digital Bursary Clearance Seals for exam docket unlocking.
+            </p>
+          </div>
+          <div style="display:flex; gap:0.65rem; z-index:2; flex-wrap:wrap;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="openAssessArrearsModal()" style="background:rgba(255,255,255,0.15); color:#fff; border-color:rgba(255,255,255,0.3); font-weight:700;">
+              <span>➕ Assess Arrears Debit</span>
+            </button>
+            <button type="button" class="btn btn-gold btn-sm" onclick="openWaiverModal()">
+              <span>📜 Grant Bursar Waiver</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. Fast Student Selector Chips Bar -->
+        <div class="student-selector-bar">
+          <div class="selector-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+            Audited Student:
+          </div>
+          <div id="studentChipsContainer" style="display:flex; gap:0.55rem; flex-wrap:wrap; flex:1;">
+            <!-- Dynamically populated chips via JS -->
+          </div>
+        </div>
+
+        <!-- 3. Active Student Audit Dashboard Stage (3-Cards) -->
+        <div class="audit-stage-grid">
+          
+          <!-- Card 1: Prior Session (2024/2025) Arrears -->
+          <div class="audit-card arrears-card">
+            <div class="audit-card-header">
+              <div>
+                <h3 class="audit-card-title">Prior Session (2024/2025) Arrears</h3>
+                <p class="audit-card-sub">Carried forward debt from previous level</p>
+              </div>
+              <span id="arrearsStatusBadge" class="badge badge-danger" style="font-weight:800; font-size:0.68rem;">
+                OUTSTANDING
+              </span>
+            </div>
+
+            <div style="font-size:1.6rem; font-weight:800; color:#DC2626; font-family:'Fira Code', monospace; margin-bottom:0.75rem;" id="priorArrearsAmount">
+              ₦35,000.00
+            </div>
+
+            <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:10px; padding:0.85rem 1rem; margin-bottom:1.1rem;">
+              <div style="font-size:0.72rem; font-weight:700; color:#991B1B; text-transform:uppercase; margin-bottom:0.4rem;">
+                Itemized Prior Debt Obligations:
+              </div>
+              <div id="priorArrearsList">
+                <!-- Dynamically populated via JS -->
+              </div>
+            </div>
+
+            <div style="margin-top:auto; display:flex; gap:0.6rem;">
+              <button type="button" class="btn btn-secondary" onclick="settlePriorArrearsForStudent()" style="flex:1; font-size:0.76rem; font-weight:700; background:#F8FAFC;">
+                ⚡ Auto-Clear Arrears
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="openWaiverModal()" style="font-size:0.76rem; color:#991B1B; font-weight:700;">
+                Waive
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: Current Session (2025/2026) Standing -->
+          <div class="audit-card current-card">
+            <div class="audit-card-header">
+              <div>
+                <h3 class="audit-card-title">Current Session (2025/2026)</h3>
+                <p class="audit-card-sub">100 Level statutory obligations</p>
+              </div>
+              <span id="currentStatusBadge" class="badge badge-navy" style="font-weight:800; font-size:0.68rem;">
+                60% CLEARED
+              </span>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.75rem;">
+              <div>
+                <div style="font-size:0.7rem; color:var(--grey-600); font-weight:700;">TOTAL SETTLED</div>
+                <div style="font-size:1.4rem; font-weight:800; color:#2563EB; font-family:'Fira Code', monospace;" id="currentPaidAmount">
+                  ₦235,000.00
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.7rem; color:var(--grey-600); font-weight:700;">PENDING SUNDRY</div>
+                <div style="font-size:1.15rem; font-weight:800; color:#D97706; font-family:'Fira Code', monospace;" id="currentPendingAmount">
+                  ₦14,500.00
+                </div>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div style="background:#E2E8F0; border-radius:9999px; height:8px; overflow:hidden; margin-bottom:0.85rem;">
+              <div id="tuitionProgressBar" style="width:75%; height:100%; background:linear-gradient(90deg, #2563EB, #10B981); border-radius:9999px;"></div>
+            </div>
+
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.85rem 1rem; font-size:0.75rem; margin-bottom:1rem;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem;">
+                <span style="color:var(--grey-600);">Tuition Tranche 1 (60%):</span>
+                <strong style="color:#059669;">₦185,000.00 (Cleared)</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem;">
+                <span style="color:var(--grey-600);">Moremi Hostel (Room 204):</span>
+                <strong style="color:#059669;">₦40,000.00 (Cleared)</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span style="color:var(--grey-600);">NACOS &amp; Faculty Dues:</span>
+                <strong style="color:#D97706;">₦14,500.00 (Unpaid)</strong>
+              </div>
+            </div>
+
+            <div style="margin-top:auto;">
+              <div style="font-size:0.74rem; color:var(--grey-600); display:flex; justify-content:space-between; align-items:center;">
+                <span>Student Wallet Balance:</span>
+                <strong id="auditWalletBal" style="color:var(--navy-950); font-family:'Fira Code', monospace; font-size:0.82rem;">₦35,000.00</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Clearance Verdict & Digital Seal Authorization -->
+          <div class="audit-card verdict-card">
+            <div class="audit-card-header">
+              <div>
+                <h3 class="audit-card-title">Clearance Verdict &amp; Seal</h3>
+                <p class="audit-card-sub">Central examination docket authentication</p>
+              </div>
+              <span id="verdictBadge" class="badge badge-gold" style="font-weight:800; font-size:0.68rem;">
+                REQUIRES REVIEW
+              </span>
+            </div>
+
+            <div style="background:#FFFDF5; border:1px solid #FDE68A; border-radius:12px; padding:1rem; margin-bottom:1.1rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                <span style="font-size:0.76rem; font-weight:700; color:#78350F;">Docket Condition:</span>
+                <span id="docketConditionTag" style="font-size:0.72rem; font-weight:800; color:#DC2626;">BLOCKED BY ARREARS</span>
+              </div>
+              <div style="font-size:0.74rem; color:#92400E; line-height:1.45;" id="docketConditionDesc">
+                Student has <strong>₦35,000.00</strong> unsettled prior session (2024/2025) arrears. Institutional policy mandates full liquidation of prior session debts before exam clearance seal issuance.
+              </div>
+            </div>
+
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.85rem; margin-bottom:1.1rem; font-family:'Fira Code', monospace; font-size:0.72rem;">
+              <div style="color:var(--grey-600); margin-bottom:0.25rem;">DIGITAL SEAL SIGNATURE:</div>
+              <div id="sealSignatureText" style="color:var(--navy-950); font-weight:700; word-break:break-all;">
+                BUR-SEAL-2026-PENDING-REV-0142
+              </div>
+            </div>
+
+            <div style="margin-top:auto; display:flex; flex-direction:column; gap:0.55rem;">
+              <button type="button" class="btn btn-primary" id="grantSealBtn" onclick="grantClearanceCertificate()" style="background:#0F1F42; color:#fff; font-size:0.8rem; font-weight:700; width:100%;">
+                🛡️ Issue Official Clearance Seal
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="printClearanceDocket()" style="font-size:0.78rem; font-weight:700; width:100%;">
+                🖨️ Print Clearance Docket Certificate
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 4. Student Roster Table Card -->
+        <div class="bursary-section-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <h2 style="font-family:'Playfair Display', serif; font-size:1.25rem; color:var(--navy-950); margin:0 0 0.25rem;">
+                Audited Student Clearance Master Roster
+              </h2>
+              <p style="font-size:0.76rem; color:var(--grey-600); margin:0;">
+                Comprehensive record of active students, multi-session balances, and verification clearance timestamps.
+              </p>
+            </div>
+
+            <div>
+              <input type="text" id="rosterSearchInput" placeholder="Filter roster by student..." oninput="filterRoster()" style="padding:0.5rem 0.85rem; border:1.5px solid #CBD5E1; border-radius:8px; font-size:0.8rem; width:260px; font-family:inherit;">
+            </div>
+          </div>
+
+          <div class="tariff-table-wrapper">
+            <table class="tariff-table">
+              <thead>
+                <tr>
+                  <th style="padding:0.85rem 1.15rem; background:#F8FAFC; text-align:left; color:var(--grey-700); font-size:0.72rem; text-transform:uppercase; font-weight:800;">Student Profile</th>
+                  <th style="padding:0.85rem 1.15rem; background:#F8FAFC; text-align:left; color:var(--grey-700); font-size:0.72rem; text-transform:uppercase; font-weight:800;">Program / Level</th>
+                  <th style="padding:0.85rem 1.15rem; background:#F8FAFC; text-align:right; color:var(--grey-700); font-size:0.72rem; text-transform:uppercase; font-weight:800;">2024/2025 Arrears</th>
+                  <th style="padding:0.85rem 1.15rem; background:#F8FAFC; text-align:right; color:var(--grey-700); font-size:0.72rem; text-transform:uppercase; font-weight:800;">2025/2026 Paid</th>
+                  <th style="padding:0.85rem 1.15rem; background:#F8FAFC; text-align:right; color:var(--grey-700); font-size:0.72rem; text-transform:uppercase; font-weight:800;">Wallet Bal</th>
+                  <th style="padding:0.85rem 1.15rem; background:#F8FAFC; text-align:center; color:var(--grey-700); font-size:0.72rem; text-transform:uppercase; font-weight:800;">Clearance Status</th>
+                  <th style="padding:0.85rem 1.15rem; background:#F8FAFC; text-align:center; color:var(--grey-700); font-size:0.72rem; text-transform:uppercase; font-weight:800;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="rosterTableBody">
+                <!-- Dynamically rendered via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal: Assess Prior Session Arrears Debit -->
+  <div class="modal-backdrop" id="assessArrearsModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:9999; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(3px);">
+    <div class="modal-card" style="background:#FFFFFF; border-radius:16px; width:100%; max-width:520px; box-shadow:0 20px 40px rgba(0,0,0,0.2); overflow:hidden; border:1px solid #E2E8F0;">
+      <div style="padding:1.4rem 1.6rem; border-bottom:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center; background:#F8FAFC;">
+        <div>
+          <h3 style="margin:0; font-size:1.15rem; font-family:'Playfair Display', serif; color:var(--navy-950);">Assess Prior Session Debit</h3>
+          <p style="margin:0.2rem 0 0; font-size:0.75rem; color:var(--grey-600);">Charge unbilled prior session statutory liabilities</p>
+        </div>
+        <button type="button" onclick="closeAssessArrearsModal()" style="border:none; background:transparent; font-size:1.4rem; color:var(--grey-600); cursor:pointer;">&times;</button>
+      </div>
+
+      <form id="assessArrearsForm" onsubmit="submitAssessArrears(event)" style="padding:1.6rem;">
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; font-size:0.76rem; font-weight:700; color:var(--navy-950); margin-bottom:0.35rem;">TARGET ACADEMIC SESSION *</label>
+          <select id="assessSessionInput" style="width:100%; padding:0.65rem; border:1.5px solid #CBD5E1; border-radius:8px; font-size:0.82rem; font-family:inherit;">
+            <option value="2024/2025" selected>2024/2025 Academic Session (Previous Year)</option>
+            <option value="2023/2024">2023/2024 Academic Session</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; font-size:0.76rem; font-weight:700; color:var(--navy-950); margin-bottom:0.35rem;">DEBIT DESCRIPTION &amp; PURPOSE *</label>
+          <input type="text" id="assessNameInput" placeholder="e.g. 2024/2025 Second Semester Lab Equipment Damage Levy" required style="width:100%; box-sizing:border-box; padding:0.65rem; border:1.5px solid #CBD5E1; border-radius:8px; font-size:0.82rem; font-family:inherit;">
+        </div>
+
+        <div style="margin-bottom:1.4rem;">
+          <label style="display:block; font-size:0.76rem; font-weight:700; color:var(--navy-950); margin-bottom:0.35rem;">AMOUNT (₦) *</label>
+          <input type="number" id="assessAmountInput" placeholder="5000" min="100" step="100" required style="width:100%; box-sizing:border-box; padding:0.65rem; border:1.5px solid #CBD5E1; border-radius:8px; font-size:0.82rem; font-weight:700; font-family:inherit;">
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeAssessArrearsModal()" style="font-size:0.8rem;">Cancel</button>
+          <button type="submit" class="btn btn-danger" style="background:#DC2626; color:#fff; border:none; font-size:0.8rem; font-weight:700;">
+            ⚡ Assess Arrears Debit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Grant Official Bursar Waiver -->
+  <div class="modal-backdrop" id="waiverModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:9999; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(3px);">
+    <div class="modal-card" style="background:#FFFFFF; border-radius:16px; width:100%; max-width:520px; box-shadow:0 20px 40px rgba(0,0,0,0.2); overflow:hidden; border:1px solid #E2E8F0;">
+      <div style="padding:1.4rem 1.6rem; border-bottom:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center; background:#F8FAFC;">
+        <div>
+          <h3 style="margin:0; font-size:1.15rem; font-family:'Playfair Display', serif; color:var(--navy-950);">Execute Bursary Statutory Waiver</h3>
+          <p style="margin:0.2rem 0 0; font-size:0.75rem; color:var(--grey-600);">Ratify official Senate or Bursary scholarship/waiver</p>
+        </div>
+        <button type="button" onclick="closeWaiverModal()" style="border:none; background:transparent; font-size:1.4rem; color:var(--grey-600); cursor:pointer;">&times;</button>
+      </div>
+
+      <form id="waiverForm" onsubmit="submitWaiver(event)" style="padding:1.6rem;">
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; font-size:0.76rem; font-weight:700; color:var(--navy-950); margin-bottom:0.35rem;">SELECT ARREARS / SUNDRY OBLIGATION TO WAIVE *</label>
+          <select id="waiverFeeItemSelect" required style="width:100%; padding:0.65rem; border:1.5px solid #CBD5E1; border-radius:8px; font-size:0.82rem; font-family:inherit;">
+            <!-- Populated from active student unpaid items via JS -->
+          </select>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; font-size:0.76rem; font-weight:700; color:var(--navy-950); margin-bottom:0.35rem;">OFFICIAL WAIVER AUTHORIZATION RATIONALE *</label>
+          <input type="text" id="waiverReasonInput" placeholder="e.g. VC Indigent Scholar Grant Ref: SEN/2026/IND/09" required style="width:100%; box-sizing:border-box; padding:0.65rem; border:1.5px solid #CBD5E1; border-radius:8px; font-size:0.82rem; font-family:inherit;">
+        </div>
+
+        <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:10px; padding:0.85rem; font-size:0.74rem; color:#92400E; margin-bottom:1.4rem; line-height:1.45;">
+          ⚠️ <strong>Audit Compliance:</strong> Executing a fee waiver marks the obligation as settled under the Bursary Special Relief Gazette and generates a non-repudiable audit log.
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeWaiverModal()" style="font-size:0.8rem;">Cancel</button>
+          <button type="submit" class="btn btn-gold" style="font-size:0.8rem; font-weight:800;">
+            ✍️ Ratify &amp; Execute Waiver
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Printable Docket Card (Hidden unless printing) -->
+  <div id="printableCertificate" style="display:none;">
+    <div style="border:4px double #0F1F42; padding:2rem; text-align:center; font-family:'Inter', sans-serif;">
+      <div style="font-size:1.8rem; font-weight:800; color:#0F1F42; font-family:'Playfair Display', serif;">UNIVERSITY OF ILESA, OSUN STATE</div>
+      <div style="font-size:1rem; font-weight:700; color:#CDA434; margin-bottom:1.5rem;">DIRECTORATE OF BURSARY &amp; FINANCIAL SERVICES</div>
+      
+      <div style="font-size:1.3rem; font-weight:800; border-top:1px solid #0F1F42; border-bottom:1px solid #0F1F42; padding:0.5rem; margin-bottom:1.5rem;">
+        OFFICIAL CENTRAL EXAMINATION FINANCIAL CLEARANCE SEAL
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; text-align:left; margin-bottom:2rem; font-size:0.9rem;">
+        <div><strong>Student Name:</strong> <span id="printStudentName">Jane Adaeze Doe</span></div>
+        <div><strong>Matric Number:</strong> <span id="printMatric">UNILESA/2026/CSC/0142</span></div>
+        <div><strong>Faculty:</strong> Faculty of Science &amp; Computing</div>
+        <div><strong>Department:</strong> Computer Science</div>
+        <div><strong>Academic Session:</strong> 2025/2026 Session</div>
+        <div><strong>Clearance Status:</strong> <span style="color:#059669; font-weight:800;">100% AUTHENTICATED &amp; CLEARED</span></div>
+        <div><strong>Seal Reference:</strong> <span id="printSealRef">BUR-SEAL-2026-0142-CERT</span></div>
+        <div><strong>Authentication Date:</strong> <span id="printDate">28 Sep 2026</span></div>
+      </div>
+
+      <div style="margin-top:3rem; display:flex; justify-content:space-between; align-items:flex-end;">
+        <div style="text-align:center;">
+          <div style="font-weight:700;">Dr. O. A. Adeleke</div>
+          <div style="font-size:0.8rem; color:#666;">University Bursar</div>
+        </div>
+        <div style="width:100px; height:100px; border:2px solid #0F1F42; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; color:#0F1F42; font-size:0.75rem; text-align:center;">
+          OFFICIAL<br>BURSARY<br>SEAL
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared Scripts & Logic -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-admin-sidebar.js"></script>
+  <script src="components/unilesa-admin-header.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <script>
+    let activeStudentIndex = 0;
+    let auditList = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAuditStudents();
+      window.addEventListener('unilesa:finances-updated', () => {
+        loadAuditStudents();
+      });
+    });
+
+    function loadAuditStudents() {
+      if (!window.UniStore) return;
+      auditList = window.UniStore.getAuditStudents() || [];
+      
+      // Merge live Jane Doe store data
+      const liveFin = window.UniStore.getMultiSessionFinances();
+      const liveWallet = window.UniStore.getWallet();
+      const liveStudent = window.UniStore.getStudent();
+
+      if (auditList[0]) {
+        auditList[0].fullName = liveStudent.fullName;
+        auditList[0].matricNumber = liveStudent.matricNumber;
+        auditList[0].walletBalance = liveWallet.balance;
+        auditList[0].previousSessionArrears = liveFin.previousSessionArrears;
+        auditList[0].totalPaid = liveFin.currentSessionPaid;
+        auditList[0].totalConsolidatedDebt = liveFin.totalConsolidatedOutstanding;
+        auditList[0].isCleared = liveFin.clearanceDocketEligible;
+      }
+
+      renderStudentChips();
+      renderActiveStudentStage();
+      renderRosterTable();
+    }
+
+    function renderStudentChips() {
+      const container = document.getElementById('studentChipsContainer');
+      if (!container) return;
+
+      container.innerHTML = auditList.map((stu, idx) => {
+        const isActive = idx === activeStudentIndex;
+        const hasArrears = (stu.previousSessionArrears > 0);
+
+        return `
+          <button type="button" class="student-chip ${isActive ? 'active' : ''}" onclick="selectStudent(${idx})">
+            <span class="${hasArrears ? 'debt-dot' : 'clean-dot'}"></span>
+            <span>${escapeHTML(stu.fullName.split(' ')[0])} (${stu.matricNumber.split('/').pop()})</span>
+            ${hasArrears ? `<span style="font-size:0.68rem; color:#EF4444; font-weight:800;">-₦${stu.previousSessionArrears.toLocaleString()}</span>` : ''}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectStudent(idx) {
+      activeStudentIndex = idx;
+      renderStudentChips();
+      renderActiveStudentStage();
+    }
+
+    function renderActiveStudentStage() {
+      const stu = auditList[activeStudentIndex];
+      if (!stu) return;
+
+      const liveFin = (activeStudentIndex === 0 && window.UniStore) 
+        ? window.UniStore.getMultiSessionFinances() 
+        : null;
+
+      const priorArrears = liveFin ? liveFin.previousSessionArrears : (stu.previousSessionArrears || 0);
+      const currentPaid = liveFin ? liveFin.currentSessionPaid : (stu.totalPaid || 0);
+      const pendingSundry = liveFin ? liveFin.currentSessionOutstanding : (stu.pendingSundry || 0);
+      const walletBal = liveFin ? window.UniStore.getWallet().balance : (stu.walletBalance || 0);
+
+      // Card 1: Prior Arrears
+      document.getElementById('priorArrearsAmount').textContent = `₦${priorArrears.toLocaleString('en-NG', {minimumFractionDigits:2})}`;
+      const arrearsBadge = document.getElementById('arrearsStatusBadge');
+      if (priorArrears > 0) {
+        arrearsBadge.className = 'badge badge-danger';
+        arrearsBadge.textContent = 'OUTSTANDING ARREARS';
+      } else {
+        arrearsBadge.className = 'badge badge-success';
+        arrearsBadge.textContent = 'CLEAN PRIOR RECORD';
+      }
+
+      // Prior item list
+      const priorListEl = document.getElementById('priorArrearsList');
+      if (liveFin && liveFin.previousSessionItems && liveFin.previousSessionItems.length > 0) {
+        priorListEl.innerHTML = liveFin.previousSessionItems.map(item => `
+          <div class="arrears-item-row">
+            <span style="color:#991B1B; font-weight:600;">${escapeHTML(item.name)}</span>
+            <strong style="font-family:'Fira Code', monospace; color:#DC2626;">₦${item.amount.toLocaleString()}</strong>
+          </div>
+        `).join('');
+      } else if (priorArrears > 0) {
+        priorListEl.innerHTML = `
+          <div class="arrears-item-row">
+            <span style="color:#991B1B; font-weight:600;">2024/2025 Second Semester Tuition &amp; Lab Obligations</span>
+            <strong style="font-family:'Fira Code', monospace; color:#DC2626;">₦${priorArrears.toLocaleString()}</strong>
+          </div>
+        `;
+      } else {
+        priorListEl.innerHTML = `
+          <div style="font-size:0.75rem; color:#166534; font-weight:600; padding:0.35rem 0;">
+            ✓ All prior academic session fee obligations are 100% liquidated.
+          </div>
+        `;
+      }
+
+      // Card 2: Current Session
+      document.getElementById('currentPaidAmount').textContent = `₦${currentPaid.toLocaleString('en-NG', {minimumFractionDigits:2})}`;
+      document.getElementById('currentPendingAmount').textContent = `₦${pendingSundry.toLocaleString('en-NG', {minimumFractionDigits:2})}`;
+      document.getElementById('auditWalletBal').textContent = `₦${walletBal.toLocaleString('en-NG', {minimumFractionDigits:2})}`;
+
+      // Card 3: Verdict & Seal
+      const isEligible = priorArrears === 0 && (currentPaid >= 185000);
+      const verdictBadge = document.getElementById('verdictBadge');
+      const conditionTag = document.getElementById('docketConditionTag');
+      const conditionDesc = document.getElementById('docketConditionDesc');
+      const sealText = document.getElementById('sealSignatureText');
+      const grantBtn = document.getElementById('grantSealBtn');
+
+      if (isEligible) {
+        verdictBadge.className = 'badge badge-success';
+        verdictBadge.textContent = 'ELIGIBLE & AUTHORIZED';
+
+        conditionTag.style.color = '#059669';
+        conditionTag.textContent = 'READY FOR DOCKET ISSUANCE';
+
+        conditionDesc.innerHTML = `
+          Student satisfies all Senate criteria: <strong>₦0.00 prior session arrears</strong> and has met the <strong>60% First Semester tuition threshold</strong>.
+        `;
+        sealText.textContent = `BUR-SEAL-2026-${stu.matricNumber.split('/').pop()}-VERIFIED`;
+        grantBtn.disabled = false;
+        grantBtn.style.opacity = '1';
+      } else {
+        verdictBadge.className = 'badge badge-danger';
+        verdictBadge.textContent = 'CLEARANCE BLOCKED';
+
+        conditionTag.style.color = '#DC2626';
+        conditionTag.textContent = priorArrears > 0 ? 'BLOCKED BY ARREARS' : 'THRESHOLD NOT MET';
+
+        conditionDesc.innerHTML = priorArrears > 0 
+          ? `Student has <strong>₦${priorArrears.toLocaleString()}</strong> in carried-forward prior session debt. Settle or waive arrears before issuing clearance seal.`
+          : `Student has paid less than the mandatory 60% minimum threshold for 2025/2026 First Semester.`;
+        sealText.textContent = `BUR-SEAL-2026-PENDING-${stu.matricNumber.split('/').pop()}`;
+      }
+    }
+
+    function renderRosterTable() {
+      const tbody = document.getElementById('rosterTableBody');
+      if (!tbody) return;
+
+      tbody.innerHTML = auditList.map((stu, idx) => {
+        const isSelected = idx === activeStudentIndex;
+        const hasDebt = stu.previousSessionArrears > 0;
+
+        return `
+          <tr style="${isSelected ? 'background:#EFF6FF;' : ''}">
+            <td style="padding:1rem 1.15rem; border-bottom:1px solid #F1F5F9;">
+              <div style="font-weight:700; color:var(--navy-950);">${escapeHTML(stu.fullName)}</div>
+              <div style="font-family:'Fira Code', monospace; font-size:0.72rem; color:var(--grey-600);">${stu.matricNumber}</div>
+            </td>
+            <td style="padding:1rem 1.15rem; border-bottom:1px solid #F1F5F9; font-size:0.75rem;">
+              <div>${stu.department}</div>
+              <div style="color:var(--grey-600);">${stu.faculty}</div>
+            </td>
+            <td style="padding:1rem 1.15rem; border-bottom:1px solid #F1F5F9; text-align:right; font-family:'Fira Code', monospace; font-weight:700; color:${hasDebt ? '#DC2626' : '#059669'};">
+              ${hasDebt ? `₦${stu.previousSessionArrears.toLocaleString()}` : '₦0.00'}
+            </td>
+            <td style="padding:1rem 1.15rem; border-bottom:1px solid #F1F5F9; text-align:right; font-family:'Fira Code', monospace; font-weight:700; color:#2563EB;">
+              ₦${(stu.totalPaid || 0).toLocaleString()}
+            </td>
+            <td style="padding:1rem 1.15rem; border-bottom:1px solid #F1F5F9; text-align:right; font-family:'Fira Code', monospace; color:var(--navy-950);">
+              ₦${(stu.walletBalance || 0).toLocaleString()}
+            </td>
+            <td style="padding:1rem 1.15rem; border-bottom:1px solid #F1F5F9; text-align:center;">
+              <span class="badge ${!hasDebt ? 'badge-success' : 'badge-danger'}" style="font-size:0.68rem; font-weight:800;">
+                ${!hasDebt ? 'CLEARED' : 'ARREARS ACTIVE'}
+              </span>
+            </td>
+            <td style="padding:1rem 1.15rem; border-bottom:1px solid #F1F5F9; text-align:center;">
+              <button type="button" class="btn btn-secondary" onclick="selectStudent(${idx})" style="padding:0.35rem 0.75rem; font-size:0.74rem; font-weight:700;">
+                Audit File
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterRoster() {
+      const q = (document.getElementById('rosterSearchInput').value || '').toLowerCase();
+      document.querySelectorAll('#rosterTableBody tr').forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+
+    function openAssessArrearsModal() {
+      const modal = document.getElementById('assessArrearsModal');
+      if (modal) modal.style.display = 'flex';
+    }
+    function closeAssessArrearsModal() {
+      const modal = document.getElementById('assessArrearsModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function submitAssessArrears(e) {
+      e.preventDefault();
+      const sessionKey = document.getElementById('assessSessionInput').value;
+      const name = document.getElementById('assessNameInput').value.trim();
+      const amount = parseFloat(document.getElementById('assessAmountInput').value) || 0;
+
+      if (window.UniStore && activeStudentIndex === 0) {
+        window.UniStore.assessSessionArrears('UNILESA/2026/CSC/0142', sessionKey, {
+          name: name,
+          amount: amount,
+          category: 'sundry'
+        });
+      } else {
+        auditList[activeStudentIndex].previousSessionArrears += amount;
+      }
+
+      showToast(`Assessed arrears debit of ₦${amount.toLocaleString()} posted.`);
+      closeAssessArrearsModal();
+      loadAuditStudents();
+    }
+
+    function openWaiverModal() {
+      const stu = auditList[activeStudentIndex];
+      const selectEl = document.getElementById('waiverFeeItemSelect');
+      
+      if (activeStudentIndex === 0 && window.UniStore) {
+        const fin = window.UniStore.getMultiSessionFinances();
+        const unpaid = [...fin.previousSessionItems, ...fin.currentSessionUnpaidItems];
+        if (unpaid.length === 0) {
+          selectEl.innerHTML = '<option value="">No outstanding items on this account</option>';
+        } else {
+          selectEl.innerHTML = unpaid.map(i => `
+            <option value="${i.id}">${escapeHTML(i.name)} — ₦${i.amount.toLocaleString()} (${i.sessionTitle || 'Arrears'})</option>
+          `).join('');
+        }
+      } else {
+        selectEl.innerHTML = `
+          <option value="custom_arrears">2024/2025 Outstanding Arrears (₦${(stu.previousSessionArrears || 0).toLocaleString()})</option>
+        `;
+      }
+
+      const modal = document.getElementById('waiverModal');
+      if (modal) modal.style.display = 'flex';
+    }
+    function closeWaiverModal() {
+      const modal = document.getElementById('waiverModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function submitWaiver(e) {
+      e.preventDefault();
+      const feeId = document.getElementById('waiverFeeItemSelect').value;
+      const reason = document.getElementById('waiverReasonInput').value.trim();
+
+      if (window.UniStore && activeStudentIndex === 0) {
+        window.UniStore.waiveSessionArrears('UNILESA/2026/CSC/0142', null, feeId, reason);
+      } else {
+        auditList[activeStudentIndex].previousSessionArrears = 0;
+      }
+
+      showToast(`Official Bursary Waiver ratified: "${reason}"`);
+      closeWaiverModal();
+      loadAuditStudents();
+    }
+
+    function settlePriorArrearsForStudent() {
+      if (window.UniStore && activeStudentIndex === 0) {
+        window.UniStore.payPreviousSessionArrears('Direct Administrative Clearance', 'BUR-ADMIN-CLEAR-0142');
+        showToast('All prior session (2024/2025) arrears liquidated via Bursary Administrative Override.');
+        loadAuditStudents();
+      } else {
+        auditList[activeStudentIndex].previousSessionArrears = 0;
+        showToast('Arrears cleared for selected student.');
+        loadAuditStudents();
+      }
+    }
+
+    function grantClearanceCertificate() {
+      const stu = auditList[activeStudentIndex];
+      const sealRef = `BUR-SEAL-2026-${stu.matricNumber.split('/').pop()}-AUTH`;
+      showToast(`Digital Clearance Seal "${sealRef}" generated and dispatched to student portal!`);
+      
+      // Update certificate details
+      document.getElementById('printStudentName').textContent = stu.fullName;
+      document.getElementById('printMatric').textContent = stu.matricNumber;
+      document.getElementById('printSealRef').textContent = sealRef;
+      document.getElementById('printDate').textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function printClearanceDocket() {
+      grantClearanceCertificate();
+      const printArea = document.getElementById('printableCertificate');
+      if (printArea) {
+        printArea.style.display = 'block';
+        window.print();
+        printArea.style.display = 'none';
+      }
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+    }
+  </script>
+</body>
+</html>

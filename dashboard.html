@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Student Dashboard — UNILESA Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* ==================== DASHBOARD-SPECIFIC STYLES ==================== */
+    
+    /* 1. Student Hero Profile Banner */
+    .student-hero-card {
+      background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-900) 45%, var(--navy-800) 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem 2rem;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px -5px rgba(10, 23, 48, 0.35);
+      border: 1px solid rgba(205, 164, 52, 0.3);
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .student-hero-card::before {
+      content: "";
+      position: absolute;
+      top: -60px;
+      right: -40px;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(205,164,52,0.22), transparent 70%);
+      pointer-events: none;
+    }
+    .student-hero-card::after {
+      content: "";
+      position: absolute;
+      bottom: -40px;
+      left: 22%;
+      width: 200px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(99,102,241,0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-profile-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+    }
+    .hero-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .hero-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--gold-400);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+      display: block;
+    }
+    .hero-online-indicator {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #10B981;
+      border: 2px solid var(--navy-900);
+    }
+    .hero-details {
+      min-width: 0;
+    }
+    .hero-details h2 {
+      margin: 0 0 0.3rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hero-meta-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.8rem;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.9);
+    }
+    .hero-actions-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.65rem;
+      position: relative;
+      z-index: 2;
+      flex-shrink: 0;
+    }
+    .hero-session-pill {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 0.4rem 0.85rem;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.74rem;
+      color: var(--white);
+      backdrop-filter: blur(8px);
+      white-space: nowrap;
+    }
+    .hero-session-pill strong {
+      color: var(--gold-400);
+    }
+    .hero-quick-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* 2. Top Metrics Stats Grid (4 Cards Row - 100% Contained) */
+    .stats-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .stat-card-v2 {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      padding: 1.15rem 1.2rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: all 0.22s var(--ease-spring);
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .stat-card-v2:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--grey-400);
+    }
+    .stat-v2-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.35rem;
+      margin-bottom: 0.65rem;
+    }
+    .stat-v2-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 0;
+    }
+    .stat-v2-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .stat-v2-icon.indigo { background: #EEF2FF; color: #4F46E5; }
+    .stat-v2-icon.amber { background: #FEF3C7; color: #D97706; }
+    .stat-v2-icon.gold { background: #FAF5E6; color: #B78F27; }
+    .stat-v2-icon.green { background: #ECFDF5; color: #059669; }
+    .stat-v2-label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--grey-700);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .stat-v2-val-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+      margin-bottom: 0.3rem;
+      min-width: 0;
+    }
+    .stat-v2-number {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--navy-950);
+      line-height: 1;
+      font-family: 'Inter', sans-serif;
+    }
+    .stat-v2-sub {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--grey-500);
+      white-space: nowrap;
+    }
+    .stat-v2-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--grey-600);
+      border-top: 1px dashed var(--grey-200);
+      padding-top: 0.5rem;
+      margin-top: 0.5rem;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+    .stat-v2-footer span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 3. Master 2-Column Workspace Grid */
+    .dashboard-workspace-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+      gap: 1.4rem;
+      align-items: start;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .workspace-main-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .workspace-side-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Status Pillars Card (3x2 Grid) */
+    .status-pillars-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      padding: 1.35rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .pillars-grid-3x2 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .pillar-box {
+      background: #FAFAFA;
+      border: 1.5px solid var(--grey-300);
+      border-radius: 12px;
+      padding: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      min-height: 120px;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .pillar-box:hover {
+      border-color: var(--gold-500);
+      background: #FFFDF7;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(205,164,52,0.12);
+    }
+    .pillar-top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.35rem;
+      margin-bottom: 0.5rem;
+    }
+    .pillar-icon-box {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .pillar-icon-box.fees { background: #EFF6FF; color: #1D4ED8; }
+    .pillar-icon-box.hostel { background: #FEF3C7; color: #B45309; }
+    .pillar-icon-box.course { background: #ECFDF5; color: #047857; }
+    .pillar-icon-box.siwes { background: #F5F3FF; color: #6D28D9; }
+    .pillar-icon-box.tp { background: #FEF3C7; color: #B45309; }
+    .pillar-icon-box.results { background: #FFF1F2; color: #BE123C; }
+
+    .pillar-body-name {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--grey-600);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.15rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pillar-body-val {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--navy-950);
+      line-height: 1.25;
+      margin-bottom: 0.15rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pillar-body-sub {
+      font-size: 0.68rem;
+      color: var(--grey-500);
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pillar-link-bottom {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--gold-600);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: auto;
+      border-top: 1px dashed var(--grey-300);
+      padding-top: 0.4rem;
+      transition: gap 0.15s ease;
+    }
+    .pillar-box:hover .pillar-link-bottom {
+      gap: 0.45rem;
+      color: var(--navy-900);
+    }
+
+    /* 4. Chart Card (Strictly Bound - No Overflow) */
+    .chart-card-v2 {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      padding: 1.35rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .chart-wrapper-v2 {
+      position: relative;
+      width: 100%;
+      height: 230px;
+      margin: 0.9rem 0 0.65rem;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    #gpaChartCanvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .chart-tooltip-v2 {
+      position: absolute;
+      display: none;
+      background: var(--navy-950);
+      color: var(--white);
+      padding: 0.45rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      pointer-events: none;
+      transform: translate(-50%, -125%);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+      z-index: 20;
+      white-space: nowrap;
+      border: 1px solid rgba(205,164,52,0.3);
+    }
+    .chart-legend-v2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      color: var(--grey-600);
+      border-top: 1px solid var(--grey-200);
+      padding-top: 0.65rem;
+      margin-top: 0.4rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .legend-indicators {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .dot-ind {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 0.35rem;
+    }
+
+    /* Payments Table */
+    .table-responsive {
+      overflow-x: auto;
+      margin-top: 0.8rem;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .payment-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .payment-table th {
+      padding: 0.75rem 0.9rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--grey-500);
+      border-bottom: 1.5px solid var(--grey-300);
+      background: #FAFBFD;
+    }
+    .payment-table td {
+      padding: 0.85rem 0.9rem;
+      font-size: 0.81rem;
+      color: var(--ink);
+      border-bottom: 1px solid var(--grey-200);
+      vertical-align: middle;
+    }
+    .payment-table tr:hover td { background: #FAF8F2; }
+    .payment-id-code {
+      font-weight: 700;
+      color: var(--navy-900);
+      font-family: monospace;
+      font-size: 0.8rem;
+    }
+    .payment-mobile-list {
+      display: none;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.8rem;
+    }
+    .payment-mob-card {
+      background: #FAFAFA;
+      border: 1.5px solid var(--grey-300);
+      border-radius: 12px;
+      padding: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    /* Right Column Widgets */
+    .side-widget-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      padding: 1.3rem 1.4rem;
+      box-shadow: var(--shadow-sm);
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      min-width: 0;
+    }
+    
+    /* Lectures List */
+    .lectures-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.85rem;
+    }
+    .lecture-card-item {
+      background: #FAFAFA;
+      border: 1px solid var(--grey-300);
+      border-radius: 12px;
+      padding: 0.85rem 0.95rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: all 0.18s ease;
+      cursor: pointer;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .lecture-card-item:hover {
+      background: #FFFDF8;
+      border-color: var(--gold-500);
+      transform: translateY(-1px);
+    }
+    .lecture-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      min-width: 0;
+    }
+    .lecturer-thumb {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .lecture-heading {
+      min-width: 0;
+    }
+    .lecture-heading .title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--navy-950);
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .lecture-heading .time {
+      font-size: 0.7rem;
+      color: var(--grey-600);
+      margin-top: 0.15rem;
+      white-space: nowrap;
+    }
+    .lecture-meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--grey-700);
+      border-top: 1px dashed var(--grey-200);
+      padding-top: 0.45rem;
+      margin-top: 0.2rem;
+    }
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Deadlines List */
+    .milestone-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 0.8rem;
+    }
+    .milestone-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      padding: 0.65rem 0.75rem;
+      background: #FAFBFD;
+      border: 1px solid var(--grey-300);
+      border-radius: 10px;
+      font-size: 0.75rem;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .milestone-icon {
+      font-size: 1.1rem;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .milestone-title {
+      font-weight: 700;
+      color: var(--navy-900);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .milestone-date {
+      color: var(--grey-600);
+      font-size: 0.69rem;
+      margin-top: 0.15rem;
+    }
+
+    /* Quick Links Grid */
+    .quick-services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin-top: 0.8rem;
+    }
+    .quick-service-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.35rem;
+      padding: 0.75rem 0.85rem;
+      background: #FAFAFA;
+      border: 1px solid var(--grey-300);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--ink);
+      transition: all 0.15s ease;
+      cursor: pointer;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .quick-service-btn:hover {
+      background: #FFFDF8;
+      border-color: var(--gold-500);
+      color: var(--navy-900);
+      transform: translateY(-1px);
+    }
+    .quick-service-btn .icon {
+      color: var(--gold-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .quick-service-btn .label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+
+    /* Level Adviser Card */
+    .adviser-card-content {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-top: 0.8rem;
+      padding: 0.75rem;
+      background: #FAFBFD;
+      border: 1px solid var(--grey-300);
+      border-radius: 12px;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .adviser-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold-400);
+      flex-shrink: 0;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 1280px) {
+      .stats-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .dashboard-workspace-grid { grid-template-columns: 1fr; }
+      .pillars-grid-3x2 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 900px) {
+      .pillars-grid-3x2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .student-hero-card { flex-direction: column; align-items: flex-start; padding: 1.4rem; }
+      .hero-actions-box { align-items: flex-start; width: 100%; }
+      .hero-quick-btn-group { flex-wrap: wrap; }
+    }
+    @media (max-width: 640px) {
+      .stats-grid-4 { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+      .stat-card-v2 { padding: 0.85rem 0.75rem; }
+      .stat-v2-number { font-size: 1.3rem; }
+      .pillars-grid-3x2 { grid-template-columns: 1fr; }
+      .table-responsive { display: none; }
+      .payment-mobile-list { display: flex; }
+      .quick-services-grid { grid-template-columns: 1fr; }
+      .stat-v2-footer { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST NOTIFICATION ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="student"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- REUSABLE SIDEBAR COMPONENT -->
+    <unilesa-sidebar active="dashboard"></unilesa-sidebar>
+
+    <!-- MAIN PAGE WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- REUSABLE TOP HEADER COMPONENT -->
+      <unilesa-header title="Welcome Back, Jane" subtitle="B.Sc. Computer Science &bull; 100 Level"></unilesa-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+
+        <!-- 1. Urgent Broadcast Notification Banner -->
+        <div class="alert-banner-item">
+          <div class="alert-left">
+            <div class="alert-icon-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div>
+              <strong>First Semester Academic Notice:</strong> Late course registration penalty takes effect in 3 days. Complete all course additions.
+            </div>
+          </div>
+          <a href="course-registration.html" class="alert-btn-action">
+            <span>View Courses</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </a>
+        </div>
+
+        <!-- 2. Student Hero Profile Banner -->
+        <section class="student-hero-card">
+          <div class="hero-profile-wrap">
+            <div class="hero-avatar-wrap">
+              <img class="hero-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=140&q=80" alt="Jane Adaeze Doe Portrait">
+              <span class="hero-online-indicator" title="Student Session Active"></span>
+            </div>
+            <div class="hero-details">
+              <h2>Jane Adaeze Doe</h2>
+              <div class="hero-meta-row">
+                <span class="hero-matric-badge" onclick="copyMatricNumber('UNILESA/2026/CSC/0142')" title="Click to copy matriculation number">
+                  UNILESA/2026/CSC/0142
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </span>
+                <span class="hero-status-pill">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="10" r="10"></circle></svg>
+                  Active Student
+                </span>
+                <span>Faculty of Science &amp; Computing &bull; Computer Science</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="hero-actions-box">
+            <div class="hero-session-pill">
+              <span>ACADEMIC SESSION:</span>
+              <strong>2025/2026 &bull; 100 Level &bull; First Semester</strong>
+            </div>
+            <div class="hero-quick-btn-group">
+              <a href="payments.html" class="btn btn-gold btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                <span>Fee Payments</span>
+              </a>
+              <a href="course-registration.html" class="btn btn-outline btn-sm" style="background:rgba(255,255,255,0.12); color:#fff; border-color:rgba(255,255,255,0.3);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                <span>Course Slip</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. Top Metrics Stats (4 Key High-Impact Metrics - Guaranteed Visibility) -->
+        <section class="stats-grid-4">
+          <!-- Stat 1: CGPA -->
+          <div class="stat-card-v2" onclick="window.location.href='results.html'" style="cursor:pointer;" title="Click to view full results and transcript">
+            <div class="stat-v2-header">
+              <div class="stat-v2-title-wrap">
+                <div class="stat-v2-icon indigo">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                </div>
+                <span class="stat-v2-label">Cumulative GPA</span>
+              </div>
+              <span class="badge badge-success">🏆 1st Class</span>
+            </div>
+            <div class="stat-v2-val-row">
+              <span class="stat-v2-number">4.79</span>
+              <span class="stat-v2-sub">/ 5.00</span>
+            </div>
+            <div class="stat-v2-footer">
+              <span>First Class Honours</span>
+              <span style="color:var(--purple-primary); font-weight:700;">View Results &rarr;</span>
+            </div>
+          </div>
+
+          <!-- Stat 2: Registered Credits -->
+          <div class="stat-card-v2">
+            <div class="stat-v2-header">
+              <div class="stat-v2-title-wrap">
+                <div class="stat-v2-icon amber">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </div>
+                <span class="stat-v2-label">Registered Units</span>
+              </div>
+              <span class="badge badge-warning">1st Semester</span>
+            </div>
+            <div class="stat-v2-val-row">
+              <span class="stat-v2-number">21</span>
+              <span class="stat-v2-sub">/ 24 Units</span>
+            </div>
+            <div class="stat-v2-footer">
+              <span>8 Approved</span>
+              <span style="color:var(--amber-tag); font-weight:700;">3 Electives</span>
+            </div>
+          </div>
+
+          <!-- Stat 3: Student Portal Wallet -->
+          <div class="stat-card-v2">
+            <div class="stat-v2-header">
+              <div class="stat-v2-title-wrap">
+                <div class="stat-v2-icon gold">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                </div>
+                <span class="stat-v2-label">Portal Wallet</span>
+              </div>
+              <span class="badge badge-gold">Active</span>
+            </div>
+            <div class="stat-v2-val-row">
+              <span class="stat-v2-number" id="dashWalletNumber">₦35,000</span>
+              <span class="stat-v2-sub">.00</span>
+            </div>
+            <div class="stat-v2-footer">
+              <span>Fees &amp; Sundry</span>
+              <a href="payments.html" style="color:var(--gold-600); font-weight:700; text-decoration:none;">Fund &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Stat 4: Clearance Progress -->
+          <div class="stat-card-v2" id="clearanceProgressStatCard" onclick="window.location.href='documents.html'" style="cursor:pointer;" title="Click to view full Clearance Documents &amp; Credentials">
+            <div class="stat-v2-header">
+              <div class="stat-v2-title-wrap">
+                <div class="stat-v2-icon green">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+                <span class="stat-v2-label">Clearance Progress</span>
+              </div>
+              <span class="badge badge-success">100% Cleared</span>
+            </div>
+            <div class="stat-v2-val-row">
+              <span class="stat-v2-number">6</span>
+              <span class="stat-v2-sub">/ 6 Documents</span>
+            </div>
+            <div class="stat-v2-footer">
+              <span>Registry Verified</span>
+              <span style="color:var(--green-ok); font-weight:700;">View Docs &rarr;</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. Master 2-Column Workspace Grid -->
+        <section class="dashboard-workspace-grid">
+
+          <!-- LEFT COLUMN: Main Academic Operations (~60%) -->
+          <div class="workspace-main-col">
+
+            <!-- Card 1: Six Key Pillars Status at a Glance (3x2 Grid) -->
+            <div class="status-pillars-card">
+              <div class="card-header-flex" style="margin-bottom:0.2rem;">
+                <div>
+                  <h3 style="display:flex; align-items:center; gap:0.55rem; font-size:1.05rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    Status at a Glance
+                  </h3>
+                  <p>Key academic clearances, portal modules, and campus lifecycle</p>
+                </div>
+              </div>
+
+              <div class="pillars-grid-3x2">
+                <!-- Pillar 1: School Fees & Multi-Session Arrears Tracking -->
+                <div class="pillar-box" onclick="window.location.href='payments.html'">
+                  <div class="pillar-top-row">
+                    <div class="pillar-icon-box fees">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                    </div>
+                    <span class="badge badge-warning" id="dashPillarFeesBadge">ARREARS OWING</span>
+                  </div>
+                  <div>
+                    <div class="pillar-body-name">School Fees &amp; Arrears</div>
+                    <div class="pillar-body-val" id="dashPillarFeesVal">₦49,500 Owing</div>
+                    <div class="pillar-body-sub" id="dashPillarFeesSub">₦35k 2024/25 Arrears + Sundries</div>
+                  </div>
+                  <div class="pillar-link-bottom">Clear Balance &rarr;</div>
+                </div>
+
+                <!-- Pillar 2: Hostel Accommodation -->
+                <div class="pillar-box" onclick="openHostelModal(event)">
+                  <div class="pillar-top-row">
+                    <div class="pillar-icon-box hostel">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    </div>
+                    <span class="badge badge-warning">ALLOCATED</span>
+                  </div>
+                  <div>
+                    <div class="pillar-body-name">Hostel Space</div>
+                    <div class="pillar-body-val">Room 204</div>
+                    <div class="pillar-body-sub">Moremi Female Hall &bull; Bed 2</div>
+                  </div>
+                  <div class="pillar-link-bottom">Check-in Pass &rarr;</div>
+                </div>
+
+                <!-- Pillar 3: Course Registration -->
+                <div class="pillar-box" onclick="window.location.href='course-registration.html'">
+                  <div class="pillar-top-row">
+                    <div class="pillar-icon-box course">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    </div>
+                    <span class="badge badge-success">APPROVED</span>
+                  </div>
+                  <div>
+                    <div class="pillar-body-name">Course Reg</div>
+                    <div class="pillar-body-val">21 Credit Units</div>
+                    <div class="pillar-body-sub">9 Registered courses verified</div>
+                  </div>
+                  <div class="pillar-link-bottom">Course Slip &rarr;</div>
+                </div>
+
+                <!-- Pillar 4: SIWES Portal -->
+                <div class="pillar-box" onclick="openSiwesModal(event)">
+                  <div class="pillar-top-row">
+                    <div class="pillar-icon-box siwes">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    </div>
+                    <span class="badge badge-info">300L TRACK</span>
+                  </div>
+                  <div>
+                    <div class="pillar-body-name">SIWES Portal</div>
+                    <div class="pillar-body-val">Industrial IT</div>
+                    <div class="pillar-body-sub">Pre-placement prep</div>
+                  </div>
+                  <div class="pillar-link-bottom">Placement Info &rarr;</div>
+                </div>
+
+                <!-- Pillar 5: Teaching Practice (TP) -->
+                <div class="pillar-box" onclick="openTpModal(event)">
+                  <div class="pillar-top-row">
+                    <div class="pillar-icon-box tp">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    </div>
+                    <span class="badge badge-gold">EDU PORTAL</span>
+                  </div>
+                  <div>
+                    <div class="pillar-body-name">TP Practicum</div>
+                    <div class="pillar-body-val">School Posting</div>
+                    <div class="pillar-body-sub">Lesson plan portal</div>
+                  </div>
+                  <div class="pillar-link-bottom">Practicum Guide &rarr;</div>
+                </div>
+
+                <!-- Pillar 6: Results -->
+                <div class="pillar-box" onclick="window.location.href='results.html'">
+                  <div class="pillar-top-row">
+                    <div class="pillar-icon-box results">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    </div>
+                    <span class="badge badge-success">PUBLISHED</span>
+                  </div>
+                  <div>
+                    <div class="pillar-body-name">Exam Results</div>
+                    <div class="pillar-body-val">CGPA: 4.79</div>
+                    <div class="pillar-body-sub">First Class Honours</div>
+                  </div>
+                  <div class="pillar-link-bottom">View Results &rarr;</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Academic Performance Progression (Canvas Chart Strictly Bound) -->
+            <div class="chart-card-v2">
+              <div class="card-header-flex">
+                <div>
+                  <h2 style="font-size:1.05rem;">Academic Performance Progression</h2>
+                  <p>Semester-by-semester Grade Point Average (GPA) &amp; Departmental Benchmark</p>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span class="badge badge-gold" style="font-size:0.68rem;">Standing: Excellent</span>
+                </div>
+              </div>
+
+              <div class="chart-wrapper-v2" id="chartWrapper">
+                <canvas id="gpaChartCanvas"></canvas>
+                <div class="chart-tooltip-v2" id="chartTooltip">
+                  <div style="font-weight:700; color:var(--gold-400);" id="ttTitle">1st Semester</div>
+                  <div style="margin-top:0.15rem;">Student GPA: <strong id="ttStudentGpa">3.75</strong></div>
+                  <div style="color:#CBD5E1;">Department Average: <strong id="ttAvgGpa">2.80</strong></div>
+                </div>
+              </div>
+
+              <div class="chart-legend-v2">
+                <div class="legend-indicators">
+                  <span><span class="dot-ind" style="background:#6366F1;"></span> Your GPA Curve</span>
+                  <span><span class="dot-ind" style="background:#E11D48;"></span> Department Average</span>
+                </div>
+                <div style="font-weight:700; color:var(--navy-900); font-size:0.75rem;">
+                  Active Semester GPA: <span style="color:#6366F1;">3.75 / 4.00</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Recent Bursary Transactions & Receipts -->
+            <div class="card">
+              <div class="card-header-flex">
+                <div>
+                  <h2 style="font-size:1.05rem;">Recent Payment History &amp; Receipts</h2>
+                  <p>Verified bursary receipts for the active academic session</p>
+                </div>
+                <a href="payments.html" class="btn btn-outline btn-sm">Make Fee Payment</a>
+              </div>
+
+              <!-- Desktop Table -->
+              <div class="table-responsive">
+                <table class="payment-table">
+                  <thead>
+                    <tr>
+                      <th>Transaction ID</th>
+                      <th>Description</th>
+                      <th>Date Paid</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th style="text-align:right;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="payment-id-code">PID-331829</td>
+                      <td><strong>First Semester Tuition &amp; Levies</strong></td>
+                      <td>23 Oct 2024</td>
+                      <td style="font-weight:700;">₦185,000.00</td>
+                      <td><span class="badge badge-success">Completed</span></td>
+                      <td style="text-align:right;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="previewReceipt('PID-331829', 'First Semester Tuition & Levies', '23 Oct 2024', '₦185,000.00', 'Completed')">
+                          View Receipt
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="payment-id-code">PID-330412</td>
+                      <td><strong>Faculty &amp; Departmental Dues</strong></td>
+                      <td>12 Oct 2024</td>
+                      <td style="font-weight:700;">₦10,000.00</td>
+                      <td><span class="badge badge-success">Completed</span></td>
+                      <td style="text-align:right;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="previewReceipt('PID-330412', 'Faculty & Departmental Dues', '12 Oct 2024', '₦10,000.00', 'Completed')">
+                          View Receipt
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="payment-id-code">PID-329841</td>
+                      <td><strong>Hostel Maintenance Fee (Moremi Hall)</strong></td>
+                      <td>04 Oct 2024</td>
+                      <td style="font-weight:700;">₦40,000.00</td>
+                      <td><span class="badge badge-warning">On-Verification</span></td>
+                      <td style="text-align:right;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="previewReceipt('PID-329841', 'Hostel Maintenance Fee', '04 Oct 2024', '₦40,000.00', 'On-Verification')">
+                          View Receipt
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Mobile Cards -->
+              <div class="payment-mobile-list">
+                <div class="payment-mob-card" onclick="previewReceipt('PID-331829', 'First Semester Tuition', '23 Oct 2024', '₦185,000.00', 'Completed')">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="payment-id-code">PID-331829</span>
+                    <span class="badge badge-success">Completed</span>
+                  </div>
+                  <div style="font-weight:700; color:var(--navy-900);">First Semester Tuition</div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--grey-300); padding-top:0.4rem;">
+                    <span style="font-size:0.75rem; color:var(--grey-600);">23 Oct 2024</span>
+                    <span style="font-weight:800; color:var(--navy-950);">₦185,000.00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: Side Intelligence & Fast Utilities (~40%) -->
+          <div class="workspace-side-col">
+
+            <!-- Side Card 1: Today's Lectures -->
+            <div class="side-widget-card">
+              <div class="card-header-flex" style="margin-bottom:0.4rem;">
+                <div>
+                  <h3 style="font-size:0.98rem;">Today's Lectures</h3>
+                  <p>Tuesday, 28th September 2026</p>
+                </div>
+                <a href="exam-timetable.html" class="btn btn-outline btn-sm" style="padding:0.35rem 0.65rem; font-size:0.72rem;">Full Timetable</a>
+              </div>
+
+              <div class="lectures-stack">
+                <!-- Lecture 1 -->
+                <div class="lecture-card-item" onclick="alert('CSC 101: 08:00 AM - 10:00 AM\nVenue: ETF Lecture Theatre 1\nLecturer: Dr. A. K. Alabi')">
+                  <div class="lecture-card-top">
+                    <div style="display:flex; align-items:center; gap:0.6rem; min-width:0;">
+                      <img class="lecturer-thumb" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80" alt="Dr. Alabi">
+                      <div class="lecture-heading">
+                        <div class="title">CSC 101 - Intro to Computer Science</div>
+                        <div class="time">08:00 AM &ndash; 10:00 AM (2 hrs)</div>
+                      </div>
+                    </div>
+                    <span class="badge badge-success">Upcoming</span>
+                  </div>
+                  <div class="lecture-meta-bar">
+                    <div class="meta-chip">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      <span>ETF Theatre 1</span>
+                    </div>
+                    <div class="meta-chip">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span>Dr. A. K. Alabi</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Lecture 2 -->
+                <div class="lecture-card-item" onclick="alert('MTH 101: 11:00 AM - 01:00 PM\nVenue: Faculty Large Hall B\nLecturer: Prof. O. T. Adeleke')">
+                  <div class="lecture-card-top">
+                    <div style="display:flex; align-items:center; gap:0.6rem; min-width:0;">
+                      <img class="lecturer-thumb" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=80&q=80" alt="Prof. Adeleke">
+                      <div class="lecture-heading">
+                        <div class="title">MTH 101 - Elementary Mathematics I</div>
+                        <div class="time">11:00 AM &ndash; 01:00 PM (2 hrs)</div>
+                      </div>
+                    </div>
+                    <span class="badge badge-info">Lecture</span>
+                  </div>
+                  <div class="lecture-meta-bar">
+                    <div class="meta-chip">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      <span>Science Hall B</span>
+                    </div>
+                    <div class="meta-chip">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span>Prof. Adeleke</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Lecture 3 -->
+                <div class="lecture-card-item" onclick="alert('GST 111: 02:00 PM - 04:00 PM\nVenue: General Studies Aud A\nLecturer: Dr. (Mrs) Folashade')">
+                  <div class="lecture-card-top">
+                    <div style="display:flex; align-items:center; gap:0.6rem; min-width:0;">
+                      <img class="lecturer-thumb" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=80&q=80" alt="Dr. Folashade">
+                      <div class="lecture-heading">
+                        <div class="title">GST 111 - Use of English &amp; Skills</div>
+                        <div class="time">02:00 PM &ndash; 04:00 PM (2 hrs)</div>
+                      </div>
+                    </div>
+                    <span class="badge badge-gold">General</span>
+                  </div>
+                  <div class="lecture-meta-bar">
+                    <div class="meta-chip">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      <span>GST Aud A</span>
+                    </div>
+                    <div class="meta-chip">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span>Dr. Folashade</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Side Card 2: Semester Milestones & Deadlines -->
+            <div class="side-widget-card">
+              <div class="card-header-flex" style="margin-bottom:0.2rem;">
+                <div>
+                  <h3 style="font-size:0.98rem;">First Semester Milestones</h3>
+                  <p>2025/2026 Academic Calendar</p>
+                </div>
+              </div>
+
+              <div class="milestone-list">
+                <div class="milestone-row">
+                  <div class="milestone-icon">⏳</div>
+                  <div style="flex:1; min-width:0;">
+                    <div class="milestone-title">Course Registration Closes</div>
+                    <div class="milestone-date">3 Days Remaining &bull; 01 Oct 2026</div>
+                  </div>
+                  <span class="badge badge-danger" style="font-size:0.62rem;">Urgent</span>
+                </div>
+
+                <div class="milestone-row">
+                  <div class="milestone-icon">📝</div>
+                  <div style="flex:1; min-width:0;">
+                    <div class="milestone-title">Continuous Assessment CBTs</div>
+                    <div class="milestone-date">14 Oct &ndash; 21 Oct 2026</div>
+                  </div>
+                  <span class="badge badge-info" style="font-size:0.62rem;">Scheduled</span>
+                </div>
+
+                <div class="milestone-row">
+                  <div class="milestone-icon">🎓</div>
+                  <div style="flex:1; min-width:0;">
+                    <div class="milestone-title">First Semester Final Examinations</div>
+                    <div class="milestone-date">18 Nov &ndash; 05 Dec 2026</div>
+                  </div>
+                  <span class="badge badge-warning" style="font-size:0.62rem;">Upcoming</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Side Card 3: Quick Document Services -->
+            <div class="side-widget-card">
+              <div class="card-header-flex" style="margin-bottom:0.2rem;">
+                <div>
+                  <h3 style="font-size:0.98rem;">Quick Services &amp; Passes</h3>
+                  <p>1-Click instant academic documents</p>
+                </div>
+              </div>
+
+              <div class="quick-services-grid">
+                <a href="course-registration.html" class="quick-service-btn">
+                  <span class="icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                  </span>
+                  <span class="label">Course Form</span>
+                </a>
+
+                <a href="exam-timetable.html" class="quick-service-btn">
+                  <span class="icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  </span>
+                  <span class="label">Exam Docket</span>
+                </a>
+
+                <button type="button" class="quick-service-btn" onclick="openHostelModal(event)">
+                  <span class="icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                  </span>
+                  <span class="label">Hostel Pass</span>
+                </button>
+
+                <a href="medical-clearance.html" class="quick-service-btn">
+                  <span class="icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                  </span>
+                  <span class="label">Medical Card</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Side Card 4: Level Academic Adviser -->
+            <div class="side-widget-card">
+              <div class="card-header-flex" style="margin-bottom:0.2rem;">
+                <div>
+                  <h3 style="font-size:0.98rem;">Staff Level Adviser</h3>
+                  <p>Department of Computer Science</p>
+                </div>
+              </div>
+
+              <div class="adviser-card-content">
+                <img class="adviser-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" alt="Dr. A. K. Alabi">
+                <div style="flex:1; min-width:0;">
+                  <div style="font-weight:700; color:var(--navy-900); font-size:0.83rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Dr. A. K. Alabi</div>
+                  <div style="font-size:0.71rem; color:var(--grey-600); margin-top:0.1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">ETF Wing B, Room 14</div>
+                  <div style="font-size:0.67rem; color:var(--gold-600); font-weight:600; margin-top:0.1rem;">Mon &amp; Wed (10 AM - 2 PM)</div>
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" onclick="openHelpdeskModal(event)" style="padding:0.35rem 0.65rem; font-size:0.72rem; flex-shrink:0;">
+                  Contact
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- REUSABLE MOBILE BOTTOM NAV -->
+  <unilesa-mobile-nav active="dashboard"></unilesa-mobile-nav>
+
+  <!-- SHARED JS LOGIC & REUSABLE COMPONENTS -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-sidebar.js"></script>
+  <script src="components/unilesa-header.js"></script>
+  <script src="components/unilesa-mobile-nav.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <!-- PAGE-SPECIFIC LOGIC (CANVAS GPA CHART & WALLET SYNC) -->
+  <script>
+    // Live Multi-Session Finance & Wallet Sync
+    (function syncDashboardFinances() {
+      function updateFinanceDisplay() {
+        if (!window.UniStore) return;
+        const wallet = window.UniStore.getWallet();
+        const data = window.UniStore.getMultiSessionFinances();
+        const arrears = window.UniStore.getPreviousSessionArrears();
+
+        const walletEl = document.getElementById('dashWalletNumber');
+        if (walletEl) {
+          const amt = Math.floor(wallet.balance || 0);
+          walletEl.textContent = '₦' + amt.toLocaleString('en-NG');
+        }
+
+        const badgeEl = document.getElementById('dashPillarFeesBadge');
+        const valEl = document.getElementById('dashPillarFeesVal');
+        const subEl = document.getElementById('dashPillarFeesSub');
+
+        if (badgeEl && valEl && subEl) {
+          if (arrears.totalArrears > 0) {
+            badgeEl.className = 'badge badge-danger';
+            badgeEl.textContent = 'PRIOR ARREARS';
+            valEl.textContent = '₦' + data.totalConsolidatedOwing.toLocaleString('en-NG') + ' Owing';
+            subEl.textContent = `₦${arrears.totalArrears.toLocaleString('en-NG')} 2024/25 Arrears + Sundries`;
+          } else if (data.totalConsolidatedOwing > 0) {
+            badgeEl.className = 'badge badge-warning';
+            badgeEl.textContent = 'PENDING SUNDRY';
+            valEl.textContent = '₦' + data.totalConsolidatedOwing.toLocaleString('en-NG') + ' Owing';
+            subEl.textContent = '2025/2026 Sundry Fees Pending';
+          } else {
+            badgeEl.className = 'badge badge-success';
+            badgeEl.textContent = '100% CLEARED';
+            valEl.textContent = '₦' + data.totalConsolidatedBilled.toLocaleString('en-NG') + ' Paid';
+            subEl.textContent = 'All multi-session fees cleared';
+          }
+        }
+      }
+      updateFinanceDisplay();
+      window.addEventListener('unilesa:wallet-updated', updateFinanceDisplay);
+      window.addEventListener('unilesa:finances-updated', updateFinanceDisplay);
+    })();
+
+    // Canvas GPA Chart (Strictly Bound to Parent Box)
+    (function initGpaChart() {
+      const canvas = document.getElementById('gpaChartCanvas');
+      const wrapper = document.getElementById('chartWrapper');
+      const tooltip = document.getElementById('chartTooltip');
+      const ttTitle = document.getElementById('ttTitle');
+      const ttStudentGpa = document.getElementById('ttStudentGpa');
+      const ttAvgGpa = document.getElementById('ttAvgGpa');
+      if (!canvas || !wrapper) return;
+
+      const ctx = canvas.getContext('2d');
+      const terms = ['1st Sem', '2nd Sem', '3rd Sem', '4th Sem', '5th Sem', '6th Sem'];
+      const studentGpa = [2.50, 2.33, 2.15, 2.52, 3.20, 3.75];
+      const averageGpa = [2.20, 2.49, 2.35, 2.45, 2.80, 3.40];
+
+      const minY = 1.0;
+      const maxY = 4.0;
+      let width = 0, height = 0;
+      let pointCoords = [];
+
+      function resize() {
+        if (!wrapper || !canvas) return;
+        const rect = wrapper.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = Math.floor(rect.width);
+        height = Math.floor(rect.height || 230);
+        if (width <= 0) return;
+
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+
+        ctx.resetTransform();
+        ctx.scale(dpr, dpr);
+        renderChart();
+      }
+      window.addEventListener('resize', resize);
+
+      function getYPixel(val) {
+        const paddingBottom = 26;
+        const paddingTop = 14;
+        const h = Math.max(10, height - paddingBottom - paddingTop);
+        const ratio = (val - minY) / (maxY - minY);
+        return height - paddingBottom - (ratio * h);
+      }
+
+      function getXPixel(idx) {
+        const isMobile = window.innerWidth < 640;
+        const paddingLeft = isMobile ? 30 : 38;
+        const paddingRight = isMobile ? 12 : 20;
+        const w = Math.max(10, width - paddingLeft - paddingRight);
+        return paddingLeft + (idx / (terms.length - 1)) * w;
+      }
+
+      function renderChart(hoverIndex = -1) {
+        ctx.clearRect(0, 0, width, height);
+        const isMobile = window.innerWidth < 640;
+        const paddingLeft = isMobile ? 30 : 38;
+        const paddingRight = isMobile ? 12 : 20;
+
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.font = '500 10px Inter, sans-serif';
+        ctx.fillStyle = '#8E9CAE';
+
+        const yTicks = [1.0, 2.0, 3.0, 4.0];
+        yTicks.forEach(tick => {
+          const y = getYPixel(tick);
+          ctx.fillText(tick.toFixed(1), paddingLeft - 6, y);
+          ctx.beginPath();
+          ctx.moveTo(paddingLeft, y);
+          ctx.lineTo(width - paddingRight, y);
+          ctx.strokeStyle = '#EDF2F7';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        });
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.font = isMobile ? '500 9px Inter, sans-serif' : '500 10px Inter, sans-serif';
+        terms.forEach((term, i) => {
+          const x = getXPixel(i);
+          ctx.fillText(term, x, height - 16);
+        });
+
+        // Average GPA Line (Dashed Rose Line)
+        ctx.save();
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        terms.forEach((term, i) => {
+          const x = getXPixel(i);
+          const y = getYPixel(averageGpa[i]);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.strokeStyle = '#E11D48';
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+        ctx.restore();
+
+        // Student GPA Curve with Area Fill
+        pointCoords = [];
+        ctx.beginPath();
+        terms.forEach((term, i) => {
+          const x = getXPixel(i);
+          const y = getYPixel(studentGpa[i]);
+          pointCoords.push({ x, y, index: i });
+          if (i === 0) ctx.moveTo(x, y);
+          else {
+            const prevX = getXPixel(i - 1);
+            const prevY = getYPixel(studentGpa[i - 1]);
+            const cp1x = prevX + (x - prevX) / 2;
+            const cp2x = prevX + (x - prevX) / 2;
+            ctx.bezierCurveTo(cp1x, prevY, cp2x, y, x, y);
+          }
+        });
+
+        ctx.strokeStyle = '#6366F1';
+        ctx.lineWidth = 2.4;
+        ctx.stroke();
+
+        const grad = ctx.createLinearGradient(0, 0, 0, height - 26);
+        grad.addColorStop(0, 'rgba(99, 102, 241, 0.22)');
+        grad.addColorStop(1, 'rgba(99, 102, 241, 0.00)');
+
+        ctx.lineTo(getXPixel(terms.length - 1), getYPixel(minY));
+        ctx.lineTo(getXPixel(0), getYPixel(minY));
+        ctx.closePath();
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        // Points
+        pointCoords.forEach((pt, i) => {
+          const isHovered = (i === hoverIndex);
+          ctx.beginPath();
+          ctx.arc(pt.x, getYPixel(averageGpa[i]), 3, 0, Math.PI * 2);
+          ctx.fillStyle = '#E11D48';
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, isHovered ? 5.5 : 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = '#6366F1';
+          ctx.fill();
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = '#FFFFFF';
+          ctx.stroke();
+        });
+      }
+
+      function handlePointerMove(clientX) {
+        const rect = wrapper.getBoundingClientRect();
+        const mouseX = clientX - rect.left;
+        let closestIdx = -1;
+        let minDistance = 45;
+
+        pointCoords.forEach((pt, i) => {
+          const dist = Math.abs(pt.x - mouseX);
+          if (dist < minDistance) {
+            minDistance = dist;
+            closestIdx = i;
+          }
+        });
+
+        if (closestIdx !== -1) {
+          const pt = pointCoords[closestIdx];
+          renderChart(closestIdx);
+          ttTitle.textContent = `${terms[closestIdx]} 2025`;
+          ttStudentGpa.textContent = studentGpa[closestIdx].toFixed(2);
+          ttAvgGpa.textContent = averageGpa[closestIdx].toFixed(2);
+          tooltip.style.display = 'block';
+          tooltip.style.left = `${pt.x}px`;
+          tooltip.style.top = `${pt.y}px`;
+        } else {
+          renderChart();
+          tooltip.style.display = 'none';
+        }
+      }
+
+      wrapper.addEventListener('mousemove', (e) => handlePointerMove(e.clientX));
+      wrapper.addEventListener('mouseleave', () => {
+        renderChart();
+        tooltip.style.display = 'none';
+      });
+
+      wrapper.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) handlePointerMove(e.touches[0].clientX);
+      }, { passive: true });
+
+      wrapper.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) handlePointerMove(e.touches[0].clientX);
+      }, { passive: true });
+
+      wrapper.addEventListener('touchend', () => {
+        setTimeout(() => {
+          renderChart();
+          tooltip.style.display = 'none';
+        }, 1500);
+      });
+
+      setTimeout(resize, 60);
+    })();
+  </script>
+</body>
+</html>

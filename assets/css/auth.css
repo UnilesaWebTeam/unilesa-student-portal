@@ -1,0 +1,443 @@
+/* ==========================================================================
+   AUTH & ONBOARDING SHARED STYLES
+   ========================================================================== */
+
+body.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.6rem 1.2rem;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #071126;
+  min-height: 100vh;
+}
+
+/* Background Automations & Canvas */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(1100px 700px at 15% 15%, rgba(205,164,52,0.18), transparent 60%),
+    radial-gradient(1000px 700px at 85% 85%, rgba(21,42,88,0.7), transparent 60%),
+    radial-gradient(800px 600px at 50% 50%, rgba(15,31,66,0.6), transparent 70%),
+    linear-gradient(160deg, #071126 0%, #0B1938 50%, #050D1E 100%);
+  background-size: 140% 140%;
+  animation: meshShift 14s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes meshShift {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 30% 100%; }
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(205,164,52,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(205,164,52,0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at center, black 35%, transparent 85%);
+  -webkit-mask-image: radial-gradient(circle at center, black 35%, transparent 85%);
+  pointer-events: none;
+  z-index: 0;
+  animation: gridBreathe 8s ease-in-out infinite alternate;
+}
+
+@keyframes gridBreathe {
+  0% { opacity: 0.4; transform: scale(1); }
+  100% { opacity: 0.85; transform: scale(1.02); }
+}
+
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blobs-wrapper {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(85px);
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 0.4s var(--ease-spring);
+}
+
+.blob-gold {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle at 35% 35%, rgba(224,193,104,0.45), rgba(205,164,52,0.08) 60%, transparent 75%);
+  top: -10%;
+  left: -8%;
+  animation: floatGold 18s ease-in-out infinite alternate;
+}
+
+.blob-navy {
+  width: 580px;
+  height: 580px;
+  background: radial-gradient(circle at 60% 40%, rgba(25,55,125,0.75), rgba(15,31,66,0.15) 65%, transparent 80%);
+  bottom: -18%;
+  right: -10%;
+  animation: floatNavy 22s ease-in-out infinite alternate;
+}
+
+.blob-indigo {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle at 50% 50%, rgba(55,85,160,0.38), rgba(21,42,88,0.06) 65%, transparent 75%);
+  top: 2%;
+  right: -4%;
+  animation: floatIndigo 20s ease-in-out infinite alternate;
+}
+
+.blob-amber {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle at 40% 40%, rgba(205,164,52,0.25), rgba(183,143,39,0.04) 65%, transparent 75%);
+  bottom: 2%;
+  left: 6%;
+  animation: floatAmber 16s ease-in-out infinite alternate;
+}
+
+@keyframes floatGold {
+  0% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(70px,50px) scale(1.1); }
+  100% { transform: translate(30px,95px) scale(0.96); }
+}
+
+@keyframes floatNavy {
+  0% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(-80px,-45px) scale(1.08); }
+  100% { transform: translate(-35px,-90px) scale(0.95); }
+}
+
+@keyframes floatIndigo {
+  0% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(-50px,60px) scale(1.12); }
+  100% { transform: translate(-85px,20px) scale(0.93); }
+}
+
+@keyframes floatAmber {
+  0% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(55px,-55px) scale(1.1); }
+  100% { transform: translate(85px,-20px) scale(0.95); }
+}
+
+/* Auth Card Container: 50% / 50% Symmetrical Split & Harmoniously Distributed Context */
+.auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 980px;
+  min-height: 480px;
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  box-shadow: var(--shadow-card);
+  animation: cardIn 0.8s var(--ease-smooth) both;
+  margin: auto;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(28px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.auth-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 24px;
+  padding: 2px;
+  background: linear-gradient(120deg, var(--gold-500), transparent 35%, transparent 65%, var(--gold-400));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.9;
+  animation: glowRotate 6s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes glowRotate {
+  0% { background: linear-gradient(0deg, var(--gold-500), transparent 35%, transparent 65%, var(--gold-400)); }
+  50% { background: linear-gradient(180deg, var(--gold-400), transparent 35%, transparent 65%, var(--gold-500)); }
+  100% { background: linear-gradient(360deg, var(--gold-500), transparent 35%, transparent 65%, var(--gold-400)); }
+}
+
+/* Left Column: Form / Action Panel with Balanced Vertical Distribution */
+.form-col {
+  padding: 1.6rem 2.1rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.8rem;
+  position: relative;
+  z-index: 1;
+  max-height: 88vh;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--grey-300) transparent;
+}
+
+/* Right Column: Hero Showcase with Animated Official UNILESA School Gate */
+.hero-col {
+  background: linear-gradient(145deg, #060e22 0%, #0a1836 45%, #12244a 100%);
+  padding: 1.6rem 2.1rem 1.4rem;
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  border-left: 1px solid rgba(205, 164, 52, 0.28);
+}
+
+/* Continuous Cinematic Animated Background Image with Official UNILESA Gate from img folder */
+.hero-col::before {
+  content: "";
+  position: absolute;
+  inset: -25px;
+  background-image: url('../img/school-gate.png'), url('../img/school%20gate.png');
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.58;
+  pointer-events: none;
+  z-index: 0;
+  animation: heroImageMotion 24s ease-in-out infinite alternate;
+  will-change: transform, filter;
+}
+
+@keyframes heroImageMotion {
+  0% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
+    filter: brightness(1.02) contrast(1.12) saturate(1.08);
+  }
+  33% {
+    transform: scale(1.12) translate(-12px, -8px) rotate(0.4deg);
+    filter: brightness(1.12) contrast(1.18) saturate(1.12);
+  }
+  66% {
+    transform: scale(1.16) translate(10px, -10px) rotate(-0.3deg);
+    filter: brightness(1.15) contrast(1.14) saturate(1.15);
+  }
+  100% {
+    transform: scale(1.06) translate(6px, 8px) rotate(0.2deg);
+    filter: brightness(1.04) contrast(1.1) saturate(1.06);
+  }
+}
+
+/* Shifting Animated Aurora & Vignette Overlay for Crisp Contrast */
+.hero-col::after {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background: 
+    radial-gradient(500px 380px at 85% 15%, rgba(205, 164, 52, 0.22), transparent 70%),
+    radial-gradient(600px 480px at 15% 85%, rgba(15, 31, 66, 0.55), transparent 70%),
+    linear-gradient(145deg, rgba(6, 14, 34, 0.72) 0%, rgba(10, 24, 54, 0.52) 45%, rgba(6, 14, 34, 0.76) 100%);
+  pointer-events: none;
+  z-index: 0;
+  animation: heroAurora 12s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes heroAurora {
+  0% {
+    opacity: 0.85;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04) rotate(1.2deg);
+  }
+  100% {
+    opacity: 0.9;
+    transform: scale(0.98) rotate(-1.2deg);
+  }
+}
+
+.hero-col > * {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.brand-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.logo-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--navy-800);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.logo-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 2.5px;
+}
+
+.logo-badge .fallback {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--white);
+  display: none;
+}
+
+.brand-left .word {
+  font-weight: 800;
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  color: var(--navy-800);
+  line-height: 1.15;
+}
+
+.brand-left .word .motto {
+  font-style: italic;
+  font-weight: 500;
+  color: #0A1730;
+  display: block;
+  font-size: 0.6rem;
+}
+
+.brand-left .word span:not(.motto) {
+  display: block;
+  font-weight: 500;
+  font-size: 0.6rem;
+  color: var(--grey-500);
+  letter-spacing: 0.02em;
+}
+
+.step-badge {
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: var(--gold-600);
+  background: rgba(205,164,52,0.14);
+  border: 1px solid rgba(205,164,52,0.25);
+  padding: 0.18rem 0.5rem;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.progress-track {
+  width: 100%;
+  height: 4px;
+  background: var(--grey-300);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.25rem;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--gold-400), var(--gold-500));
+  transform-origin: left;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.62rem;
+  color: var(--grey-500);
+  margin-bottom: 0.45rem;
+}
+
+.progress-labels span.done, .progress-labels span.current {
+  color: var(--gold-600);
+  font-weight: 700;
+}
+
+/* Right-Column Hero Feature List with Glassmorphic Backdrop */
+.hero-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0.8rem 0;
+}
+
+.hero-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.77rem;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(7, 17, 38, 0.45);
+  border: 1px solid rgba(205, 164, 52, 0.28);
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.hero-feature-item:hover {
+  transform: translateX(3px);
+  border-color: var(--gold-400);
+}
+
+.hero-feature-item svg {
+  color: var(--gold-400);
+  flex-shrink: 0;
+}
+
+/* Auth Responsive */
+@media (max-width: 860px) {
+  .auth-card {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+    min-height: auto;
+  }
+  .hero-col {
+    display: none;
+  }
+  .form-col {
+    padding: 1.6rem 1.4rem;
+  }
+}
+

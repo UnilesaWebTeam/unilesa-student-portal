@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Personal Profile &amp; Bio-Data — UNILESA Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Courier+Prime:wght@700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* ==================== PROFILE PAGE SPECIFIC STYLES ==================== */
+    
+    /* 1. Hero Profile Banner */
+    .profile-hero-card {
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 50%, var(--navy-700) 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2rem;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(205, 164, 52, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-hero-card::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(205,164,52,0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .profile-left-main {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      z-index: 1;
+    }
+    .profile-avatar-box {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      flex-shrink: 0;
+    }
+    .profile-avatar-box img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3.5px solid var(--gold-400);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    }
+    .avatar-edit-badge {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      background: var(--gold-500);
+      color: var(--navy-950);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 2px solid var(--navy-900);
+      transition: transform 0.15s ease;
+    }
+    .avatar-edit-badge:hover { transform: scale(1.1); }
+    .profile-title-area h2 {
+      margin: 0 0 0.35rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .profile-meta-line {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.6rem 0.9rem;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+    }
+    .profile-matric-badge {
+      background: rgba(205,164,52,0.22);
+      border: 1px solid rgba(224,193,104,0.45);
+      color: var(--gold-400);
+      font-weight: 700;
+      padding: 0.22rem 0.6rem;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.82rem;
+    }
+    .profile-status-tag {
+      background: rgba(30,142,90,0.25);
+      border: 1px solid rgba(74,222,128,0.4);
+      color: #4ADE80;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.18rem 0.55rem;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .profile-actions-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+
+    /* 2. Tab Navigation */
+    .profile-tabs-bar {
+      display: flex;
+      gap: 0.4rem;
+      border-bottom: 2px solid var(--grey-300);
+      padding-bottom: 0.2rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .profile-tabs-bar::-webkit-scrollbar { display: none; }
+    .profile-tab-item {
+      padding: 0.7rem 1.1rem;
+      font-size: 0.83rem;
+      font-weight: 700;
+      color: var(--grey-600);
+      cursor: pointer;
+      border-radius: 8px 8px 0 0;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+      position: relative;
+    }
+    .profile-tab-item:hover { color: var(--navy-900); background: var(--grey-200); }
+    .profile-tab-item.active {
+      color: var(--navy-900);
+      background: var(--white);
+      border: 1.5px solid var(--grey-300);
+      border-bottom: 2px solid var(--white);
+      margin-bottom: -2px;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.03);
+    }
+
+    /* 3. Tab Contents & Cards */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease both; }
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.3rem;
+    }
+    .detail-card {
+      background: var(--white);
+      border: 1px solid var(--grey-300);
+      border-radius: var(--radius-lg);
+      padding: 1.3rem 1.4rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .detail-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--grey-200);
+    }
+    .detail-card-head h3 {
+      margin: 0;
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--navy-900);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .field-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .field-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      font-size: 0.83rem;
+    }
+    .field-label {
+      color: var(--grey-600);
+      font-weight: 600;
+      flex: 1;
+    }
+    .field-value {
+      color: var(--navy-900);
+      font-weight: 700;
+      text-align: right;
+      flex: 1.3;
+      word-break: break-word;
+    }
+
+    /* Verified Documents List */
+    .doc-badge-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--grey-300);
+      border-radius: 10px;
+      background: #FAFCFE;
+      margin-bottom: 0.6rem;
+    }
+    .doc-badge-item .doc-title {
+      font-weight: 700;
+      font-size: 0.83rem;
+      color: var(--navy-900);
+    }
+    .doc-badge-item .doc-date {
+      font-size: 0.72rem;
+      color: var(--grey-500);
+      margin-top: 0.15rem;
+    }
+
+    /* Digital Student ID Card */
+    .id-card-wrap {
+      width: 360px;
+      height: 220px;
+      background: linear-gradient(135deg, #0A1730 0%, #152A58 100%);
+      border-radius: 14px;
+      padding: 1.1rem;
+      color: var(--white);
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(205,164,52,0.4);
+    }
+
+    /* Print bio-data styles */
+    #printableProfile { display: none; }
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      unilesa-sidebar, unilesa-header, unilesa-mobile-nav, unilesa-modals, unilesa-toast, .profile-hero-card, .profile-tabs-bar, .no-print { display: none !important; }
+      .app-layout { display: block !important; }
+      .content-container { padding: 0 !important; max-width: 100% !important; }
+      #printableProfile {
+        display: block !important;
+        padding: 0.25in;
+        background: #FFFFFF;
+        color: #000000;
+      }
+      .print-hdr {
+        text-align: center;
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
+        margin-bottom: 12px;
+        position: relative;
+      }
+      .print-logo { width: 60px; position: absolute; left: 0; top: 0; }
+      .print-photo { width: 75px; height: 90px; position: absolute; right: 0; top: 0; border: 1px solid #000; }
+      .print-tbl {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 8.5pt;
+        margin-bottom: 12px;
+      }
+      .print-tbl th, .print-tbl td { border: 1px solid #555; padding: 5px 8px; }
+      .print-tbl th { background: #EEE; font-weight: bold; text-align: left; }
+    }
+
+    @media (max-width: 900px) {
+      .details-grid { grid-template-columns: 1fr; }
+      .profile-hero-card { flex-direction: column; align-items: flex-start; }
+      .profile-actions-right { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST NOTIFICATION ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="student"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- REUSABLE SIDEBAR COMPONENT -->
+    <unilesa-sidebar active="profile"></unilesa-sidebar>
+
+    <!-- MAIN PAGE WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- REUSABLE TOP HEADER COMPONENT -->
+      <unilesa-header title="Student Bio-Data &amp; Profile" subtitle="Academic Records &bull; Directorate of Student Academic Affairs"></unilesa-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+
+        <!-- 1. Profile Hero Card -->
+        <section class="profile-hero-card">
+          <div class="profile-left-main">
+            <div class="profile-avatar-box">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=240&q=80" alt="Jane Adaeze Doe" id="profileMainImg">
+              <div class="avatar-edit-badge" title="Change Photo" onclick="alert('Passport photo change requires verification from Academic Registry.');">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+              </div>
+            </div>
+
+            <div class="profile-title-area">
+              <h2 id="heroName">Jane Adaeze Doe</h2>
+              <div class="profile-meta-line">
+                <span class="profile-matric-badge" id="heroMatric">UNILESA/2026/CSC/0142</span>
+                <span>&bull; B.Sc. Computer Science</span>
+                <span>&bull; 100 Level</span>
+                <span class="profile-status-tag">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>
+                  Active Student
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-actions-right">
+            <button type="button" class="btn btn-gold btn-sm" onclick="openEditModal()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              Edit Contact Info
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="openIdModal()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+              Digital ID Card
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="window.print()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+              Print Bio-Data
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. Profile Tabs Bar -->
+        <div class="profile-tabs-bar">
+          <div class="profile-tab-item active" onclick="switchTab('personal', this)">Personal &amp; Contact Info</div>
+          <div class="profile-tab-item" onclick="switchTab('academic', this)">Academic Profile</div>
+          <div class="profile-tab-item" onclick="switchTab('kin', this)">Next of Kin &amp; Emergency</div>
+          <div class="profile-tab-item" onclick="switchTab('docs', this)">Verified Credentials</div>
+          <div class="profile-tab-item" onclick="switchTab('security', this)">Account Security</div>
+        </div>
+
+        <!-- Tab 1: Personal & Contact Info -->
+        <div class="tab-content active" id="tab-personal">
+          <div class="details-grid">
+            <div class="detail-card">
+              <div class="detail-card-head">
+                <h3>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  Personal Bio-Data
+                </h3>
+              </div>
+              <div class="field-list">
+                <div class="field-row">
+                  <span class="field-label">Full Legal Name:</span>
+                  <span class="field-value" id="fName">Jane Adaeze Doe</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">JAMB Registration No:</span>
+                  <span class="field-value">202610948210EF</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Gender / Sex:</span>
+                  <span class="field-value">Female</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Date of Birth:</span>
+                  <span class="field-value">14 August 2004 (22 yrs)</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Blood Group / Genotype:</span>
+                  <span class="field-value">O+ / AA</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Nationality:</span>
+                  <span class="field-value">Nigerian</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">State of Origin / LGA:</span>
+                  <span class="field-value">Osun State &bull; Ilesa East</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Religion:</span>
+                  <span class="field-value">Christianity</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-card-head">
+                <h3>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  Contact &amp; Residential
+                </h3>
+              </div>
+              <div class="field-list">
+                <div class="field-row">
+                  <span class="field-label">Primary Mobile Phone:</span>
+                  <span class="field-value" id="fPhone">+234 812 345 6789</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Student Institutional Email:</span>
+                  <span class="field-value">jane.doe@student.unilesa.edu.ng</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Personal Email Address:</span>
+                  <span class="field-value" id="fEmail">janeadaeze.doe@gmail.com</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Permanent Home Address:</span>
+                  <span class="field-value" id="fHomeAddress">18, Harmony Crescent, GRA Phase 2, Osogbo, Osun State</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Campus Hall / Room:</span>
+                  <span class="field-value" id="fCampusAddress">Queen Moremi Hostel &bull; Block C, Room 204</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Academic Profile -->
+        <div class="tab-content" id="tab-academic">
+          <div class="details-grid">
+            <div class="detail-card">
+              <div class="detail-card-head">
+                <h3>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                  Faculty &amp; Programme Details
+                </h3>
+              </div>
+              <div class="field-list">
+                <div class="field-row">
+                  <span class="field-label">Faculty / College:</span>
+                  <span class="field-value">Faculty of Science &amp; Computing</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Department:</span>
+                  <span class="field-value">Department of Computer Science</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Degree Programme:</span>
+                  <span class="field-value">B.Sc. Computer Science (Single Honours)</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Current Level / Class:</span>
+                  <span class="field-value">100 Level (Undergraduate)</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Academic Session:</span>
+                  <span class="field-value">2025/2026 Academic Session</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-card-head">
+                <h3>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                  Adviser &amp; Admission Status
+                </h3>
+              </div>
+              <div class="field-list">
+                <div class="field-row">
+                  <span class="field-label">Mode of Admission:</span>
+                  <span class="field-value">UTME (Merit List)</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Year of Admission:</span>
+                  <span class="field-value">2025 / 2026</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Staff Level Adviser:</span>
+                  <span class="field-value">Dr. A. K. Alabi</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Head of Department (HOD):</span>
+                  <span class="field-value">Prof. O. T. Adeleke</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Next of Kin -->
+        <div class="tab-content" id="tab-kin">
+          <div class="details-grid">
+            <div class="detail-card">
+              <div class="detail-card-head">
+                <h3>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                  Primary Next of Kin
+                </h3>
+              </div>
+              <div class="field-list">
+                <div class="field-row">
+                  <span class="field-label">Next of Kin Full Name:</span>
+                  <span class="field-value">Dr. Michael O. Doe</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Relationship:</span>
+                  <span class="field-value">Father / Legal Guardian</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Mobile Phone Number:</span>
+                  <span class="field-value">+234 803 456 7890</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Email Address:</span>
+                  <span class="field-value">m.doe@consulting.ng</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Residential Address:</span>
+                  <span class="field-value">18, Harmony Crescent, GRA Phase 2, Osogbo</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-card-head">
+                <h3>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  Medical Emergency Contact
+                </h3>
+              </div>
+              <div class="field-list">
+                <div class="field-row">
+                  <span class="field-label">Emergency Contact Name:</span>
+                  <span class="field-value">Mrs. Beatrice A. Doe</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Relationship:</span>
+                  <span class="field-value">Mother</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Emergency Phone:</span>
+                  <span class="field-value">+234 802 987 6543</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Health Centre Status:</span>
+                  <span class="field-value" style="color:var(--green-ok); font-weight:700;">&#10003; Registered at Clinic</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Verified Documents -->
+        <div class="tab-content" id="tab-docs">
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <h3>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                Archived Admissions &amp; Registry Documents
+              </h3>
+              <a href="documents.html" class="btn btn-outline btn-sm">Upload Documents</a>
+            </div>
+            
+            <div class="doc-badge-item">
+              <div>
+                <div class="doc-title">WAEC / SSCE Official Result Certificate</div>
+                <div class="doc-date">Verified by Admissions Office &bull; 15 Oct 2025</div>
+              </div>
+              <span class="badge badge-success">Verified</span>
+            </div>
+            <div class="doc-badge-item">
+              <div>
+                <div class="doc-title">JAMB Official Admission Letter (Original)</div>
+                <div class="doc-date">Verified &bull; 18 Oct 2025</div>
+              </div>
+              <span class="badge badge-success">Verified</span>
+            </div>
+            <div class="doc-badge-item">
+              <div>
+                <div class="doc-title">Birth Certificate / Age Declaration</div>
+                <div class="doc-date">Verified &bull; 18 Oct 2025</div>
+              </div>
+              <span class="badge badge-success">Verified</span>
+            </div>
+            <div class="doc-badge-item">
+              <div>
+                <div class="doc-title">Local Government Identification Certificate</div>
+                <div class="doc-date">Verified &bull; 19 Oct 2025</div>
+              </div>
+              <span class="badge badge-success">Verified</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 5: Account Security -->
+        <div class="tab-content" id="tab-security">
+          <div class="details-grid">
+            <div class="detail-card">
+              <div class="detail-card-head">
+                <h3>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  Portal Password &amp; Credentials
+                </h3>
+              </div>
+              <p style="font-size:0.83rem; color:var(--grey-700); line-height:1.5; margin-bottom:1.2rem;">
+                Protect your student portal access. Regularly update your password and never disclose your PIN to third parties.
+              </p>
+              <a href="force-password-change.html" class="btn btn-gold btn-sm">Change Portal Password</a>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-card-head">
+                <h3>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  Security Status
+                </h3>
+              </div>
+              <div class="field-list">
+                <div class="field-row">
+                  <span class="field-label">2FA Authentication:</span>
+                  <span class="field-value" style="color:var(--green-ok);">Enabled (SMS OTP)</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Last Successful Login:</span>
+                  <span class="field-value">Today &bull; 09:30 AM</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">Portal Security State:</span>
+                  <span class="field-value"><span class="badge badge-success">Secured</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- EDIT CONTACT MODAL -->
+  <div class="modal-backdrop" id="editModal">
+    <div class="modal-box">
+      <div class="modal-header-clean">
+        <h3>Edit Contact Information</h3>
+        <button type="button" class="modal-close-icon" onclick="closeEditModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-content-inner">
+        <div style="margin-bottom:0.9rem;">
+          <label style="font-size:0.75rem; font-weight:700; color:var(--navy-900); display:block; margin-bottom:0.3rem;">FULL LEGAL NAME</label>
+          <input type="text" id="editNameInput" value="Jane Adaeze Doe" style="width:100%; padding:0.6rem 0.8rem; border-radius:8px; border:1px solid var(--grey-300);">
+        </div>
+        <div style="margin-bottom:0.9rem;">
+          <label style="font-size:0.75rem; font-weight:700; color:var(--navy-900); display:block; margin-bottom:0.3rem;">PRIMARY PHONE NUMBER</label>
+          <input type="text" id="editPhoneInput" value="+234 812 345 6789" style="width:100%; padding:0.6rem 0.8rem; border-radius:8px; border:1px solid var(--grey-300);">
+        </div>
+        <div style="margin-bottom:0.9rem;">
+          <label style="font-size:0.75rem; font-weight:700; color:var(--navy-900); display:block; margin-bottom:0.3rem;">PERSONAL EMAIL ADDRESS</label>
+          <input type="email" id="editEmailInput" value="janeadaeze.doe@gmail.com" style="width:100%; padding:0.6rem 0.8rem; border-radius:8px; border:1px solid var(--grey-300);">
+        </div>
+        <div style="margin-bottom:0.9rem;">
+          <label style="font-size:0.75rem; font-weight:700; color:var(--navy-900); display:block; margin-bottom:0.3rem;">PERMANENT RESIDENTIAL ADDRESS</label>
+          <textarea id="editHomeAddressInput" rows="2" style="width:100%; padding:0.6rem 0.8rem; border-radius:8px; border:1px solid var(--grey-300); font-family:inherit;">18, Harmony Crescent, GRA Phase 2, Osogbo, Osun State</textarea>
+        </div>
+        <div style="margin-bottom:0.9rem;">
+          <label style="font-size:0.75rem; font-weight:700; color:var(--navy-900); display:block; margin-bottom:0.3rem;">CAMPUS RESIDENCE / HOSTEL</label>
+          <input type="text" id="editCampusAddressInput" value="Queen Moremi Hostel • Block C, Room 204" style="width:100%; padding:0.6rem 0.8rem; border-radius:8px; border:1px solid var(--grey-300);">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="closeEditModal()">Cancel</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="saveProfileChanges()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIGITAL ID CARD MODAL -->
+  <div class="modal-backdrop" id="idModal">
+    <div class="modal-box" style="max-width:440px;">
+      <div class="modal-header-clean">
+        <h3>Digital Student Identity Card</h3>
+        <button type="button" class="modal-close-icon" onclick="closeIdModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-content-inner" style="text-align:center; padding:1.8rem 1.2rem;">
+        <div class="id-card-wrap">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="text-align:left;">
+              <div style="font-size:0.65rem; font-weight:800; color:var(--gold-400); text-transform:uppercase;">University of Ilesa</div>
+              <div style="font-size:0.52rem; color:rgba(255,255,255,0.8);">STUDENT IDENTITY CARD</div>
+            </div>
+            <div style="width:24px; height:24px; background:var(--gold-500); border-radius:6px; display:flex; align-items:center; justify-content:center; color:#000; font-weight:800; font-size:0.65rem;">UL</div>
+          </div>
+
+          <div style="display:flex; gap:0.9rem; align-items:center; margin:0.4rem 0;">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" style="width:55px; height:65px; border-radius:6px; object-fit:cover; border:1.5px solid var(--gold-400);">
+            <div style="text-align:left;">
+              <div style="font-size:0.85rem; font-weight:800; color:#fff;" id="idCardName">Jane Adaeze Doe</div>
+              <div style="font-size:0.68rem; color:var(--gold-400); font-family:monospace; font-weight:700;" id="idCardMatric">UNILESA/2026/CSC/0142</div>
+              <div style="font-size:0.64rem; color:rgba(255,255,255,0.85); margin-top:2px;">B.Sc. Computer Science &bull; 100L</div>
+              <div style="font-size:0.58rem; color:rgba(255,255,255,0.7);">Blood Grp: O+ &bull; Genotype: AA</div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:0.55rem; color:rgba(255,255,255,0.7); font-family:monospace;">
+            <div>EXP: 10/2029</div>
+            <div>*2026-CSC-0142*</div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.2rem;">
+          <button type="button" class="btn btn-gold btn-sm" onclick="showToast('Wallet', 'Digital ID saved to phone wallet', 'success')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Save to Phone Wallet
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINTABLE PROFILE FORM (FOR PRINT DIALOG) -->
+  <div id="printableProfile">
+    <div class="print-hdr">
+      <img src="https://unilesa.edu.ng/static/frontpage/assets/img/icons/unilesa_origina.png" alt="UNILESA Crest" class="print-logo">
+      <h1 style="margin:0; font-size:14pt; font-family:'Playfair Display',serif;">UNIVERSITY OF ILESA, OSUN STATE</h1>
+      <h2 style="margin:2px 0 0; font-size:10pt; text-transform:uppercase;">Directorate of Student Academic Affairs &bull; Student Bio-Data Form</h2>
+      <p style="margin:2px 0 0; font-size:8.5pt;">2025/2026 Academic Session &bull; Undergraduate Record</p>
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" alt="Student Passport" class="print-photo">
+    </div>
+
+    <table class="print-tbl">
+      <tr>
+        <th style="width:25%;">Full Legal Name</th>
+        <td style="width:25%;" id="pName">Jane Adaeze Doe</td>
+        <th style="width:25%;">Matriculation Number</th>
+        <td style="width:25%;" id="pMatric">UNILESA/2026/CSC/0142</td>
+      </tr>
+      <tr>
+        <th>JAMB Reg Number</th>
+        <td>202610948210EF</td>
+        <th>Gender / Sex</th>
+        <td>Female</td>
+      </tr>
+      <tr>
+        <th>Date of Birth</th>
+        <td>14 August 2004</td>
+        <th>Blood Group / Genotype</th>
+        <td>O+ / AA</td>
+      </tr>
+      <tr>
+        <th>Faculty</th>
+        <td>Faculty of Science &amp; Computing</td>
+        <th>Department</th>
+        <td>Department of Computer Science</td>
+      </tr>
+      <tr>
+        <th>Programme</th>
+        <td>B.Sc. Computer Science (100L)</td>
+        <th>Mode of Entry / Year</th>
+        <td>UTME / 2025</td>
+      </tr>
+      <tr>
+        <th>Student Phone Number</th>
+        <td id="pPhone">+234 812 345 6789</td>
+        <th>Institutional Email</th>
+        <td>jane.doe@student.unilesa.edu.ng</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- REUSABLE MOBILE BOTTOM NAV -->
+  <unilesa-mobile-nav active="profile"></unilesa-mobile-nav>
+
+  <!-- SHARED JS LOGIC & REUSABLE COMPONENTS -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-sidebar.js"></script>
+  <script src="components/unilesa-header.js"></script>
+  <script src="components/unilesa-mobile-nav.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <!-- PAGE-SPECIFIC LOGIC -->
+  <script>
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.profile-tab-item').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+    }
+
+    function openEditModal() { openModal('editModal'); }
+    function closeEditModal() { closeModal('editModal'); }
+    function openIdModal() { openModal('idModal'); }
+    function closeIdModal() { closeModal('idModal'); }
+
+    function loadProfileData() {
+      const student = window.UniStore ? window.UniStore.getStudent() : {};
+      const name = student.fullName || 'Jane Adaeze Doe';
+      const matric = student.matricNumber || 'UNILESA/2026/CSC/0142';
+      const phone = student.phone || '+234 812 345 6789';
+      const email = student.email || 'janeadaeze.doe@gmail.com';
+
+      document.getElementById('heroName').textContent = name;
+      document.getElementById('heroMatric').textContent = matric;
+      document.getElementById('fName').textContent = name;
+      document.getElementById('fPhone').textContent = phone;
+      document.getElementById('fEmail').textContent = email;
+      document.getElementById('idCardName').textContent = name;
+      document.getElementById('idCardMatric').textContent = matric;
+      document.getElementById('pName').textContent = name;
+      document.getElementById('pMatric').textContent = matric;
+      document.getElementById('pPhone').textContent = phone;
+
+      document.getElementById('editNameInput').value = name;
+      document.getElementById('editPhoneInput').value = phone;
+      document.getElementById('editEmailInput').value = email;
+    }
+
+    function saveProfileChanges() {
+      const newName = document.getElementById('editNameInput').value.trim();
+      const newPhone = document.getElementById('editPhoneInput').value.trim();
+      const newEmail = document.getElementById('editEmailInput').value.trim();
+      const newHome = document.getElementById('editHomeAddressInput').value.trim();
+      const newCampus = document.getElementById('editCampusAddressInput').value.trim();
+
+      if (window.UniStore) {
+        window.UniStore.setStudent({
+          fullName: newName || 'Jane Adaeze Doe',
+          phone: newPhone,
+          email: newEmail,
+          initials: newName.split(' ').map(n => n[0]).slice(0, 2).join('')
+        });
+      }
+
+      loadProfileData();
+      closeEditModal();
+      showToast('Profile Updated', 'Your contact info was successfully updated across the portal!', 'success');
+    }
+
+    loadProfileData();
+  </script>
+</body>
+</html>

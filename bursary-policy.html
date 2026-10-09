@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Payment Policy &amp; Split Modes — Directorate of Bursary | UNILESA</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* ==================== BURSARY POLICY SPECIFIC STYLES ==================== */
+    .bursary-admin-hero {
+      background: linear-gradient(135deg, #091530 0%, #0F1F42 60%, #162E62 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 12px 30px -5px rgba(15, 31, 66, 0.2);
+      border: 1px solid rgba(205, 164, 52, 0.35);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .bursary-admin-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(205,164,52,0.2), transparent 70%);
+      pointer-events: none;
+    }
+    .bursary-hero-title h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--white);
+      margin: 0 0 0.35rem;
+      letter-spacing: -0.01em;
+    }
+    .bursary-hero-title p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.82);
+      margin: 0;
+      line-height: 1.45;
+      max-width: 680px;
+    }
+
+    .bursary-section-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 8px 25px -5px rgba(15, 23, 42, 0.04);
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.6rem;
+      position: relative;
+    }
+    .bursary-section-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0F1F42 0%, #CDA434 50%, #0F1F42 100%);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+    .section-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.4rem;
+      flex-wrap: wrap;
+    }
+    .section-header-row h2 {
+      font-size: 1.25rem;
+      font-family: 'Playfair Display', serif;
+      color: var(--navy-950);
+      margin: 0 0 0.25rem;
+    }
+    .section-header-row p {
+      font-size: 0.78rem;
+      color: var(--grey-600);
+      margin: 0;
+    }
+
+    /* Schedule Modes Grid */
+    .schedule-modes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 1.6rem;
+    }
+    .schedule-mode-box {
+      border: 2px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.35rem 1.45rem;
+      background: #FAFBFD;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.1rem;
+    }
+    .schedule-mode-box:hover {
+      border-color: #94A3B8;
+      background: #FFFFFF;
+      transform: translateY(-2px);
+    }
+    .schedule-mode-box.selected {
+      border-color: var(--gold-500);
+      background: #FFFDF8;
+      box-shadow: 0 6px 20px rgba(205, 164, 52, 0.15);
+    }
+    .schedule-mode-badge {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .schedule-mode-box.selected .schedule-mode-badge {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FDE68A;
+    }
+    .mode-ratio-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: #E2E8F0;
+      overflow: hidden;
+      display: flex;
+      margin: 0.75rem 0 0.35rem;
+    }
+    .mode-ratio-fill-1 {
+      background: var(--navy-900);
+      height: 100%;
+    }
+    .mode-ratio-fill-2 {
+      background: var(--gold-500);
+      height: 100%;
+    }
+    .mode-ratio-fill-3 {
+      background: #059669;
+      height: 100%;
+    }
+
+    /* Policy Rules Form Strip */
+    .policy-rules-strip {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 1.4rem;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+      gap: 1.2rem;
+      align-items: flex-end;
+    }
+    .rule-input-group label {
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--navy-900);
+      margin-bottom: 0.4rem;
+    }
+    .rule-input-group select,
+    .rule-input-group input {
+      width: 100%;
+      height: 40px;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 8px;
+      padding: 0 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--navy-950);
+      background: #FFFFFF;
+      box-sizing: border-box;
+      outline: none;
+    }
+    .rule-input-group select:focus,
+    .rule-input-group input:focus {
+      border-color: var(--navy-900);
+      box-shadow: 0 0 0 3px rgba(15, 31, 66, 0.08);
+    }
+
+    @media (max-width: 1200px) {
+      .schedule-modes-grid { grid-template-columns: 1fr; }
+      .policy-rules-strip { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .policy-rules-strip { grid-template-columns: 1fr; }
+      .bursary-admin-hero { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST NOTIFICATION ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="bursary"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- ENTERPRISE ADMIN SIDEBAR COMPONENT -->
+    <unilesa-admin-sidebar active="policy"></unilesa-admin-sidebar>
+
+    <!-- MAIN PAGE WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- ENTERPRISE ADMIN TOP HEADER COMPONENT -->
+      <unilesa-admin-header title="Directorate of Bursary &amp; Financial Services" subtitle="University Payment Schedule Modes &amp; Clearance Policy Authorizer"></unilesa-admin-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+
+        <!-- 1. Bursary Policy Banner -->
+        <section class="bursary-admin-hero">
+          <div class="bursary-hero-title">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+              <span class="badge badge-gold" style="font-size:0.68rem; font-weight:800;">⚖️ POLICY &amp; DIRECTIVE ENGINE</span>
+              <span class="badge badge-success" style="font-size:0.68rem; font-weight:700;">● Active Policy: Split (60% / 40%)</span>
+            </div>
+            <h1>University Payment Schedule Mode &amp; Policy Control</h1>
+            <p>
+              Centrally configure university payment installment ratios, enforce examination clearance thresholds, and broadcast binding fee directives to all student dashboards.
+            </p>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:0.65rem; flex-wrap:wrap;">
+            <a href="payments.html" class="btn btn-outline btn-sm" style="color:var(--white); border-color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.1);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+              View Student Portal View
+            </a>
+            <button type="button" class="btn btn-gold btn-sm" onclick="publishBursaryDirectives()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              Broadcast Directives Now
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. PAYMENT SCHEDULE MODE CONFIGURATION GRID -->
+        <section class="bursary-section-card">
+          <div class="section-header-row">
+            <div>
+              <div style="display:flex; align-items:center; gap:0.45rem; margin-bottom:0.25rem;">
+                <span class="badge badge-gold" style="font-size:0.65rem;">BURSARY DIRECTIVE ENGINE</span>
+                <span class="badge badge-success" style="font-size:0.65rem;">Live Broadcast to Student Portals</span>
+              </div>
+              <h2>Institutional Payment Schedule Mode Configuration</h2>
+              <p>Select and authorize the institutional payment schedule mode enforced on all undergraduate &amp; postgraduate student portals.</p>
+            </div>
+            <button type="button" class="btn btn-gold btn-sm" onclick="publishBursaryDirectives()">
+              Broadcast Changes to Student Portals
+            </button>
+          </div>
+
+          <!-- Schedule Modes Grid -->
+          <div class="schedule-modes-grid">
+            
+            <!-- Mode 1: Split 60/40 (Default Active) -->
+            <div class="schedule-mode-box selected" id="modeBoxSplit" onclick="selectScheduleMode('split_60_40')">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                  <span class="schedule-mode-badge">★ Active University Policy</span>
+                  <input type="radio" name="scheduleModeRadio" id="radioSplit" checked style="accent-color:var(--gold-500); width:18px; height:18px;">
+                </div>
+                <h3 style="margin:0.2rem 0; font-size:1.05rem; color:var(--navy-950);">Two-Semester Split (60% / 40%)</h3>
+                <p style="margin:0; font-size:0.75rem; color:var(--grey-600); line-height:1.4;">
+                  Students pay 60% upon First Semester registration, and the remaining 40% balance prior to Second Semester examination clearance.
+                </p>
+                <div class="mode-ratio-bar">
+                  <div class="mode-ratio-fill-1" style="width:60%;" title="First Semester: 60%"></div>
+                  <div class="mode-ratio-fill-2" style="width:40%;" title="Second Semester: 40%"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.68rem; font-weight:700; color:var(--grey-600);">
+                  <span>1st Sem: ₦185,000 (60%)</span>
+                  <span>2nd Sem: ₦123,000 (40%)</span>
+                </div>
+              </div>
+              <div style="border-top:1px dashed #E2E8F0; padding-top:0.6rem; font-size:0.72rem; color:var(--green-ok); font-weight:700;">
+                ✓ Recommended for standard academic sessions
+              </div>
+            </div>
+
+            <!-- Mode 2: Full Session 100% Upfront -->
+            <div class="schedule-mode-box" id="modeBoxFull" onclick="selectScheduleMode('full_session')">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                  <span class="schedule-mode-badge" style="background:#E0F2FE; color:#0369A1; border:1px solid #BAE6FD;">Full Session Mode</span>
+                  <input type="radio" name="scheduleModeRadio" id="radioFull" style="accent-color:var(--gold-500); width:18px; height:18px;">
+                </div>
+                <h3 style="margin:0.2rem 0; font-size:1.05rem; color:var(--navy-950);">Full Session 100% Upfront</h3>
+                <p style="margin:0; font-size:0.75rem; color:var(--grey-600); line-height:1.4;">
+                  Mandatory single 100% upfront settlement of tuition and all statutory levies during First Semester matriculation clearance.
+                </p>
+                <div class="mode-ratio-bar">
+                  <div class="mode-ratio-fill-1" style="width:100%;" title="Full Session: 100%"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.68rem; font-weight:700; color:var(--grey-600);">
+                  <span>100% Session Clearance: ₦308,000</span>
+                </div>
+              </div>
+              <div style="border-top:1px dashed #E2E8F0; padding-top:0.6rem; font-size:0.72rem; color:var(--grey-500);">
+                Direct single-tranche bursary receipt
+              </div>
+            </div>
+
+            <!-- Mode 3: 3-Tier Micro-Installment -->
+            <div class="schedule-mode-box" id="modeBoxTier" onclick="selectScheduleMode('installment_3_tier')">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                  <span class="schedule-mode-badge" style="background:#F5F3FF; color:#6D28D9; border:1px solid #DDD6FE;">Indigent / Hardship Plan</span>
+                  <input type="radio" name="scheduleModeRadio" id="radioTier" style="accent-color:var(--gold-500); width:18px; height:18px;">
+                </div>
+                <h3 style="margin:0.2rem 0; font-size:1.05rem; color:var(--navy-950);">3-Tier Installment (40% / 30% / 30%)</h3>
+                <p style="margin:0; font-size:0.75rem; color:var(--grey-600); line-height:1.4;">
+                  Special relief installment schedule authorized for sponsored indigent students and approved state scholarship beneficiaries.
+                </p>
+                <div class="mode-ratio-bar">
+                  <div class="mode-ratio-fill-1" style="width:40%;" title="Tranche 1: 40%"></div>
+                  <div class="mode-ratio-fill-2" style="width:30%;" title="Tranche 2: 30%"></div>
+                  <div class="mode-ratio-fill-3" style="width:30%;" title="Tranche 3: 30%"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.68rem; font-weight:700; color:var(--grey-600);">
+                  <span>T1: 40% (₦123.2k)</span>
+                  <span>T2: 30% (₦92.4k)</span>
+                  <span>T3: 30% (₦92.4k)</span>
+                </div>
+              </div>
+              <div style="border-top:1px dashed #E2E8F0; padding-top:0.6rem; font-size:0.72rem; color:var(--grey-500);">
+                Requires Committee on Fee Relief approval
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Policy Enforcement Rules Strip -->
+          <div class="policy-rules-strip">
+            
+            <div class="rule-input-group">
+              <label>Minimum Threshold for Exam Docket:</label>
+              <select id="policyThresholdSelect">
+                <option value="60" selected>60% Fee Clearance (Standard)</option>
+                <option value="75">75% Fee Clearance (Strict)</option>
+                <option value="100">100% Full Session Clearance</option>
+              </select>
+            </div>
+
+            <div class="rule-input-group">
+              <label>Prior Session Arrears Rule:</label>
+              <select id="policyArrearsRuleSelect">
+                <option value="strict" selected>Strict: 100% Prior Debt Cleared Before Docket</option>
+                <option value="provisional">Provisional: Allow with Senate Bond</option>
+              </select>
+            </div>
+
+            <div class="rule-input-group">
+              <label>Late Registration Surcharge Penalty:</label>
+              <input type="number" id="policyLateSurchargeInput" value="10000" step="1000">
+            </div>
+
+            <div>
+              <button type="button" class="btn btn-gold" style="height:40px; width:100%; white-space:nowrap;" onclick="publishBursaryDirectives()">
+                Save &amp; Broadcast Directive
+              </button>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- 3. HISTORICAL POLICY DIRECTIVES GAZETTE -->
+        <section class="bursary-section-card">
+          <div class="section-header-row">
+            <div>
+              <h2>Bursary Policy Gazette &amp; Senate Announcements Log</h2>
+              <p>Official archive of published fee schedules and circulars communicated to student accounts.</p>
+            </div>
+          </div>
+
+          <div style="border:1px solid #E2E8F0; border-radius:12px; overflow-x:auto;">
+            <table style="width:100%; min-width:700px; border-collapse:collapse; text-align:left; font-size:0.8rem;">
+              <thead style="background:#F8FAFC; border-bottom:1px solid #E2E8F0;">
+                <tr>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800;">Directive Ref</th>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800;">Effective Session</th>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800;">Schedule Mode</th>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800;">Docket Threshold</th>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800;">Published Date</th>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800; text-align:right;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid #F1F5F9;">
+                  <td style="padding:0.75rem 0.95rem; font-family:'Fira Code', monospace; font-weight:700; color:var(--navy-950);">DIR-BUR-2025-01</td>
+                  <td style="padding:0.75rem 0.95rem;"><span class="badge badge-gold" style="font-size:0.62rem;">2025/2026 Session</span></td>
+                  <td style="padding:0.75rem 0.95rem; font-weight:700; color:var(--navy-900);">Two-Semester Split Schedule (60% / 40%)</td>
+                  <td style="padding:0.75rem 0.95rem; color:#059669; font-weight:700;">60% (First Semester Exam)</td>
+                  <td style="padding:0.75rem 0.95rem; color:#64748B;">01 Oct 2024, 09:00 AM</td>
+                  <td style="padding:0.75rem 0.95rem; text-align:right;">
+                    <span style="font-size:0.68rem; font-weight:800; background:#ECFDF5; color:#059669; padding:0.18rem 0.5rem; border-radius:6px;">● Active</span>
+                  </td>
+                </tr>
+                <tr style="border-bottom:1px solid #F1F5F9;">
+                  <td style="padding:0.75rem 0.95rem; font-family:'Fira Code', monospace; font-weight:700; color:var(--navy-950);">DIR-BUR-2024-02</td>
+                  <td style="padding:0.75rem 0.95rem;"><span class="badge badge-danger" style="font-size:0.62rem;">2024/2025 Session</span></td>
+                  <td style="padding:0.75rem 0.95rem; font-weight:700; color:var(--navy-900);">Two-Semester Split Schedule (60% / 40%)</td>
+                  <td style="padding:0.75rem 0.95rem; color:#64748B;">60% (Standard)</td>
+                  <td style="padding:0.75rem 0.95rem; color:#64748B;">15 Nov 2023, 10:30 AM</td>
+                  <td style="padding:0.75rem 0.95rem; text-align:right;">
+                    <span style="font-size:0.68rem; font-weight:800; background:#F1F5F9; color:#64748B; padding:0.18rem 0.5rem; border-radius:6px;">Archived</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Unified Modals & Overlays -->
+  <unilesa-role-switcher></unilesa-role-switcher>
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+
+  <!-- SHARED JS LOGIC & REUSABLE COMPONENTS -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-admin-sidebar.js"></script>
+  <script src="components/unilesa-admin-header.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <script>
+    let currentSelectedMode = 'split_60_40';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadActiveBursaryPolicy();
+    });
+
+    window.addEventListener('unilesa:bursary-updated', () => {
+      loadActiveBursaryPolicy();
+    });
+
+    function loadActiveBursaryPolicy() {
+      const policy = window.UniStore ? window.UniStore.getBursaryPolicy() : { scheduleMode: 'split_60_40' };
+      selectScheduleMode(policy.scheduleMode || 'split_60_40');
+      
+      const thresholdEl = document.getElementById('policyThresholdSelect');
+      if (thresholdEl && policy.clearanceMinimumPercent) thresholdEl.value = policy.clearanceMinimumPercent;
+
+      const surchargeEl = document.getElementById('policyLateSurchargeInput');
+      if (surchargeEl && policy.lateRegistrationSurcharge) surchargeEl.value = policy.lateRegistrationSurcharge;
+    }
+
+    function selectScheduleMode(mode) {
+      currentSelectedMode = mode;
+      
+      const boxSplit = document.getElementById('modeBoxSplit');
+      const boxFull = document.getElementById('modeBoxFull');
+      const boxTier = document.getElementById('modeBoxTier');
+
+      const radioSplit = document.getElementById('radioSplit');
+      const radioFull = document.getElementById('radioFull');
+      const radioTier = document.getElementById('radioTier');
+
+      if (boxSplit) boxSplit.classList.remove('selected');
+      if (boxFull) boxFull.classList.remove('selected');
+      if (boxTier) boxTier.classList.remove('selected');
+
+      if (mode === 'split_60_40') {
+        if (boxSplit) boxSplit.classList.add('selected');
+        if (radioSplit) radioSplit.checked = true;
+      } else if (mode === 'full_session') {
+        if (boxFull) boxFull.classList.add('selected');
+        if (radioFull) radioFull.checked = true;
+      } else if (mode === 'installment_3_tier') {
+        if (boxTier) boxTier.classList.add('selected');
+        if (radioTier) radioTier.checked = true;
+      }
+    }
+
+    function publishBursaryDirectives() {
+      let title = 'Two-Semester Split Schedule (60% First Semester / 40% Second Semester)';
+      let desc = 'Standard Institutional Billing: Students settle 60% upon First Semester registration, and the remaining 40% prior to Second Semester commencement.';
+
+      if (currentSelectedMode === 'full_session') {
+        title = 'Full Session Upfront Schedule (100% Session Clearance)';
+        desc = 'Official Bursary Directive: Mandatory 100% upfront session fee payment required upon matriculation.';
+      } else if (currentSelectedMode === 'installment_3_tier') {
+        title = 'Three-Tier Relief Installment Schedule (40% / 30% / 30%)';
+        desc = 'Official Bursary Directive: Structured 3-tranche relief payment plan authorized by the Bursary.';
+      }
+
+      const threshold = parseInt(document.getElementById('policyThresholdSelect').value || '60', 10);
+      const surcharge = parseFloat(document.getElementById('policyLateSurchargeInput').value || '10000');
+
+      const updatedPolicy = {
+        scheduleMode: currentSelectedMode,
+        scheduleModeTitle: title,
+        modeDescription: desc,
+        clearanceMinimumPercent: threshold,
+        lateRegistrationSurcharge: surcharge,
+        lastDirectiveDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+      };
+
+      if (window.UniStore) {
+        window.UniStore.setBursaryPolicy(updatedPolicy);
+      }
+
+      if (typeof showToast === 'function') {
+        showToast('Directive Published', `Payment Schedule Mode updated to "${title}". Broadcasted to all student portals.`, 'success');
+      }
+    }
+  </script>
+</body>
+</html>

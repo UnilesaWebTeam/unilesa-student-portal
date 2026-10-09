@@ -1,0 +1,2768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Fee Payments &amp; Bursary Clearance — UNILESA Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* ==================== PAYMENTS & WALLET SPECIFIC STYLES ==================== */
+    
+    /* 1. Financial Overview Grid (Clearance Banner + Student Wallet) */
+    .financial-top-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.4rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Bursary Clearance Banner */
+    .clearance-hero-card {
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 50%, #0c1c3f 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.6rem 1.8rem;
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.2rem;
+      box-shadow: 0 10px 25px -5px rgba(15, 31, 66, 0.15);
+      border: 1px solid rgba(205, 164, 52, 0.3);
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .clearance-hero-card::after {
+      content: "";
+      position: absolute;
+      right: -20px;
+      bottom: -30px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(205,164,52,0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .clearance-left-info h2 {
+      margin: 0 0 0.35rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+    .clearance-left-info p {
+      margin: 0 0 0.85rem;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.45;
+    }
+    .clearance-pills-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.65rem;
+      font-size: 0.74rem;
+    }
+    .clearance-pill {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.24rem 0.65rem;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: normal;
+    }
+    .clearance-pill.active {
+      background: rgba(22, 163, 74, 0.25);
+      border-color: rgba(74, 222, 128, 0.5);
+      color: #4ADE80;
+      font-weight: 700;
+    }
+    .clearance-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 0.85rem 1.15rem;
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      gap: 0.75rem;
+    }
+    .clearance-action-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 0.2rem;
+    }
+    .btn-pay-outstanding {
+      background: linear-gradient(135deg, #E5B842 0%, #CDA434 50%, #B38A22 100%);
+      color: #081124;
+      font-weight: 800;
+      font-size: 0.88rem;
+      padding: 0.72rem 1.3rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      box-shadow: 0 4px 15px rgba(205, 164, 52, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      flex: 1;
+      min-width: 220px;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .btn-pay-outstanding:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(205, 164, 52, 0.55);
+      filter: brightness(1.06);
+    }
+    .btn-pay-outstanding:active {
+      transform: translateY(0);
+    }
+    .btn-pay-outstanding.cleared {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+      color: #FFFFFF !important;
+      border-color: #34D399 !important;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+    }
+    @media (max-width: 640px) {
+      .clearance-stats-bar {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem 0.5rem;
+      }
+      .clearance-stats-bar > div:last-child {
+        grid-column: span 2;
+        text-align: left !important;
+        border-top: 1px dashed rgba(255,255,255,0.15);
+        padding-top: 0.5rem;
+      }
+      .clearance-action-row {
+        flex-direction: column;
+      }
+      .btn-pay-outstanding {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+
+    /* 2. UNILESA Student Portal Wallet Card */
+    .portal-wallet-card {
+      background: linear-gradient(145deg, #091530 0%, #12244E 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.6rem 1.8rem;
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.1rem;
+      box-shadow: 0 10px 25px -5px rgba(15, 31, 66, 0.15);
+      border: 1px solid rgba(205, 164, 52, 0.38);
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .portal-wallet-card::before {
+      content: "";
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(205,164,52,0.25), transparent 70%);
+      pointer-events: none;
+    }
+    .wallet-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .wallet-badge-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--gold-400);
+      background: rgba(205,164,52,0.15);
+      border: 1px solid rgba(205,164,52,0.35);
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      white-space: nowrap;
+    }
+    .wallet-balance-amount {
+      font-size: 1.95rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin: 0.25rem 0 0.35rem;
+      font-family: 'Inter', sans-serif;
+    }
+    .wallet-restriction-note {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.45;
+      background: rgba(0,0,0,0.28);
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      border-left: 3px solid var(--gold-400);
+      margin-top: 2rem;
+      margin-bottom: 0.25rem;
+    }
+    .wallet-action-row {
+      display: flex;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    /* 3. Official Bursary Policy Strip */
+    .bursary-schedule-strip {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-left: 4px solid var(--gold-500);
+      border-radius: var(--radius-lg);
+      padding: 0.85rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.4rem;
+      flex-wrap: wrap;
+    }
+    .bursary-strip-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .bursary-strip-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--navy-900);
+      color: var(--gold-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* 4. Filter Tabs */
+    .fee-filter-tabs {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 2px solid var(--grey-200);
+      padding-bottom: 0.2rem;
+      margin-bottom: 1.2rem;
+      overflow-x: auto;
+      max-width: 100%;
+      scrollbar-width: thin;
+    }
+    .fee-tab-btn {
+      background: none;
+      border: none;
+      padding: 0.55rem 1rem;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--grey-600);
+      cursor: pointer;
+      border-radius: 8px 8px 0 0;
+      position: relative;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .fee-tab-btn:hover {
+      color: var(--navy-900);
+      background: var(--grey-100);
+    }
+    .fee-tab-btn.active {
+      color: var(--navy-900);
+      font-weight: 800;
+    }
+    .fee-tab-btn.active::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gold-500);
+      border-radius: 3px 3px 0 0;
+    }
+
+    /* 5. Fee Row Items */
+    .fee-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .fee-row-item {
+      background: #FAFAFA;
+      border: 1.5px solid var(--grey-300);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      transition: all 0.2s ease;
+      width: 100%;
+      box-sizing: border-box;
+      min-width: 0;
+    }
+    .fee-row-item:hover {
+      border-color: var(--gold-400);
+      background: #FFFDF9;
+    }
+    .fee-row-left {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      min-width: 0;
+      flex: 1;
+    }
+    .fee-row-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-shrink: 0;
+    }
+    .fee-cat-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .fee-cat-icon.tuition { background: #EFF6FF; color: #1D4ED8; }
+    .fee-cat-icon.dues { background: #FEF3C7; color: #B45309; }
+    .fee-cat-icon.hostel { background: #ECFDF5; color: #047857; }
+    .fee-cat-icon.sundry { background: #F5F3FF; color: #6D28D9; }
+    .fee-cat-icon.health { background: #FEE2E2; color: #DC2626; }
+
+    /* Multi-Session Selector Bar */
+    .session-selector-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: var(--radius-lg);
+      padding: 0.7rem 1.1rem;
+      margin-bottom: 1.3rem;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+      flex-wrap: wrap;
+    }
+    .session-selector-label {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--navy-900);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .session-pills-list {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .session-pill-btn {
+      background: #F1F5F9;
+      border: 1.5px solid transparent;
+      border-radius: 20px;
+      padding: 0.4rem 0.95rem;
+      font-size: 0.77rem;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+    }
+    .session-pill-btn:hover {
+      background: #E2E8F0;
+      color: var(--navy-950);
+    }
+    .session-pill-btn.active {
+      background: var(--navy-900);
+      color: var(--white);
+      border-color: var(--navy-900);
+      box-shadow: 0 3px 10px rgba(15, 31, 66, 0.15);
+    }
+    .session-pill-badge {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.12rem 0.5rem;
+      border-radius: 10px;
+    }
+    .session-pill-badge.danger {
+      background: #FEE2E2;
+      color: #B91C1C;
+    }
+    .session-pill-badge.warning {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+    .session-pill-badge.info {
+      background: #E0E7FF;
+      color: #3730A3;
+    }
+    .session-pill-badge.success {
+      background: #DCFCE7;
+      color: #15803D;
+    }
+    .session-pill-btn.active .session-pill-badge.danger {
+      background: #EF4444;
+      color: #FFFFFF;
+    }
+    .session-pill-btn.active .session-pill-badge.warning {
+      background: #F59E0B;
+      color: #FFFFFF;
+    }
+    .session-pill-btn.active .session-pill-badge.info {
+      background: #4F46E5;
+      color: #FFFFFF;
+    }
+    .session-pill-btn.active .session-pill-badge.success {
+      background: #10B981;
+      color: #FFFFFF;
+    }
+
+    /* Prior Session Arrears Warning & Cleared Banner */
+    .arrears-alert-container {
+      margin-bottom: 1.4rem;
+    }
+    .arrears-warning-card {
+      background: linear-gradient(135deg, #3B0808 0%, #7F1D1D 45%, #991B1B 100%);
+      border: 1.5px solid #F87171;
+      border-radius: var(--radius-xl);
+      padding: 1.5rem 1.75rem;
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      box-shadow: 0 10px 25px -5px rgba(185, 28, 28, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    .arrears-warning-card::after {
+      content: "";
+      position: absolute;
+      right: -25px;
+      bottom: -25px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(254, 202, 202, 0.16), transparent 70%);
+      pointer-events: none;
+    }
+    .arrears-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .arrears-tag {
+      background: #EF4444;
+      color: #FFFFFF;
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.22rem 0.65rem;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .arrears-breakdown-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      padding: 0.9rem 1.15rem;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+    .arrears-pill-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .arrears-pill-label {
+      font-size: 0.67rem;
+      color: #FCA5A5;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .arrears-pill-val {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+    }
+    .arrears-cleared-card {
+      background: linear-gradient(135deg, #064E3B 0%, #047857 50%, #059669 100%);
+      border: 1.5px solid #34D399;
+      border-radius: var(--radius-xl);
+      padding: 1.3rem 1.65rem;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      box-shadow: 0 8px 20px -4px rgba(5, 150, 105, 0.2);
+    }
+    .session-badge-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .session-badge-tag.prior {
+      background: #FEE2E2;
+      color: #991B1B;
+      border: 1px solid #FECACA;
+    }
+    .session-badge-tag.current {
+      background: #E0E7FF;
+      color: #3730A3;
+      border: 1px solid #C7D2FE;
+    }
+    @media (max-width: 640px) {
+      .arrears-breakdown-box {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ==================== 6. WORLD-CLASS FINTECH FINANCIAL LEDGER ==================== */
+    .ledger-section-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.02);
+      padding: 1.8rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      margin-top: 1.6rem;
+      position: relative;
+      width: 100%;
+      box-sizing: border-box;
+      min-width: 0;
+    }
+    .ledger-section-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0F1F42 0%, #CDA434 50%, #0F1F42 100%);
+    }
+
+    /* Modern KPI 4-Card Command Grid */
+    .ledger-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .ledger-kpi-card {
+      background: #FAFBFD;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.15rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.8rem;
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .ledger-kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(15, 31, 66, 0.06);
+      border-color: #CBD5E1;
+      background: #FFFFFF;
+    }
+    .ledger-kpi-card.gold-glow {
+      background: linear-gradient(145deg, #FFFDF8 0%, #FFF8EA 100%);
+      border-color: rgba(205, 164, 52, 0.4);
+    }
+    .kpi-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+    .kpi-icon-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .kpi-icon-avatar.emerald { background: #ECFDF5; color: #059669; }
+    .kpi-icon-avatar.navy { background: #EFF6FF; color: #1D4ED8; }
+    .kpi-icon-avatar.gold { background: #FEF3C7; color: #B45309; }
+    .kpi-icon-avatar.purple { background: #F5F3FF; color: #7C3AED; }
+
+    .kpi-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.18rem 0.55rem;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .kpi-tag.success { background: #DCFCE7; color: #15803D; }
+    .kpi-tag.info { background: #DBEAFE; color: #1E40AF; }
+    .kpi-tag.gold { background: #FEF3C7; color: #92400E; }
+    .kpi-tag.purple { background: #EDE9FE; color: #6D28D9; }
+
+    .kpi-amount-display {
+      font-size: clamp(1.2rem, 1.6vw, 1.45rem);
+      font-weight: 800;
+      color: #0F172A;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      word-break: break-word;
+    }
+    .kpi-sub-text {
+      font-size: 0.72rem;
+      color: #64748B;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      line-height: 1.35;
+      margin-top: 0.2rem;
+    }
+
+    /* Toolbar: Filters & Instant Search */
+    .ledger-toolbar-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 0.65rem 0.9rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .ledger-tabs-scroll {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      overflow-x: auto;
+      max-width: 100%;
+      scrollbar-width: thin;
+      padding-bottom: 2px;
+    }
+    .ledger-pill-tab {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      color: #475569;
+      padding: 0.4rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .ledger-pill-tab:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+    .ledger-pill-tab.active {
+      background: #0F1F42;
+      color: #FFFFFF;
+      border-color: #0F1F42;
+      box-shadow: 0 2px 8px rgba(15, 31, 66, 0.2);
+    }
+    .ledger-pill-tab .pill-badge {
+      background: #F1F5F9;
+      color: #475569;
+      padding: 0.05rem 0.42rem;
+      border-radius: 10px;
+      font-size: 0.65rem;
+      font-weight: 800;
+    }
+    .ledger-pill-tab.active .pill-badge {
+      background: rgba(255,255,255,0.25);
+      color: #FFFFFF;
+    }
+
+    .ledger-search-group {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-grow: 1;
+      justify-content: flex-end;
+      min-width: 240px;
+    }
+    .ledger-search-input-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+    }
+    .ledger-search-input-wrap input {
+      width: 100%;
+      height: 38px;
+      background: #FFFFFF;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 20px;
+      padding: 0 1rem 0 2.3rem;
+      font-size: 0.79rem;
+      color: #0F172A;
+      outline: none;
+      transition: all 0.15s ease;
+      box-sizing: border-box;
+    }
+    .ledger-search-input-wrap input:focus {
+      border-color: #0F1F42;
+      box-shadow: 0 0 0 3px rgba(15, 31, 66, 0.09);
+    }
+    .ledger-search-input-wrap .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94A3B8;
+      pointer-events: none;
+      display: flex;
+    }
+
+    /* Fintech Data Table - FULL HORIZONTAL SCROLL GUARANTEED */
+    .fintech-table-wrap {
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      background: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      scrollbar-width: thin;
+      scrollbar-color: #CBD5E1 #F1F5F9;
+    }
+    .fintech-table-wrap::-webkit-scrollbar {
+      height: 7px;
+    }
+    .fintech-table-wrap::-webkit-scrollbar-track {
+      background: #F8FAFC;
+      border-radius: 4px;
+    }
+    .fintech-table-wrap::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    .fintech-table-wrap::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    .fintech-ledger-table {
+      width: 100%;
+      min-width: 1060px; /* Guarantees all 9 columns display with absolute clarity */
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .fintech-ledger-table thead {
+      background: #F8FAFC;
+      border-bottom: 2px solid #E2E8F0;
+    }
+    .fintech-ledger-table th {
+      padding: 0.9rem 1.1rem;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #475569;
+      white-space: nowrap;
+    }
+    .fintech-ledger-table td {
+      padding: 1.05rem 1.1rem;
+      font-size: 0.82rem;
+      color: #1E293B;
+      border-bottom: 1px solid #F1F5F9;
+      vertical-align: middle;
+      transition: background 0.15s ease;
+    }
+    .fintech-ledger-table tbody tr:hover td {
+      background: #F8FAFC;
+    }
+    .fintech-ledger-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Direction Badges */
+    .ledger-type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.28rem 0.65rem;
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .ledger-type-badge.inflow {
+      background: #ECFDF5;
+      color: #047857;
+      border: 1px solid #A7F3D0;
+    }
+    .ledger-type-badge.outflow {
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border: 1px solid #BFDBFE;
+    }
+    .ledger-type-badge.direct {
+      background: #FFFBEB;
+      color: #B45309;
+      border: 1px solid #FDE68A;
+    }
+    .ledger-type-badge.synced {
+      background: #F5F3FF;
+      color: #6D28D9;
+      border: 1px solid #DDD6FE;
+    }
+
+    /* Monospace Ref Tag */
+    .ledger-ref-pill {
+      font-family: 'Fira Code', 'SF Mono', monospace;
+      font-weight: 700;
+      font-size: 0.77rem;
+      color: #0F1F42;
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      padding: 0.25rem 0.55rem;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .ledger-ref-pill:hover {
+      background: #E2E8F0;
+      border-color: #94A3B8;
+    }
+
+    /* Transaction Detail Cell */
+    .tx-item-flex {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      min-width: 250px;
+    }
+    .tx-item-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .tx-item-avatar.tuition { background: #EFF6FF; color: #1D4ED8; }
+    .tx-item-avatar.wallet { background: #ECFDF5; color: #047857; }
+    .tx-item-avatar.health { background: #FEE2E2; color: #DC2626; }
+    .tx-item-avatar.ict { background: #F5F3FF; color: #7C3AED; }
+    .tx-item-avatar.dues { background: #FEF3C7; color: #D97706; }
+    .tx-item-avatar.hostel { background: #E0F2FE; color: #0284C7; }
+
+    .tx-item-texts .tx-title {
+      font-weight: 700;
+      color: #0F172A;
+      font-size: 0.84rem;
+      line-height: 1.25;
+    }
+    .tx-item-texts .tx-sub {
+      font-size: 0.71rem;
+      color: #64748B;
+      margin-top: 0.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Channel Badge */
+    .channel-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.24rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      color: #334155;
+      white-space: nowrap;
+    }
+    .channel-badge.wallet {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+      color: #92400E;
+      font-weight: 700;
+    }
+
+    /* Amount Typography */
+    .ledger-amount-box {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    .ledger-amount-box.credit {
+      color: #059669;
+    }
+    .ledger-amount-box.debit {
+      color: #0F172A;
+    }
+    .cr-dr-tag {
+      font-size: 0.6rem;
+      font-weight: 800;
+      padding: 0.1rem 0.32rem;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+    }
+    .cr-dr-tag.cr { background: #DCFCE7; color: #15803D; }
+    .cr-dr-tag.dr { background: #F1F5F9; color: #475569; }
+
+    /* Running Balance Cell */
+    .running-balance-cell {
+      font-family: 'Fira Code', 'SF Mono', monospace;
+      font-weight: 700;
+      font-size: 0.79rem;
+      color: #475569;
+      white-space: nowrap;
+    }
+
+    /* Table Footer Bar */
+    .ledger-table-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1.1rem;
+      background: #F8FAFC;
+      border-top: 1px solid #E2E8F0;
+      font-size: 0.74rem;
+      color: #64748B;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Mobile Responsive Card Feed */
+    .ledger-mobile-list {
+      display: none;
+      flex-direction: column;
+      gap: 0.85rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .ledger-mobile-item {
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .mob-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .mob-item-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px dashed #E2E8F0;
+      padding-top: 0.65rem;
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 1200px) {
+      .ledger-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .financial-top-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 960px) {
+      .fee-row-item { flex-direction: column; align-items: flex-start; }
+      .fee-row-right { width: 100%; justify-content: space-between; margin-top: 0.4rem; }
+    }
+    @media (max-width: 768px) {
+      .fintech-table-wrap { display: none; }
+      .ledger-mobile-list { display: flex; }
+      .ledger-toolbar-bar { flex-direction: column; align-items: stretch; }
+      .ledger-search-group { width: 100%; }
+      .ledger-search-input-wrap { max-width: 100%; }
+      .ledger-kpi-grid { grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+      .kpi-amount-display { font-size: 1.15rem; }
+      .ledger-section-card { padding: 1.25rem 1.1rem; }
+    }
+    @media (max-width: 480px) {
+      .ledger-kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST NOTIFICATION ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="student"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- REUSABLE FIXED SIDEBAR COMPONENT -->
+    <unilesa-sidebar active="payments"></unilesa-sidebar>
+
+    <!-- MAIN PAGE WRAPPER (OFFSET FROM FIXED SIDEBAR) -->
+    <div class="main-wrapper">
+      
+      <!-- REUSABLE TOP HEADER COMPONENT -->
+      <unilesa-header title="Fee Payments &amp; Bursary Clearance" subtitle="First Semester &bull; 2025/2026 Academic Session"></unilesa-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+
+        <!-- 0. Academic Session Selector & Multi-Session Control Bar -->
+        <div class="session-selector-bar">
+          <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:0.4rem;">
+              <span style="font-size:0.75rem; font-weight:800; color:var(--navy-900); text-transform:uppercase; letter-spacing:0.04em;">Academic Session:</span>
+            </div>
+            <div class="session-pill-group">
+              <button type="button" class="session-pill-btn active" id="sessionTabAll" onclick="switchAcademicSessionView('all', this)">
+                <span>All Sessions (Consolidated)</span>
+                <span class="session-count-badge">Multi-Session</span>
+              </button>
+              <button type="button" class="session-pill-btn" id="sessionTabCurrent" onclick="switchAcademicSessionView('2025/2026', this)">
+                <span>2025/2026 (Current Session)</span>
+                <span class="session-count-badge current">Active</span>
+              </button>
+              <button type="button" class="session-pill-btn" id="sessionTabPrior" onclick="switchAcademicSessionView('2024/2025', this)">
+                <span>2024/2025 (Prior Session)</span>
+                <span class="session-count-badge prior" id="priorArrearsPillBadge">₦35,000 Arrears</span>
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="openStatementModal()" style="font-size:0.76rem; padding:0.45rem 0.85rem; gap:0.4rem; background:#FFFFFF; border-color:#CBD5E1;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              <span>Official Statement of Account</span>
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="resetFinanceDemoData()" title="Reset multi-session payments demo state" style="font-size:0.72rem; padding:0.45rem 0.65rem; color:#64748B; background:#FFFFFF; border-color:#CBD5E1;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+              <span>Reset State</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 1. Prior Session Arrears Alert Banner / Cleared Seal -->
+        <div class="arrears-alert-container" id="priorSessionArrearsBanner">
+          <!-- Populated dynamically via renderPriorSessionArrears() -->
+        </div>
+
+        <!-- 2. Top Financial Grid (Bursary Clearance Status + Portal Wallet) -->
+        <section class="financial-top-grid">
+          
+          <!-- Left: Bursary Clearance Status Banner -->
+          <div class="clearance-hero-card" id="clearanceHeroCard">
+            <div class="clearance-left-info">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.4rem;">
+                <span class="badge badge-gold" style="font-size:0.65rem;" id="heroSessionBadge">Consolidated (2024/2025 + 2025/2026)</span>
+                <span class="badge badge-success" style="font-size:0.65rem;" id="heroSemesterBadge">First Semester Active</span>
+              </div>
+              <h2>Institutional Bursary Clearance Status</h2>
+              <p>Official university ledger recording tuition settlement, prior session carryover arrears, departmental associations, hostel accommodation, and statutory sundries.</p>
+              
+              <div class="clearance-pills-row" id="heroPillsRow">
+                <span class="clearance-pill active" id="heroPillTuition">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>
+                  2025/26 Tuition: 100% Cleared (₦185k)
+                </span>
+                <span class="clearance-pill active" id="heroPillHostel">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>
+                  Hostel: Paid (₦40k)
+                </span>
+                <span class="clearance-pill" id="heroPillArrears" style="background:rgba(239, 68, 68, 0.25); border-color:rgba(248, 113, 113, 0.5); color:#FCA5A5;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>
+                  Prior Arrears: ₦35k Pending
+                </span>
+                <span class="clearance-pill" id="heroPillSundry" style="background:rgba(217, 119, 6, 0.25); border-color:rgba(251, 191, 36, 0.5); color:#FDE68A;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>
+                  Current Sundry: ₦14.5k Pending
+                </span>
+              </div>
+            </div>
+
+            <!-- Stats Bar (3 Metrics: Total, Cleared, Outstanding) -->
+            <div class="clearance-stats-bar">
+              <div>
+                <div style="font-size:0.68rem; color:var(--gold-400); text-transform:uppercase; font-weight:700;" id="heroTotalFeesLabel">Consolidated Total Billed</div>
+                <div style="font-size:1.15rem; font-weight:800; color:var(--white); font-family:'Inter', sans-serif;" id="heroTotalFees">₦544,500.00</div>
+              </div>
+              <div>
+                <div style="font-size:0.68rem; color:#86EFAC; text-transform:uppercase; font-weight:700;">Total Cleared to Date</div>
+                <div style="font-size:1.15rem; font-weight:800; color:#4ADE80; font-family:'Inter', sans-serif;" id="heroClearedFees">₦495,000.00</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.68rem; color:#FCA5A5; text-transform:uppercase; font-weight:700;">Total Outstanding Balance</div>
+                <div style="font-size:1.15rem; font-weight:800; color:#F87171; font-family:'Inter', sans-serif;" id="heroOutstandingFees">₦49,500.00</div>
+              </div>
+            </div>
+
+            <!-- Prominent Action Row to Pay Outstanding Payment Directly -->
+            <div class="clearance-action-row">
+              <button type="button" class="btn-pay-outstanding" id="payOutstandingHeroBtn" onclick="payOutstandingPayment()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                <span id="payOutstandingBtnText">Pay Total Outstanding (₦49,500.00)</span>
+              </button>
+              <button type="button" class="btn btn-outline btn-sm" onclick="openStatementModal()" style="color:var(--white); border-color:rgba(255,255,255,0.35); background:rgba(255,255,255,0.08); font-size:0.78rem; padding:0.65rem 0.95rem; white-space:nowrap; border-radius:10px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                <span>Statement of Account</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Student Portal Wallet Card -->
+          <div class="portal-wallet-card">
+            <div class="wallet-header-row">
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                <div style="width:32px; height:32px; border-radius:8px; background:var(--gold-500); color:var(--navy-950); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                </div>
+                <div>
+                  <div style="font-size:0.88rem; font-weight:800; letter-spacing:-0.01em;">UNILESA Student Wallet</div>
+                  <div style="font-size:0.67rem; color:var(--gold-400);">Dedicated School Fees Deposit</div>
+                </div>
+              </div>
+              <span class="wallet-badge-tag">🔒 Active</span>
+            </div>
+
+            <div>
+              <div style="font-size:0.7rem; color:rgba(255,255,255,0.7); text-transform:uppercase; font-weight:600;">Available Wallet Balance</div>
+              <div class="wallet-balance-amount" id="walletBalanceDisplay">₦35,000.00</div>
+              <div class="wallet-restriction-note">
+                💡 <b>Policy:</b> Deposited funds can only be applied toward tuition, departmental dues, hostel fees, prior arrears, and sundry charges.
+              </div>
+            </div>
+
+            <div class="wallet-action-row">
+              <button type="button" class="btn btn-gold btn-sm" style="flex:1;" onclick="openFundWalletModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Fund Wallet
+              </button>
+              <button type="button" class="btn btn-outline btn-sm" style="color:var(--white); border-color:rgba(255,255,255,0.3); background:rgba(255,255,255,0.08);" onclick="document.getElementById('walletHistorySection').scrollIntoView({behavior:'smooth'})">
+                Audit Ledger
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- 3. Official Bursary Directive Strip (Determined centrally by Directorate of Bursary) -->
+        <div class="bursary-schedule-strip">
+          <div class="bursary-strip-info">
+            <div class="bursary-strip-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </div>
+            <div>
+              <div style="font-size:0.84rem; font-weight:800; color:var(--navy-950);" id="bursaryDirectiveTitle">
+                Official Bursary Directive: Multi-Session Financial Tracking &amp; Clearance Policy
+              </div>
+              <div style="font-size:0.73rem; color:var(--grey-600);" id="bursaryDirectiveDesc">
+                Examination docket issuance and course registration for 2025/2026 require full settlement of previous session (2024/2025) carryover obligations.
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+            <span class="badge badge-success" style="font-size:0.68rem; font-weight:700;">● Multi-Session Audit Active</span>
+            <span class="badge badge-gold" style="font-size:0.68rem; font-weight:700;" id="bursaryDirectiveBadge">Two-Semester Split (60% / 40%)</span>
+          </div>
+        </div>
+
+        <!-- 4A. Previous Academic Session (2024/2025) Obligations & Arrears Schedule -->
+        <section class="card" id="prevSessionScheduleCard" style="margin-bottom:1.4rem;">
+          <div class="card-header-flex" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; flex-wrap:wrap; gap:0.6rem;">
+            <div>
+              <div style="display:flex; align-items:center; gap:0.45rem; margin-bottom:0.2rem;">
+                <span class="session-badge-tag prior">2024/2025 Session</span>
+                <span class="badge badge-danger" id="prevSessionStatusBadge" style="font-size:0.65rem;">Prior Arrears Detected</span>
+              </div>
+              <h3 style="font-size:1.05rem; margin:0;">2024/2025 Academic Session Fee Schedule &amp; Arrears</h3>
+              <p style="font-size:0.75rem; color:var(--grey-600); margin:0.2rem 0 0;">Historical university fees, settled tranches, and carryover debt obligations.</p>
+            </div>
+
+            <!-- Direct Arrears Settlement Action -->
+            <button type="button" class="btn btn-navy btn-sm" id="payAllPriorArrearsBtn" onclick="payAllPreviousArrears()">
+              Pay Prior Session Arrears (<span id="prevArrearsBtnAmount">₦35,000.00</span>)
+            </button>
+          </div>
+
+          <div class="fee-items-list" id="prevSessionFeeList">
+            <!-- Dynamically rendered via renderSchedules() -->
+          </div>
+        </section>
+
+        <!-- 4B. Current Academic Session (2025/2026) Fee Breakdown & Sundry Module -->
+        <section class="card" id="currentSessionScheduleCard" style="margin-bottom:1.4rem;">
+          <div class="card-header-flex" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; flex-wrap:wrap; gap:0.6rem;">
+            <div>
+              <div style="display:flex; align-items:center; gap:0.45rem; margin-bottom:0.2rem;">
+                <span class="session-badge-tag current">2025/2026 Active Session</span>
+                <span class="badge badge-success" style="font-size:0.65rem;">First Semester</span>
+              </div>
+              <h3 style="font-size:1.05rem; margin:0;" id="payableScheduleHeader">2025/2026 Fee Schedule &amp; Sundry Levies</h3>
+              <p style="font-size:0.75rem; color:var(--grey-600); margin:0.2rem 0 0;">Approved institutional fees for 100 Level B.Sc. Computer Science</p>
+            </div>
+
+            <!-- Batch Action Button -->
+            <button type="button" class="btn btn-gold btn-sm" id="batchPayBtn" onclick="payBatchSelected()">
+              Pay Selected Sundry Fees (<span id="selectedFeesCount">0</span>)
+            </button>
+          </div>
+
+          <!-- Category Filter Tabs -->
+          <div class="fee-filter-tabs">
+            <button type="button" class="fee-tab-btn active" onclick="filterFeeCategory('all', this)">All 2025/26 Fees (<span id="countCatAll">8</span>)</button>
+            <button type="button" class="fee-tab-btn" onclick="filterFeeCategory('tuition', this)">Tuition &amp; Levies</button>
+            <button type="button" class="fee-tab-btn" onclick="filterFeeCategory('sundry', this)">Sundry Fees</button>
+            <button type="button" class="fee-tab-btn" onclick="filterFeeCategory('dues', this)">Departmental Dues</button>
+            <button type="button" class="fee-tab-btn" onclick="filterFeeCategory('hostel', this)">Accommodation</button>
+          </div>
+
+          <div class="fee-items-list" id="currentSessionFeeList">
+            <!-- Dynamically rendered via renderSchedules() -->
+          </div>
+        </section>
+
+        <!-- 5. CONSOLIDATED FINANCIAL LEDGER & WALLET HISTORY -->
+        <section class="ledger-section-card" id="walletHistorySection">
+          
+          <!-- Ledger Section Header -->
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                <div style="width:32px; height:32px; border-radius:8px; background:var(--navy-900); color:var(--gold-400); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(15,31,66,0.15); flex-shrink:0;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </div>
+                <h2 style="font-size:1.3rem; margin:0; color:var(--navy-950); font-family:'Playfair Display', serif; letter-spacing:-0.01em;">
+                  Consolidated Multi-Session Financial Ledger
+                </h2>
+              </div>
+              <p style="margin:0; font-size:0.77rem; color:var(--grey-600);">
+                Official bursary audit trail, digital transaction slips, Remita payments, prior session arrears settlements, and instant wallet statements.
+              </p>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="openStatementModal()" style="gap:0.4rem; background:#FFFFFF; border-color:#CBD5E1;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                <span>Official Statement</span>
+              </button>
+              <button type="button" class="btn btn-gold btn-sm" onclick="openFundWalletModal()" style="gap:0.4rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>+ Top-up Wallet</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Luxury 4-Card Command Grid -->
+          <div class="ledger-kpi-grid">
+            
+            <!-- Metric 1: Total Deposited -->
+            <div class="ledger-kpi-card">
+              <div class="kpi-card-top">
+                <div class="kpi-icon-avatar emerald">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                </div>
+                <span class="kpi-tag success">Deposits (+CR)</span>
+              </div>
+              <div>
+                <div class="kpi-amount-display" style="color:#059669;" id="kpiTotalDeposits">₦120,000.00</div>
+                <div class="kpi-sub-text">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                  <span>Verified Institutional Inflow</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Metric 2: Total Fees Cleared -->
+            <div class="ledger-kpi-card">
+              <div class="kpi-card-top">
+                <div class="kpi-icon-avatar navy">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+                </div>
+                <span class="kpi-tag info">Obligations (-DR)</span>
+              </div>
+              <div>
+                <div class="kpi-amount-display" style="color:var(--navy-950);" id="kpiTotalSettled">₦495,000.00</div>
+                <div class="kpi-sub-text">
+                  <span>Tuition, Sundries &amp; Arrears Cleared</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Metric 3: Active Wallet -->
+            <div class="ledger-kpi-card gold-glow">
+              <div class="kpi-card-top">
+                <div class="kpi-icon-avatar gold">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                </div>
+                <span class="kpi-tag gold">Active Wallet</span>
+              </div>
+              <div>
+                <div class="kpi-amount-display" style="color:#B45309;" id="ledgerKpiWallet">₦35,000.00</div>
+                <div class="kpi-sub-text" style="color:#92400E;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  Dedicated for University Fees
+                </div>
+              </div>
+            </div>
+
+            <!-- Metric 4: Audit Status -->
+            <div class="ledger-kpi-card">
+              <div class="kpi-card-top">
+                <div class="kpi-icon-avatar purple">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </div>
+                <span class="kpi-tag purple">Audit Seal</span>
+              </div>
+              <div>
+                <div class="kpi-amount-display" style="color:#6D28D9; font-size:1.2rem;" id="kpiAuditSealStatus">Multi-Session Synced</div>
+                <div class="kpi-sub-text">
+                  <span>Ref: BUR/2026/CSC/0142</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Interactive Filter & Search Toolbar -->
+          <div class="ledger-toolbar-bar">
+            
+            <div class="ledger-tabs-scroll">
+              <button type="button" class="ledger-pill-tab active" onclick="filterLedgerTab('all', this)">
+                <span>All Transactions</span>
+                <span class="pill-badge" id="ledgerCountAll">7</span>
+              </button>
+              <button type="button" class="ledger-pill-tab" onclick="filterLedgerTab('sess_25', this)">
+                <span>2025/2026 Session</span>
+                <span class="pill-badge" id="ledgerCountSess25">5</span>
+              </button>
+              <button type="button" class="ledger-pill-tab" onclick="filterLedgerTab('sess_24', this)">
+                <span>2024/2025 Session</span>
+                <span class="pill-badge" id="ledgerCountSess24">2</span>
+              </button>
+              <button type="button" class="ledger-pill-tab" onclick="filterLedgerTab('inflow', this)">
+                <span>Wallet Top-ups (+CR)</span>
+                <span class="pill-badge" id="ledgerCountInflow">1</span>
+              </button>
+              <button type="button" class="ledger-pill-tab" onclick="filterLedgerTab('outflow', this)">
+                <span>Fee Payments (-DR)</span>
+                <span class="pill-badge" id="ledgerCountOutflow">3</span>
+              </button>
+              <button type="button" class="ledger-pill-tab" onclick="filterLedgerTab('direct', this)">
+                <span>Remita &amp; Direct Sync</span>
+                <span class="pill-badge" id="ledgerCountDirect">3</span>
+              </button>
+            </div>
+
+            <div class="ledger-search-group">
+              <div class="ledger-search-input-wrap">
+                <span class="search-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
+                <input type="text" id="ledgerSearchInput" placeholder="Search by Session, Ref, RRR, Fee Title, Amount..." onkeyup="filterLedgerSearch()">
+              </div>
+            </div>
+
+          </div>
+
+          <!-- High-Contrast Fintech Data Table (Horizontal Scroll Container Guaranteed) -->
+          <div class="fintech-table-wrap">
+            <table class="fintech-ledger-table">
+              <thead>
+                <tr>
+                  <th style="width:110px;">Type / Flow</th>
+                  <th style="width:150px;">Transaction Ref</th>
+                  <th style="width:125px;">Session</th>
+                  <th style="min-width:260px;">Fee Title &amp; Institutional Purpose</th>
+                  <th style="width:155px;">Payment Channel</th>
+                  <th style="width:125px;">Date &amp; Time</th>
+                  <th style="width:140px;">Amount</th>
+                  <th style="width:130px;">Running Balance</th>
+                  <th style="width:105px;">Status</th>
+                  <th style="width:110px; text-align:right;">Official Slip</th>
+                </tr>
+              </thead>
+              <tbody id="financialLedgerTbody">
+                <!-- Dynamically rendered via renderLedgerTable() -->
+              </tbody>
+            </table>
+            
+            <div class="ledger-table-footer">
+              <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                <span class="badge badge-success" style="font-size:0.62rem;">● Live Central Sync</span>
+                <span id="ledgerFooterCounter">Showing entries &bull; Ledger reconciled across all academic sessions with UNILESA Central Bursary Database</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+                <button type="button" class="btn btn-outline btn-sm" style="padding:0.25rem 0.6rem; font-size:0.72rem; background:#FFF;" onclick="openStatementModal()">
+                  View Full Statement
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" style="padding:0.25rem 0.6rem; font-size:0.72rem; background:#FFF;" onclick="window.print()">
+                  Print Audit Sheet
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile Cards Feed (Phone Viewports) -->
+          <div class="ledger-mobile-list" id="ledgerMobileFeed">
+            <!-- Dynamically rendered via renderLedgerTable() -->
+          </div>
+
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MULTI-SESSION OFFICIAL STATEMENT OF ACCOUNT MODAL -->
+  <div class="modal-backdrop" id="statementModal" onclick="if(event.target===this) closeModal('statementModal')">
+    <div class="modal-box" style="max-width:760px; max-height:92vh; overflow-y:auto; border-radius:16px; padding:0;">
+      <div style="background:linear-gradient(135deg, #091530 0%, #0F1F42 60%, #162E62 100%); color:#fff; padding:1.4rem 1.8rem; border-bottom:3px solid #CDA434; position:relative;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+          <div style="display:flex; align-items:center; gap:0.9rem;">
+            <div style="width:46px; height:46px; border-radius:12px; background:rgba(205,164,52,0.2); border:1.5px solid #CDA434; display:flex; align-items:center; justify-content:center; color:#FDE68A; font-size:1.4rem;">
+              🏛️
+            </div>
+            <div>
+              <div style="font-size:0.7rem; font-weight:800; color:#FDE68A; text-transform:uppercase; letter-spacing:0.06em;">University of Ilesa, Osun State</div>
+              <h2 style="margin:0.15rem 0 0; font-family:'Playfair Display', serif; font-size:1.28rem; color:#fff;">Official Multi-Session Statement of Account</h2>
+              <div style="font-size:0.72rem; color:rgba(255,255,255,0.75);">Directorate of Bursary &bull; Student Financial Services Division</div>
+            </div>
+          </div>
+          <button type="button" class="modal-close-icon" onclick="closeModal('statementModal')" style="color:#fff;">&times;</button>
+        </div>
+      </div>
+
+      <div style="padding:1.6rem 1.8rem; display:flex; flex-direction:column; gap:1.2rem;">
+        
+        <!-- Student Metadata Strip -->
+        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:0.75rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:1rem 1.2rem; font-size:0.8rem;">
+          <div>
+            <div style="color:#64748B; font-size:0.7rem; text-transform:uppercase; font-weight:700;">Student Full Name:</div>
+            <div style="font-weight:800; color:var(--navy-950); font-size:0.92rem;">JANE ADAEZE DOE</div>
+          </div>
+          <div>
+            <div style="color:#64748B; font-size:0.7rem; text-transform:uppercase; font-weight:700;">Matriculation Number:</div>
+            <div style="font-family:monospace; font-weight:800; color:var(--navy-950); font-size:0.92rem;">UNILESA/2026/CSC/0142</div>
+          </div>
+          <div>
+            <div style="color:#64748B; font-size:0.7rem; text-transform:uppercase; font-weight:700;">Faculty &amp; Department:</div>
+            <div style="font-weight:700; color:#334155;">Faculty of Science &bull; Computer Science (100L)</div>
+          </div>
+          <div>
+            <div style="color:#64748B; font-size:0.7rem; text-transform:uppercase; font-weight:700;">Statement Issue Date:</div>
+            <div style="font-weight:700; color:#334155;" id="stmtIssueDate">08 Oct 2026</div>
+          </div>
+        </div>
+
+        <!-- Multi-Session Consolidated Summary Breakdown -->
+        <div>
+          <h4 style="margin:0 0 0.55rem; font-size:0.86rem; color:var(--navy-950); text-transform:uppercase; letter-spacing:0.03em;">Academic Session Billing &amp; Arrears Summary</h4>
+          <div style="border:1px solid #E2E8F0; border-radius:10px; overflow:hidden;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.8rem; text-align:left;">
+              <thead style="background:#F1F5F9; border-bottom:1px solid #E2E8F0;">
+                <tr>
+                  <th style="padding:0.6rem 0.8rem; color:#475569;">Session</th>
+                  <th style="padding:0.6rem 0.8rem; color:#475569;">Billed Total</th>
+                  <th style="padding:0.6rem 0.8rem; color:#475569;">Total Settled</th>
+                  <th style="padding:0.6rem 0.8rem; color:#475569;">Outstanding Arrears</th>
+                  <th style="padding:0.6rem 0.8rem; color:#475569; text-align:right;">Clearance Status</th>
+                </tr>
+              </thead>
+              <tbody id="stmtSessionSummaryTbody">
+                <!-- Dynamically populated via renderStatementModal() -->
+              </tbody>
+              <tfoot style="background:#F8FAFC; border-top:2px solid #CBD5E1; font-weight:800;">
+                <tr>
+                  <td style="padding:0.75rem 0.8rem; color:var(--navy-950);">CONSOLIDATED TOTAL</td>
+                  <td style="padding:0.75rem 0.8rem; color:var(--navy-950);" id="stmtConsolidatedBilled">₦544,500.00</td>
+                  <td style="padding:0.75rem 0.8rem; color:#059669;" id="stmtConsolidatedSettled">₦495,000.00</td>
+                  <td style="padding:0.75rem 0.8rem; color:#DC2626;" id="stmtConsolidatedOwing">₦49,500.00</td>
+                  <td style="padding:0.75rem 0.8rem; text-align:right;" id="stmtConsolidatedStatusBadge">
+                    <span class="badge badge-warning">Partial Clearance</span>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- Detailed Itemized Statement Ledger -->
+        <div>
+          <h4 style="margin:0 0 0.55rem; font-size:0.86rem; color:var(--navy-950); text-transform:uppercase; letter-spacing:0.03em;">Itemized Fee Transactions &amp; Receipts Ledger</h4>
+          <div style="border:1px solid #E2E8F0; border-radius:10px; max-height:220px; overflow-y:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.76rem; text-align:left;">
+              <thead style="background:#F8FAFC; border-bottom:1px solid #E2E8F0; position:sticky; top:0;">
+                <tr>
+                  <th style="padding:0.55rem 0.75rem;">Session</th>
+                  <th style="padding:0.55rem 0.75rem;">Reference</th>
+                  <th style="padding:0.55rem 0.75rem;">Obligation Description</th>
+                  <th style="padding:0.55rem 0.75rem;">Channel</th>
+                  <th style="padding:0.55rem 0.75rem;">Date</th>
+                  <th style="padding:0.55rem 0.75rem; text-align:right;">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="stmtItemizedLedgerTbody">
+                <!-- Dynamically populated via renderStatementModal() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Official Bursary Authentication Stamp & Signature Line -->
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; border-top:1.5px dashed #CBD5E1; padding-top:1.1rem; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; font-weight:700; color:#059669;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              <span>Digitally Certified by Directorate of Bursary</span>
+            </div>
+            <div style="font-size:0.68rem; color:#64748B; margin-top:0.15rem;">
+              University of Ilesa Electronic Financial Ledger Verification Server
+            </div>
+          </div>
+
+          <div style="display:flex; gap:0.5rem;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="window.print()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+              Print Statement
+            </button>
+            <button type="button" class="btn btn-navy btn-sm" onclick="showToast('Statement Exported', 'Official multi-session statement PDF downloaded.', 'success')">
+              Download Official PDF
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- UNIFIED CHECKOUT MODAL: WALLET OR DIRECT GATEWAY -->
+  <div class="modal-backdrop" id="unifiedCheckoutModal">
+    <div class="modal-box" style="max-width:540px;">
+      <div class="modal-header-clean">
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <div style="width:34px; height:34px; border-radius:8px; background:var(--gold-100); color:var(--gold-600); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+          </div>
+          <div>
+            <h3 style="margin:0; font-size:1.05rem;">Bursary Fee Checkout</h3>
+            <span style="font-size:0.72rem; color:var(--grey-500);" id="checkoutModalSubtitle">Choose UNILESA Wallet or External Payment Channel</span>
+          </div>
+        </div>
+        <button type="button" class="modal-close-icon" onclick="closeModal('unifiedCheckoutModal')">&times;</button>
+      </div>
+      
+      <div class="modal-content-inner">
+        
+        <!-- Summary Pill -->
+        <div style="background:#F6F8FB; border:1px solid var(--grey-300); border-radius:10px; padding:0.9rem 1.1rem; margin-bottom:1.1rem;">
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.3rem;">
+            <span style="color:var(--grey-600);">Academic Session:</span>
+            <b style="color:var(--navy-900);" id="checkoutSessionTag">2025/2026 Session</b>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.3rem;">
+            <span style="color:var(--grey-600);">Fee Description:</span>
+            <b style="color:var(--navy-900);" id="checkoutItemTitle">NACOS Departmental Association Due</b>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.3rem;">
+            <span style="color:var(--grey-600);">Payer Matric No:</span>
+            <b style="font-family:monospace; color:var(--navy-900);">UNILESA/2026/CSC/0142</b>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-top:1px dashed var(--grey-300); padding-top:0.4rem; margin-top:0.4rem; font-size:1.1rem; font-weight:800; color:var(--navy-950); font-family:'Inter', sans-serif;">
+            <span>Payable Total:</span>
+            <span id="checkoutPayableAmount">₦5,000.00</span>
+          </div>
+        </div>
+
+        <!-- Payment Option 1: UNILESA Student Wallet -->
+        <div style="border:2px solid var(--gold-500); background:#FFFDF9; border-radius:12px; padding:1rem; margin-bottom:1rem; position:relative;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem; flex-wrap:wrap; gap:0.4rem;">
+            <div style="display:flex; align-items:center; gap:0.4rem;">
+              <span class="badge badge-gold" style="font-size:0.65rem;">Recommended</span>
+              <b style="font-size:0.88rem; color:var(--navy-900);">Pay with UNILESA Wallet</b>
+            </div>
+            <div style="font-size:0.75rem; color:var(--grey-600);">
+              Wallet Balance: <b style="color:var(--navy-900);" id="checkoutModalWalletBal">₦35,000.00</b>
+            </div>
+          </div>
+          <p style="font-size:0.74rem; color:var(--grey-600); margin:0 0 0.75rem; line-height:1.4;">
+            Instant fee settlement with zero gateway processing fees. Generates official receipt immediately and syncs with bursary audit database.
+          </p>
+          <button type="button" class="btn btn-gold" style="width:100%; height:40px; font-size:0.86rem;" id="confirmWalletPayBtn" onclick="executeWalletPayment()">
+            Pay from Student Wallet (<span id="walletPayAmountBtn">₦5,000.00</span>)
+          </button>
+        </div>
+
+        <!-- Payment Option 2: Remita / Card / Bank Transfer -->
+        <div style="border:1.5px solid var(--grey-300); border-radius:12px; padding:0.9rem 1rem; background:#FAFBFD;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem; flex-wrap:wrap; gap:0.4rem;">
+            <b style="font-size:0.84rem; color:var(--navy-900);">Direct Card / Remita Gateway</b>
+            <span style="font-size:0.68rem; color:var(--grey-500);">+₦161.25 gateway fee</span>
+          </div>
+          <p style="font-size:0.73rem; color:var(--grey-600); margin:0 0 0.6rem; line-height:1.35;">
+            Pay with debit card, Remita RRR at commercial banks, or USSD channel.
+          </p>
+          <button type="button" class="btn btn-outline btn-sm" style="width:100%;" onclick="proceedToDirectRemita()">
+            Generate Remita RRR &amp; Pay via Card
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FUND WALLET MODAL -->
+  <div class="modal-backdrop" id="fundWalletModal">
+    <div class="modal-box" style="max-width:500px;">
+      <div class="modal-header-clean">
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <div style="width:34px; height:34px; border-radius:8px; background:var(--gold-100); color:var(--gold-600); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </div>
+          <div>
+            <h3 style="margin:0; font-size:1.05rem;">Fund Student Portal Wallet</h3>
+            <span style="font-size:0.72rem; color:var(--grey-500);">Dedicated strictly to UNILESA tuition &amp; sundry fees</span>
+          </div>
+        </div>
+        <button type="button" class="modal-close-icon" onclick="closeModal('fundWalletModal')">&times;</button>
+      </div>
+
+      <div class="modal-content-inner">
+        
+        <!-- Virtual Account Box -->
+        <div style="background:#F0FDF4; border:1.5px solid #86EFAC; border-radius:10px; padding:0.9rem 1rem; margin-bottom:1rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.2rem; flex-wrap:wrap; gap:0.4rem;">
+            <span style="font-size:0.7rem; font-weight:700; color:#166534; text-transform:uppercase;">INSTANT BANK TRANSFER ACCOUNT</span>
+            <span class="badge badge-success" style="font-size:0.6rem;">Auto-Credited in 30s</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.4rem; flex-wrap:wrap; gap:0.6rem;">
+            <div>
+              <div style="font-size:1.25rem; font-weight:800; font-family:monospace; color:#14532D;" id="virtualAccNum">9928104491</div>
+              <div style="font-size:0.72rem; color:#166534;">Wema Bank &bull; UNILESA / JANE ADAEZE DOE</div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" onclick="copyVirtualAccount()" style="font-size:0.72rem; padding:0.3rem 0.65rem;">
+              Copy Account
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Top-up Amount Selection -->
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:0.78rem; font-weight:700; color:var(--navy-900); display:block; margin-bottom:0.4rem;">
+            Or Enter Deposit Amount (₦):
+          </label>
+          <input type="number" id="fundAmountInput" value="35000" min="1000" step="500" style="width:100%; height:40px; border:1.5px solid var(--grey-300); border-radius:8px; padding:0 0.8rem; font-size:1.05rem; font-weight:700; color:var(--navy-950); box-sizing:border-box;">
+          
+          <div style="display:flex; gap:0.4rem; margin-top:0.5rem; flex-wrap:wrap;">
+            <button type="button" class="btn btn-outline btn-sm" style="flex:1; padding:0.25rem; min-width:70px;" onclick="setFundPreset(5000)">+₦5,000</button>
+            <button type="button" class="btn btn-outline btn-sm" style="flex:1; padding:0.25rem; min-width:70px;" onclick="setFundPreset(15000)">+₦15,000</button>
+            <button type="button" class="btn btn-outline btn-sm" style="flex:1; padding:0.25rem; min-width:70px;" onclick="setFundPreset(35000)">+₦35,000</button>
+            <button type="button" class="btn btn-outline btn-sm" style="flex:1; padding:0.25rem; min-width:70px;" onclick="setFundPreset(50000)">+₦50,000</button>
+          </div>
+        </div>
+
+        <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:8px; padding:0.6rem 0.8rem; font-size:0.74rem; color:#92400E; margin-bottom:1rem; line-height:1.4;">
+          ⚠️ <b>Policy Notice:</b> Funds deposited to student wallets are institutional credits and <u>cannot be refunded or transferred to external accounts</u>. They are dedicated solely to university fee clearances.
+        </div>
+
+        <button type="button" class="btn btn-gold" style="width:100%; height:42px; font-size:0.88rem;" onclick="processFundWallet()">
+          Deposit &amp; Top-up Wallet Now &rarr;
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- REMITA FALLBACK MODAL -->
+  <div class="modal-backdrop" id="remitaModal">
+    <div class="modal-box">
+      <div class="modal-header-clean">
+        <h3>Remita Payment Gateway Checkout</h3>
+        <button type="button" class="modal-close-icon" onclick="closeModal('remitaModal')">&times;</button>
+      </div>
+      <div class="modal-content-inner">
+        <div style="background:#FFF7ED; border:1px solid #FFEDD5; border-radius:10px; padding:1rem; display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+          <div>
+            <b style="color:#C2410C; font-size:0.82rem; display:block;">Remita Retrieval Reference (RRR)</b>
+            <span style="font-family:monospace; font-size:1.1rem; font-weight:800; color:var(--navy-900);" id="checkoutRrr">2409-8812-4910</span>
+          </div>
+          <button type="button" class="btn btn-outline btn-sm" onclick="copyRrrCode()">Copy RRR</button>
+        </div>
+
+        <div style="background:#F6F8FB; border:1px solid var(--grey-300); border-radius:10px; padding:1rem; margin-bottom:1.2rem; font-size:0.8rem; line-height:1.65;">
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--grey-600);">Payer / Student:</span>
+            <b>Jane Adaeze Doe</b>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--grey-600);">Matric Number:</span>
+            <b style="font-family:monospace;">UNILESA/2026/CSC/0142</b>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--grey-600);">Academic Session:</span>
+            <b id="checkoutRemitaSession">2025/2026 Session</b>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--grey-600);">Purpose of Payment:</span>
+            <b id="checkoutFeeName">NACOS Departmental Association Due</b>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-top:1.5px dashed var(--grey-300); padding-top:0.4rem; margin-top:0.4rem; font-size:1.05rem; font-weight:800; color:var(--navy-950); font-family:'Inter', sans-serif;">
+            <span>Total Payable:</span>
+            <span id="checkoutTotalAmount">₦5,161.25</span>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:0.6rem;">
+          <button type="button" class="btn btn-gold" style="width:100%;" onclick="processSimulatedPayment()">
+            Pay with Card / Bank Transfer Now
+          </button>
+          <button type="button" class="btn btn-outline" style="width:100%;" onclick="window.print()">
+            Download / Print Remita Bank Invoice
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REUSABLE MOBILE BOTTOM NAV -->
+  <unilesa-mobile-nav active="payments"></unilesa-mobile-nav>
+
+  <!-- SHARED JS LOGIC & REUSABLE COMPONENTS -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-sidebar.js"></script>
+  <script src="components/unilesa-header.js"></script>
+  <script src="components/unilesa-mobile-nav.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <!-- PAGE-SPECIFIC MULTI-SESSION PAYMENT & WALLET LOGIC -->
+  <script>
+    let currentSessionView = 'all'; // 'all', '2025/2026', '2024/2025'
+    let activeLedgerFilter = 'all';
+    let activeCategoryFilter = 'all';
+
+    let activeCheckoutFee = {
+      sessionKey: '2025/2026',
+      feeId: null,
+      name: 'NACOS Departmental Association Due',
+      amount: 5000,
+      mode: 'single', // 'single', 'prior_arrears', 'batch', 'all_outstanding'
+      items: []
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      refreshAllPortalFinances();
+    });
+
+    window.addEventListener('unilesa:finances-updated', () => {
+      refreshAllPortalFinances();
+    });
+
+    window.addEventListener('unilesa:wallet-updated', () => {
+      refreshWalletDisplay();
+    });
+
+    window.addEventListener('unilesa:bursary-updated', () => {
+      refreshBursaryDirective();
+    });
+
+    function refreshAllPortalFinances() {
+      refreshWalletDisplay();
+      refreshBursaryDirective();
+      renderPriorSessionArrears();
+      renderHeroSummary();
+      renderSchedules();
+      renderLedgerTable();
+    }
+
+    function switchAcademicSessionView(sessionView, tabBtn) {
+      currentSessionView = sessionView;
+      document.querySelectorAll('.session-pill-btn').forEach(btn => btn.classList.remove('active'));
+      if (tabBtn) tabBtn.classList.add('active');
+
+      const prevCard = document.getElementById('prevSessionScheduleCard');
+      const currentCard = document.getElementById('currentSessionScheduleCard');
+
+      if (sessionView === '2024/2025') {
+        if (prevCard) prevCard.style.display = 'block';
+        if (currentCard) currentCard.style.display = 'none';
+      } else if (sessionView === '2025/2026') {
+        if (prevCard) prevCard.style.display = 'none';
+        if (currentCard) currentCard.style.display = 'block';
+      } else {
+        if (prevCard) prevCard.style.display = 'block';
+        if (currentCard) currentCard.style.display = 'block';
+      }
+
+      renderHeroSummary();
+    }
+
+    function renderPriorSessionArrears() {
+      const banner = document.getElementById('priorSessionArrearsBanner');
+      if (!banner || !window.UniStore) return;
+
+      const arrearsInfo = window.UniStore.getPreviousSessionArrears();
+      const priorBadge = document.getElementById('priorArrearsPillBadge');
+
+      if (arrearsInfo.totalArrears > 0) {
+        if (priorBadge) {
+          priorBadge.textContent = `₦${arrearsInfo.totalArrears.toLocaleString('en-NG')} Arrears`;
+          priorBadge.style.display = 'inline-block';
+        }
+
+        const items = arrearsInfo.unpaidItems || arrearsInfo.items || [];
+        const itemsHtml = items.map(item => `
+          <div class="arrears-pill-item">
+            <span class="arrears-pill-label">${item.name || item.title || 'Prior Arrears'}</span>
+            <span class="arrears-pill-val">₦${(parseFloat(item.amount) || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
+          </div>
+        `).join('');
+
+        banner.innerHTML = `
+          <div class="arrears-warning-card">
+            <div class="arrears-header-row">
+              <div>
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.35rem;">
+                  <span class="arrears-tag">⚠️ PRIOR ACADEMIC SESSION ARREARS</span>
+                  <span style="font-size:0.75rem; color:#FEE2E2; font-weight:700;">Session: 2024/2025</span>
+                </div>
+                <h3 style="margin:0; font-size:1.18rem; color:#FFFFFF; font-family:'Playfair Display', serif;">
+                  Outstanding Arrears Carried Over from 2024/2025 Session
+                </h3>
+                <p style="margin:0.25rem 0 0; font-size:0.78rem; color:#FECACA; max-width:680px; line-height:1.4;">
+                  University Bursary directive strictly requires full settlement of prior session obligations (₦${arrearsInfo.totalArrears.toLocaleString('en-NG', { minimumFractionDigits: 2 })}) before examination dockets and clearance certificates for 2025/2026 can be issued.
+                </p>
+              </div>
+
+              <button type="button" class="btn btn-gold btn-sm" onclick="payAllPreviousArrears()" style="font-weight:800; padding:0.7rem 1.15rem; font-size:0.84rem; white-space:nowrap; box-shadow:0 4px 14px rgba(0,0,0,0.3);">
+                Pay Prior Arrears (₦${arrearsInfo.totalArrears.toLocaleString('en-NG', { minimumFractionDigits: 2 })})
+              </button>
+            </div>
+
+            <div class="arrears-breakdown-box">
+              ${itemsHtml}
+            </div>
+          </div>
+        `;
+      } else {
+        if (priorBadge) {
+          priorBadge.textContent = `100% Cleared`;
+          priorBadge.className = 'session-count-badge current';
+        }
+
+        banner.innerHTML = `
+          <div class="arrears-cleared-card">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <div style="width:36px; height:36px; border-radius:10px; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.1rem; flex-shrink:0;">
+                ✓
+              </div>
+              <div>
+                <h4 style="margin:0; font-size:0.95rem; font-weight:800;">2024/2025 Previous Academic Session 100% Cleared</h4>
+                <div style="font-size:0.74rem; color:rgba(255,255,255,0.85); margin-top:0.15rem;">
+                  All historical session obligations have been fully liquidated and reconciled with the Directorate of Bursary. Clearance Ref: <b>BUR-CLR-24/25-9921</b>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" onclick="previewReceipt('BUR-CLR-24/25-9921', '2024/2025 Session 100% Clearance Certificate', 'Settled', '₦295,000.00', 'Cleared')" style="color:#fff; border-color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.1); font-size:0.74rem;">
+              View Prior Clearance Slip
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    function renderHeroSummary() {
+      if (!window.UniStore) return;
+      const data = window.UniStore.getMultiSessionFinances();
+      const arrearsInfo = window.UniStore.getPreviousSessionArrears();
+
+      const sess25 = (data.sessionsMap && data.sessionsMap['2025/2026']) || (data.sessions && data.sessions.find(s => s.key === '2025/2026')) || { totalBilled: 0, totalPaid: 0, arrearsBalance: 0, fees: [] };
+      const sess24 = (data.sessionsMap && data.sessionsMap['2024/2025']) || (data.sessions && data.sessions.find(s => s.key === '2024/2025')) || { totalBilled: 0, totalPaid: 0, arrearsBalance: 0, fees: [] };
+
+      let billedTotal = data.totalConsolidatedBilled || 0;
+      let settledTotal = data.totalConsolidatedSettled || 0;
+      let owingTotal = data.totalConsolidatedOwing || 0;
+
+      const heroSessionBadge = document.getElementById('heroSessionBadge');
+      const heroTotalLabel = document.getElementById('heroTotalFeesLabel');
+
+      if (currentSessionView === '2025/2026') {
+        billedTotal = sess25.totalBilled || 0;
+        settledTotal = sess25.totalPaid || 0;
+        owingTotal = sess25.arrearsBalance || 0;
+        if (heroSessionBadge) heroSessionBadge.textContent = 'Active Session: 2025/2026';
+        if (heroTotalLabel) heroTotalLabel.textContent = '2025/2026 Total Billed';
+      } else if (currentSessionView === '2024/2025') {
+        billedTotal = sess24.totalBilled || 0;
+        settledTotal = sess24.totalPaid || 0;
+        owingTotal = sess24.arrearsBalance || 0;
+        if (heroSessionBadge) heroSessionBadge.textContent = 'Prior Session: 2024/2025';
+        if (heroTotalLabel) heroTotalLabel.textContent = '2024/2025 Total Billed';
+      } else {
+        if (heroSessionBadge) heroSessionBadge.textContent = 'Consolidated (2024/2025 + 2025/2026)';
+        if (heroTotalLabel) heroTotalLabel.textContent = 'Consolidated Total Billed';
+      }
+
+      const heroTotalEl = document.getElementById('heroTotalFees');
+      const heroClearedEl = document.getElementById('heroClearedFees');
+      const heroOwingEl = document.getElementById('heroOutstandingFees');
+
+      if (heroTotalEl) heroTotalEl.textContent = '₦' + billedTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      if (heroClearedEl) heroClearedEl.textContent = '₦' + settledTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      if (heroOwingEl) {
+        heroOwingEl.textContent = '₦' + owingTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+        heroOwingEl.style.color = owingTotal > 0 ? '#F87171' : '#4ADE80';
+      }
+
+      // Hero action button
+      const heroBtn = document.getElementById('payOutstandingHeroBtn');
+      const heroBtnText = document.getElementById('payOutstandingBtnText');
+
+      if (arrearsInfo.totalArrears > 0) {
+        if (heroBtnText) heroBtnText.textContent = `Pay Prior Session Arrears (₦${arrearsInfo.totalArrears.toLocaleString('en-NG', { minimumFractionDigits: 2 })})`;
+        if (heroBtn) {
+          heroBtn.className = 'btn-pay-outstanding';
+          heroBtn.onclick = payAllPreviousArrears;
+        }
+      } else if (owingTotal > 0) {
+        if (heroBtnText) heroBtnText.textContent = `Pay Outstanding Balance (₦${owingTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })})`;
+        if (heroBtn) {
+          heroBtn.className = 'btn-pay-outstanding';
+          heroBtn.onclick = payOutstandingPayment;
+        }
+      } else {
+        if (heroBtnText) heroBtnText.textContent = '✓ 100% Cleared — Official Bursary Certificate';
+        if (heroBtn) {
+          heroBtn.className = 'btn-pay-outstanding cleared';
+          heroBtn.onclick = () => previewReceipt('BUR-CLR-2026-0142', 'Institutional Bursary 100% Clearance Certificate', 'Today', '₦' + (data.totalConsolidatedBilled || 0).toLocaleString('en-NG', {minimumFractionDigits:2}), 'Cleared & Authenticated');
+        }
+      }
+
+      // Hero pills
+      const pillArrears = document.getElementById('heroPillArrears');
+      if (pillArrears) {
+        if (arrearsInfo.totalArrears > 0) {
+          pillArrears.className = 'clearance-pill';
+          pillArrears.style.background = 'rgba(239, 68, 68, 0.25)';
+          pillArrears.style.borderColor = 'rgba(248, 113, 113, 0.5)';
+          pillArrears.style.color = '#FCA5A5';
+          pillArrears.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg> Prior Arrears: ₦${(arrearsInfo.totalArrears/1000).toFixed(0)}k Pending`;
+        } else {
+          pillArrears.className = 'clearance-pill active';
+          pillArrears.style.background = '';
+          pillArrears.style.borderColor = '';
+          pillArrears.style.color = '';
+          pillArrears.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg> 2024/25 Arrears: Cleared`;
+        }
+      }
+
+      const sess25SundryOwing = (sess25.fees || [])
+        .filter(f => f.category === 'sundry' || f.category === 'dues')
+        .reduce((acc, f) => acc + (f.paid ? 0 : f.amount), 0);
+
+      const pillSundry = document.getElementById('heroPillSundry');
+      if (pillSundry) {
+        if (sess25SundryOwing > 0) {
+          pillSundry.className = 'clearance-pill';
+          pillSundry.style.background = 'rgba(217, 119, 6, 0.25)';
+          pillSundry.style.borderColor = 'rgba(251, 191, 36, 0.5)';
+          pillSundry.style.color = '#FDE68A';
+          pillSundry.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg> Current Sundry: ₦${(sess25SundryOwing/1000).toFixed(1)}k Pending`;
+        } else {
+          pillSundry.className = 'clearance-pill active';
+          pillSundry.style.background = '';
+          pillSundry.style.borderColor = '';
+          pillSundry.style.color = '';
+          pillSundry.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg> 2025/26 Sundry: 100% Cleared`;
+        }
+      }
+    }
+
+    function renderSchedules() {
+      if (!window.UniStore) return;
+      const data = window.UniStore.getMultiSessionFinances();
+
+      const sess24 = (data.sessionsMap && data.sessionsMap['2024/2025']) || (data.sessions && data.sessions.find(s => s.key === '2024/2025')) || { fees: [], totalBilled: 0, totalPaid: 0, arrearsBalance: 0 };
+      const sess25 = (data.sessionsMap && data.sessionsMap['2025/2026']) || (data.sessions && data.sessions.find(s => s.key === '2025/2026')) || { fees: [], totalBilled: 0, totalPaid: 0, arrearsBalance: 0 };
+
+      // 1. Previous Session Schedule
+      const prevList = document.getElementById('prevSessionFeeList');
+      const prevFees = sess24.fees || [];
+      const prevOwing = sess24.arrearsBalance || 0;
+
+      const prevBadge = document.getElementById('prevSessionStatusBadge');
+      if (prevBadge) {
+        if (prevOwing > 0) {
+          prevBadge.className = 'badge badge-danger';
+          prevBadge.textContent = `₦${prevOwing.toLocaleString('en-NG')} Prior Arrears Detected`;
+        } else {
+          prevBadge.className = 'badge badge-success';
+          prevBadge.textContent = `100% Settled & Reconciled`;
+        }
+      }
+
+      const prevArrearsBtnAmt = document.getElementById('prevArrearsBtnAmount');
+      if (prevArrearsBtnAmt) {
+        prevArrearsBtnAmt.textContent = '₦' + prevOwing.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      }
+
+      const payAllPriorBtn = document.getElementById('payAllPriorArrearsBtn');
+      if (payAllPriorBtn) {
+        payAllPriorBtn.style.display = prevOwing > 0 ? 'inline-flex' : 'none';
+      }
+
+      if (prevList) {
+        prevList.innerHTML = prevFees.map(f => {
+          const isPaid = !!f.paid;
+          const isPriorArrears = !isPaid;
+          const feeTitle = f.name || f.title || 'Obligation';
+          const feeAmount = parseFloat(f.amount) || 0;
+          const feeDate = f.paidDate || 'Prior Record';
+
+          const statusText = isPaid 
+            ? `<span style="font-size:0.68rem; color:var(--green-ok); font-weight:700;">CLEARED &bull; ${feeDate}</span>`
+            : `<span style="font-size:0.68rem; color:var(--rose-tag); font-weight:700;">UNPAID ARREARS &bull; 2024/2025</span>`;
+
+          const actionBtn = isPaid
+            ? `<button type="button" class="btn btn-outline btn-sm" onclick="previewReceipt('${f.receiptRef || 'PID-24-001'}', '${feeTitle.replace(/'/g, "\\'")}', '${feeDate}', '₦${feeAmount.toLocaleString('en-NG', {minimumFractionDigits:2})}', 'Completed')">Receipt</button>`
+            : `<button type="button" class="btn btn-gold btn-sm" onclick="initiateSingleFeeCheckout('2024/2025', '${f.id}', '${feeTitle.replace(/'/g, "\\'")}', ${feeAmount})">Pay ₦${feeAmount.toLocaleString('en-NG')}</button>`;
+
+          return `
+            <div class="fee-row-item" data-cat="${f.category}" style="${isPriorArrears ? 'background:#FFF8F8; border-color:#FECACA;' : ''}">
+              <div class="fee-row-left">
+                <input type="checkbox" class="fee-select-check" disabled ${isPaid ? 'checked' : ''} style="width:18px; height:18px; flex-shrink:0;">
+                <div class="fee-cat-icon ${f.category}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></div>
+                <div>
+                  <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+                    <h4 style="margin:0; font-size:0.88rem; font-weight:700;">${feeTitle}</h4>
+                    <span class="session-badge-tag prior">2024/2025</span>
+                    ${isPriorArrears ? '<span class="badge badge-danger" style="font-size:0.6rem;">Arrears Carryover</span>' : ''}
+                  </div>
+                  <p style="margin:0.2rem 0 0; font-size:0.73rem; color:var(--grey-600);">${f.description || 'Academic session fee obligation'}</p>
+                </div>
+              </div>
+              <div class="fee-row-right">
+                <div style="text-align:right;">
+                  <div style="font-size:1.05rem; font-weight:800; color:var(--navy-950);">₦${feeAmount.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</div>
+                  ${statusText}
+                </div>
+                ${actionBtn}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 2. Current Session Schedule
+      const currentList = document.getElementById('currentSessionFeeList');
+      const currentFees = sess25.fees || [];
+
+      if (currentList) {
+        currentList.innerHTML = currentFees.map(f => {
+          const isPaid = !!f.paid;
+          const isOutstanding = !isPaid;
+          const feeTitle = f.name || f.title || 'Fee';
+          const feeAmount = parseFloat(f.amount) || 0;
+          const feeDate = f.paidDate || 'Today';
+
+          const statusText = isPaid 
+            ? `<span style="font-size:0.68rem; color:var(--green-ok); font-weight:700;">PAID &bull; ${feeDate}</span>`
+            : `<span style="font-size:0.68rem; color:var(--rose-tag); font-weight:700;">OUTSTANDING</span>`;
+
+          const actionBtn = isPaid
+            ? `<button type="button" class="btn btn-outline btn-sm" onclick="previewReceipt('${f.receiptRef || 'PID-26-001'}', '${feeTitle.replace(/'/g, "\\'")}', '${feeDate}', '₦${feeAmount.toLocaleString('en-NG', {minimumFractionDigits:2})}', 'Completed')">Receipt</button>`
+            : `<button type="button" class="btn btn-gold btn-sm" onclick="initiateSingleFeeCheckout('2025/2026', '${f.id}', '${feeTitle.replace(/'/g, "\\'")}', ${feeAmount})">Pay ₦${feeAmount.toLocaleString('en-NG')}</button>`;
+
+          const checkboxHtml = isOutstanding 
+            ? `<input type="checkbox" class="fee-select-check" data-session="2025/2026" data-id="${f.id}" data-amount="${feeAmount}" data-name="${feeTitle.replace(/"/g, '&quot;')}" onchange="updateSelectedCount()" style="width:18px; height:18px; accent-color:var(--gold-500); flex-shrink:0;">`
+            : `<input type="checkbox" class="fee-select-check" disabled checked style="width:18px; height:18px; flex-shrink:0;">`;
+
+          return `
+            <div class="fee-row-item" data-cat="${f.category}">
+              <div class="fee-row-left">
+                ${checkboxHtml}
+                <div class="fee-cat-icon ${f.category}">
+                  ${f.category === 'tuition' ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>' : f.category === 'hostel' ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>'}
+                </div>
+                <div>
+                  <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+                    <h4 style="margin:0; font-size:0.88rem; font-weight:700;">${feeTitle}</h4>
+                    <span class="session-badge-tag current">2025/2026</span>
+                    ${f.category === 'sundry' || f.category === 'dues' ? '<span class="badge badge-gold" style="font-size:0.62rem; padding:0.1rem 0.4rem;">Sundry Fee</span>' : ''}
+                  </div>
+                  <p style="margin:0.2rem 0 0; font-size:0.73rem; color:var(--grey-600);">${f.description || 'Approved departmental and institutional tariff'}</p>
+                </div>
+              </div>
+              <div class="fee-row-right">
+                <div style="text-align:right;">
+                  <div style="font-size:1.05rem; font-weight:800; color:var(--navy-950);">₦${feeAmount.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</div>
+                  ${statusText}
+                </div>
+                ${actionBtn}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      updateSelectedCount();
+    }
+
+    function renderLedgerTable() {
+      if (!window.UniStore) return;
+      const ledger = window.UniStore.getFinancialLedger() || [];
+      const tbody = document.getElementById('financialLedgerTbody');
+      const mobFeed = document.getElementById('ledgerMobileFeed');
+      if (!tbody) return;
+
+      // Update KPI totals
+      const deposits = ledger.filter(l => l.type === 'deposit').reduce((a, b) => a + (parseFloat(b.amount) || 0), 0);
+      const settlements = ledger.filter(l => l.type === 'payment' || l.type === 'direct').reduce((a, b) => a + (parseFloat(b.amount) || 0), 0);
+      
+      const kpiDepEl = document.getElementById('kpiTotalDeposits');
+      const kpiSetEl = document.getElementById('kpiTotalSettled');
+      if (kpiDepEl) kpiDepEl.textContent = '₦' + deposits.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      if (kpiSetEl) kpiSetEl.textContent = '₦' + settlements.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+
+      // Update pill counts
+      const countAll = document.getElementById('ledgerCountAll');
+      const countSess25 = document.getElementById('ledgerCountSess25');
+      const countSess24 = document.getElementById('ledgerCountSess24');
+      const countInflow = document.getElementById('ledgerCountInflow');
+      const countOutflow = document.getElementById('ledgerCountOutflow');
+      const countDirect = document.getElementById('ledgerCountDirect');
+
+      const sess25Count = ledger.filter(l => l.session === '2025/2026').length;
+      const sess24Count = ledger.filter(l => l.session === '2024/2025').length;
+      const inflowCount = ledger.filter(l => l.type === 'deposit').length;
+      const outflowCount = ledger.filter(l => l.type === 'payment' && (l.method || '').toLowerCase().includes('wallet')).length;
+      const directCount = ledger.filter(l => (l.method || '').toLowerCase().includes('remita') || (l.method || '').toLowerCase().includes('direct') || (l.method || '').toLowerCase().includes('bank')).length;
+
+      if (countAll) countAll.textContent = ledger.length;
+      if (countSess25) countSess25.textContent = sess25Count;
+      if (countSess24) countSess24.textContent = sess24Count;
+      if (countInflow) countInflow.textContent = inflowCount;
+      if (countOutflow) countOutflow.textContent = outflowCount;
+      if (countDirect) countDirect.textContent = directCount;
+
+      let currentWalletBalance = 35000;
+      try {
+        currentWalletBalance = window.UniStore.getWallet().balance;
+      } catch (e) {}
+
+      // Render Desktop Rows
+      tbody.innerHTML = ledger.map(tx => {
+        const isDeposit = tx.type === 'deposit';
+        const isPrior = tx.session === '2024/2025';
+        const isRemita = (tx.method || '').toLowerCase().includes('remita') || (tx.method || '').toLowerCase().includes('direct') || (tx.method || '').toLowerCase().includes('bank');
+
+        const typeBadge = isDeposit
+          ? `<span class="ledger-type-badge inflow">↓ TOP-UP</span>`
+          : isRemita
+            ? `<span class="ledger-type-badge direct">⚡ DIRECT REMITA</span>`
+            : `<span class="ledger-type-badge outflow">↑ FEE PAID</span>`;
+
+        const amountBox = isDeposit
+          ? `<div class="ledger-amount-box credit">+₦${tx.amount.toLocaleString('en-NG', {minimumFractionDigits:2})} <span class="cr-dr-tag cr">CR</span></div>`
+          : `<div class="ledger-amount-box debit">-₦${tx.amount.toLocaleString('en-NG', {minimumFractionDigits:2})} <span class="cr-dr-tag dr">DR</span></div>`;
+
+        const sessionTag = isPrior
+          ? `<span class="session-badge-tag prior">2024/2025</span>`
+          : `<span class="session-badge-tag current">2025/2026</span>`;
+
+        const typeCategory = isDeposit ? 'inflow' : (isRemita ? 'direct' : 'outflow');
+        const txDesc = tx.description || tx.title || 'University Transaction';
+        const txDate = tx.date || 'Settled';
+        const txRef = tx.ref || tx.id || 'UNL-TXN';
+
+        return `
+          <tr data-type="${typeCategory}" data-session="${isPrior ? 'sess_24' : 'sess_25'}" data-search="${tx.id} ${txRef} ${tx.session} ${txDesc} ${tx.method} ${tx.amount}">
+            <td>${typeBadge}</td>
+            <td>
+              <span class="ledger-ref-pill" onclick="copyCode('${txRef}')" title="Click to copy Ref">
+                ${txRef}
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </span>
+            </td>
+            <td>${sessionTag}</td>
+            <td>
+              <div class="tx-item-flex">
+                <div class="tx-item-avatar ${isDeposit ? 'wallet' : 'tuition'}">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                </div>
+                <div class="tx-item-texts">
+                  <div class="tx-title">${txDesc}</div>
+                  <div class="tx-sub">
+                    <span>Ref: ${txRef}</span>
+                    <span>&bull;</span>
+                    <span style="color:${isDeposit ? '#059669' : '#1D4ED8'}; font-weight:700;">${isDeposit ? 'Institutional Credit' : 'Fee Clearance'}</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="channel-badge ${isDeposit ? '' : 'wallet'}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                ${tx.method || 'UNILESA Wallet'}
+              </span>
+            </td>
+            <td>
+              <div style="font-weight:700; color:var(--navy-950); font-size:0.78rem;">${txDate}</div>
+            </td>
+            <td>${amountBox}</td>
+            <td>
+              <span class="running-balance-cell">${isDeposit || (tx.method && tx.method.includes('Wallet')) ? '₦' + currentWalletBalance.toLocaleString('en-NG', {minimumFractionDigits:2}) : 'Direct Sync'}</span>
+            </td>
+            <td><span class="badge badge-success" style="font-size:0.68rem;">Completed</span></td>
+            <td style="text-align:right;">
+              <button type="button" class="btn btn-outline btn-sm" style="padding:0.35rem 0.65rem; font-size:0.72rem; background:#FFF;" onclick="previewReceipt('${txRef}', '${txDesc.replace(/'/g, "\\'")}', '${txDate}', '₦${tx.amount.toLocaleString('en-NG', {minimumFractionDigits:2})}', 'Completed')">
+                View Slip
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Render Mobile Feed
+      if (mobFeed) {
+        mobFeed.innerHTML = ledger.map(tx => {
+          const isDeposit = tx.type === 'deposit';
+          const isPrior = tx.session === '2024/2025';
+          const isRemita = (tx.method || '').toLowerCase().includes('remita') || (tx.method || '').toLowerCase().includes('direct') || (tx.method || '').toLowerCase().includes('bank');
+          const typeCategory = isDeposit ? 'inflow' : (isRemita ? 'direct' : 'outflow');
+          const txDesc = tx.description || tx.title || 'University Transaction';
+          const txDate = tx.date || 'Settled';
+          const txRef = tx.ref || tx.id || 'UNL-TXN';
+
+          return `
+            <div class="ledger-mobile-item" data-type="${typeCategory}" data-session="${isPrior ? 'sess_24' : 'sess_25'}">
+              <div class="mob-item-header">
+                <span class="ledger-type-badge ${isDeposit ? 'inflow' : (isRemita ? 'direct' : 'outflow')}">${isDeposit ? '↓ TOP-UP' : (isRemita ? '⚡ DIRECT' : '↑ FEE PAID')}</span>
+                <span class="session-badge-tag ${isPrior ? 'prior' : 'current'}">${tx.session}</span>
+                <span class="ledger-ref-pill">${txRef}</span>
+              </div>
+              <div>
+                <div style="font-weight:700; color:var(--navy-950); font-size:0.86rem;">${txDesc}</div>
+                <div style="font-size:0.72rem; color:var(--grey-500); margin-top:0.15rem;">${txDate} &bull; ${tx.method}</div>
+              </div>
+              <div class="mob-item-footer">
+                <div class="ledger-amount-box ${isDeposit ? 'credit' : 'debit'}">
+                  ${isDeposit ? '+' : '-'}₦${tx.amount.toLocaleString('en-NG', {minimumFractionDigits:2})} <span class="cr-dr-tag ${isDeposit ? 'cr' : 'dr'}">${isDeposit ? 'CR' : 'DR'}</span>
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" onclick="previewReceipt('${txRef}', '${txDesc.replace(/'/g, "\\'")}', '${txDate}', '₦${tx.amount.toLocaleString('en-NG', {minimumFractionDigits:2})}', 'Completed')">Slip</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      applyLedgerFilters();
+    }
+
+    /* Checkout & Payment Flows */
+    function initiateSingleFeeCheckout(sessionKey, feeId, feeTitle, amount) {
+      activeCheckoutFee = {
+        sessionKey: sessionKey,
+        feeId: feeId,
+        name: feeTitle,
+        amount: amount,
+        mode: 'single',
+        items: []
+      };
+
+      document.getElementById('checkoutSessionTag').textContent = `${sessionKey} Academic Session`;
+      document.getElementById('checkoutItemTitle').textContent = feeTitle;
+      const formatted = '₦' + amount.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      document.getElementById('checkoutPayableAmount').textContent = formatted;
+      document.getElementById('walletPayAmountBtn').textContent = formatted;
+
+      refreshWalletDisplay();
+      openModal('unifiedCheckoutModal');
+    }
+
+    function payAllPreviousArrears() {
+      const arrearsInfo = window.UniStore.getPreviousSessionArrears();
+      if (arrearsInfo.totalArrears <= 0) {
+        showToast('Fully Cleared', '2024/2025 previous session obligations are already 100% cleared.', 'success');
+        return;
+      }
+
+      const items = arrearsInfo.unpaidItems || arrearsInfo.items || [];
+      activeCheckoutFee = {
+        sessionKey: '2024/2025',
+        feeId: null,
+        name: `Liquidation of 2024/2025 Prior Session Arrears (${items.length} items)`,
+        amount: arrearsInfo.totalArrears,
+        mode: 'prior_arrears',
+        items: items
+      };
+
+      document.getElementById('checkoutSessionTag').textContent = '2024/2025 Prior Session Arrears';
+      document.getElementById('checkoutItemTitle').textContent = `Liquidation of 2024/2025 Session Arrears (${items.map(i => i.name || i.title).join(', ')})`;
+      const formatted = '₦' + arrearsInfo.totalArrears.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      document.getElementById('checkoutPayableAmount').textContent = formatted;
+      document.getElementById('walletPayAmountBtn').textContent = formatted;
+
+      refreshWalletDisplay();
+      openModal('unifiedCheckoutModal');
+    }
+
+    function payBatchSelected() {
+      const checked = document.querySelectorAll('#currentSessionFeeList .fee-select-check:checked:not([disabled])');
+      if (checked.length === 0) {
+        showToast('Selection Required', 'Please select at least one sundry fee item to pay.', 'warning');
+        return;
+      }
+
+      let total = 0;
+      const names = [];
+      const itemIds = [];
+      checked.forEach(c => {
+        const amt = parseFloat(c.getAttribute('data-amount') || '0');
+        const name = c.getAttribute('data-name');
+        const id = c.getAttribute('data-id');
+        total += amt;
+        names.push(name);
+        itemIds.push(id);
+      });
+
+      activeCheckoutFee = {
+        sessionKey: '2025/2026',
+        feeId: null,
+        name: `Batch Sundry Fees (${names.length} items: ${names.join(', ')})`,
+        amount: total,
+        mode: 'batch',
+        items: itemIds
+      };
+
+      document.getElementById('checkoutSessionTag').textContent = '2025/2026 Active Session';
+      document.getElementById('checkoutItemTitle').textContent = `Batch Settlement: ${names.join(' • ')}`;
+      const formatted = '₦' + total.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      document.getElementById('checkoutPayableAmount').textContent = formatted;
+      document.getElementById('walletPayAmountBtn').textContent = formatted;
+
+      refreshWalletDisplay();
+      openModal('unifiedCheckoutModal');
+    }
+
+    function payOutstandingPayment() {
+      const data = window.UniStore.getMultiSessionFinances();
+      const totalOwing = data.totalConsolidatedOwing;
+
+      if (totalOwing <= 0) {
+        showToast('Fully Cleared', 'All fee obligations across all academic sessions are 100% settled.', 'success');
+        previewReceipt('BUR-CLR-2026-0142', 'Institutional Bursary 100% Clearance Certificate', 'Today', '₦' + (data.totalConsolidatedBilled || 0).toLocaleString('en-NG', {minimumFractionDigits:2}), 'Cleared & Authenticated');
+        return;
+      }
+
+      activeCheckoutFee = {
+        sessionKey: 'All',
+        feeId: null,
+        name: `Consolidated Liquidation of All Outstanding Balances (Prior Arrears & Current Sundries)`,
+        amount: totalOwing,
+        mode: 'all_outstanding',
+        items: []
+      };
+
+      document.getElementById('checkoutSessionTag').textContent = 'Consolidated Multi-Session Settlement';
+      document.getElementById('checkoutItemTitle').textContent = `Full Outstanding Balance Settlement (₦${totalOwing.toLocaleString('en-NG', {minimumFractionDigits:2})})`;
+      const formatted = '₦' + totalOwing.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      document.getElementById('checkoutPayableAmount').textContent = formatted;
+      document.getElementById('walletPayAmountBtn').textContent = formatted;
+
+      refreshWalletDisplay();
+      openModal('unifiedCheckoutModal');
+    }
+
+    function executeWalletPayment() {
+      const { feeId, name, amount, mode, items } = activeCheckoutFee;
+
+      let res;
+      if (mode === 'prior_arrears') {
+        res = window.UniStore.payPreviousSessionArrears('UNILESA Wallet');
+      } else if (mode === 'batch') {
+        res = window.UniStore.payBatchFees(items, 'UNILESA Wallet');
+      } else if (mode === 'all_outstanding') {
+        res = window.UniStore.payAllOutstandingFees('UNILESA Wallet');
+      } else {
+        res = window.UniStore.payFeeItem(feeId, 'UNILESA Wallet');
+      }
+
+      if (!res || !res.success) {
+        showToast('Payment Failed', res ? res.message : 'Could not process fee clearance.', 'error');
+        return;
+      }
+
+      closeModal('unifiedCheckoutModal');
+      refreshAllPortalFinances();
+      showToast('Fee Cleared via Wallet', `Successfully settled ${name} (₦${amount.toLocaleString('en-NG', {minimumFractionDigits:2})}) from your Student Wallet.`, 'success');
+
+      setTimeout(() => {
+        const ref = res.receiptRef || (res.transactions && res.transactions[0] ? res.transactions[0].ref : 'FEE-WAL-2026');
+        previewReceipt(ref, name, 'Today (' + new Date().toLocaleDateString('en-GB') + ')', '₦' + amount.toLocaleString('en-NG', {minimumFractionDigits:2}), 'Completed (Wallet)');
+      }, 450);
+    }
+
+    function proceedToDirectRemita() {
+      closeModal('unifiedCheckoutModal');
+      const rrr = '2409-' + Math.floor(1000 + Math.random() * 9000) + '-' + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('checkoutRrr').textContent = rrr;
+      document.getElementById('checkoutRemitaSession').textContent = activeCheckoutFee.sessionKey + ' Session';
+      document.getElementById('checkoutFeeName').textContent = activeCheckoutFee.name;
+      const total = (activeCheckoutFee.amount + 161.25).toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      document.getElementById('checkoutTotalAmount').textContent = '₦' + total;
+      openModal('remitaModal');
+    }
+
+    function processSimulatedPayment() {
+      const { feeId, name, amount, mode, items } = activeCheckoutFee;
+      const rrr = document.getElementById('checkoutRrr').textContent;
+
+      closeModal('remitaModal');
+
+      let res;
+      if (mode === 'prior_arrears') {
+        res = window.UniStore.payPreviousSessionArrears('Remita Gateway', rrr);
+      } else if (mode === 'batch') {
+        res = window.UniStore.payBatchFees(items, 'Remita Gateway', rrr);
+      } else if (mode === 'all_outstanding') {
+        res = window.UniStore.payAllOutstandingFees('Remita Gateway', rrr);
+      } else {
+        res = window.UniStore.payFeeItem(feeId, 'Remita Gateway', rrr);
+      }
+
+      refreshAllPortalFinances();
+
+      setTimeout(() => {
+        showToast('Remita Payment Verified', `Payment of ₦${amount.toLocaleString('en-NG', {minimumFractionDigits:2})} confirmed and reconciled.`, 'success');
+        previewReceipt(rrr, name, 'Today (' + new Date().toLocaleDateString('en-GB') + ')', '₦' + amount.toLocaleString('en-NG', {minimumFractionDigits:2}), 'Completed (Remita)');
+      }, 400);
+    }
+
+    /* Multi-Session Official Statement Modal */
+    function openStatementModal() {
+      if (!window.UniStore) return;
+      const data = window.UniStore.getMultiSessionFinances();
+      const ledger = window.UniStore.getFinancialLedger() || [];
+
+      const tbody = document.getElementById('stmtSessionSummaryTbody');
+      const itemizedTbody = document.getElementById('stmtItemizedLedgerTbody');
+      const issueDate = document.getElementById('stmtIssueDate');
+
+      if (issueDate) {
+        issueDate.textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      }
+
+      if (tbody) {
+        tbody.innerHTML = (data.sessions || []).map(s => {
+          const isCleared = (s.arrearsBalance || 0) <= 0;
+          return `
+            <tr style="border-bottom:1px solid #F1F5F9;">
+              <td style="padding:0.65rem 0.8rem; font-weight:800; color:var(--navy-950);">
+                ${s.title}
+                <div style="font-size:0.68rem; font-weight:500; color:#64748B;">${s.level || (s.isCurrent ? 'Current Session' : 'Prior Academic Year')}</div>
+              </td>
+              <td style="padding:0.65rem 0.8rem; font-weight:700; color:#334155;">₦${(s.totalBilled || 0).toLocaleString('en-NG', {minimumFractionDigits:2})}</td>
+              <td style="padding:0.65rem 0.8rem; font-weight:700; color:#059669;">₦${(s.totalPaid || 0).toLocaleString('en-NG', {minimumFractionDigits:2})}</td>
+              <td style="padding:0.65rem 0.8rem; font-weight:800; color:${(s.arrearsBalance || 0) > 0 ? '#DC2626' : '#059669'};">₦${(s.arrearsBalance || 0).toLocaleString('en-NG', {minimumFractionDigits:2})}</td>
+              <td style="padding:0.65rem 0.8rem; text-align:right;">
+                ${isCleared 
+                  ? '<span class="badge badge-success" style="font-size:0.65rem;">✓ 100% Cleared</span>' 
+                  : `<span class="badge badge-danger" style="font-size:0.65rem;">● Arrears Owing</span>`}
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      const stmtBilled = document.getElementById('stmtConsolidatedBilled');
+      const stmtSettled = document.getElementById('stmtConsolidatedSettled');
+      const stmtOwing = document.getElementById('stmtConsolidatedOwing');
+      const stmtBadge = document.getElementById('stmtConsolidatedStatusBadge');
+
+      if (stmtBilled) stmtBilled.textContent = '₦' + (data.totalConsolidatedBilled || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      if (stmtSettled) stmtSettled.textContent = '₦' + (data.totalConsolidatedSettled || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      if (stmtOwing) stmtOwing.textContent = '₦' + (data.totalConsolidatedOwing || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      if (stmtBadge) {
+        stmtBadge.innerHTML = (data.totalConsolidatedOwing || 0) <= 0
+          ? '<span class="badge badge-success" style="font-size:0.68rem;">✓ 100% Cleared &amp; Certified</span>'
+          : '<span class="badge badge-warning" style="font-size:0.68rem;">● Prior/Active Arrears Pending</span>';
+      }
+
+      if (itemizedTbody) {
+        itemizedTbody.innerHTML = ledger.map(l => `
+          <tr style="border-bottom:1px solid #F1F5F9;">
+            <td style="padding:0.5rem 0.75rem;"><span class="session-badge-tag ${l.session === '2024/2025' ? 'prior' : 'current'}">${l.session}</span></td>
+            <td style="padding:0.5rem 0.75rem; font-family:monospace; font-weight:700; color:var(--navy-900);">${l.ref}</td>
+            <td style="padding:0.5rem 0.75rem; color:#1E293B;">${l.description}</td>
+            <td style="padding:0.5rem 0.75rem; color:#64748B;">${l.method}</td>
+            <td style="padding:0.5rem 0.75rem; color:#64748B;">${l.date}</td>
+            <td style="padding:0.5rem 0.75rem; text-align:right; font-weight:800; color:${l.type === 'deposit' ? '#059669' : 'var(--navy-950)'};">
+              ${l.type === 'deposit' ? '+' : '-'}₦${l.amount.toLocaleString('en-NG', {minimumFractionDigits:2})}
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      openModal('statementModal');
+    }
+
+    function resetFinanceDemoData() {
+      if (confirm('Reset multi-session payments demo to initial state (with ₦35,000 prior session arrears & ₦35,000 wallet)?')) {
+        if (window.UniStore && window.UniStore.resetFinanceData) {
+          window.UniStore.resetFinanceData();
+          refreshAllPortalFinances();
+          showToast('Finances Reset', 'Multi-session finance state reset to default demo scenario.', 'info');
+        }
+      }
+    }
+
+    /* Helper Utilities */
+    function refreshBursaryDirective() {
+      const policy = window.UniStore ? window.UniStore.getBursaryPolicy() : {
+        scheduleMode: 'split_60_40',
+        scheduleModeTitle: 'Two-Semester Split Schedule (60% First Semester / 40% Second Semester)',
+        modeDescription: 'Examination docket issuance and course registration for 2025/2026 require full settlement of previous session (2024/2025) carryover obligations.'
+      };
+
+      const titleEl = document.getElementById('bursaryDirectiveTitle');
+      const descEl = document.getElementById('bursaryDirectiveDesc');
+      const badgeEl = document.getElementById('bursaryDirectiveBadge');
+
+      if (titleEl) titleEl.textContent = `Official Bursary Directive: Multi-Session Financial Tracking & Clearance Policy`;
+      if (descEl && policy.modeDescription) descEl.textContent = policy.modeDescription;
+      if (badgeEl && policy.scheduleModeTitle) badgeEl.textContent = policy.scheduleModeTitle;
+    }
+
+    function refreshWalletDisplay() {
+      const wallet = window.UniStore ? window.UniStore.getWallet() : { balance: 35000 };
+      const formatted = '₦' + wallet.balance.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      
+      const balEl = document.getElementById('walletBalanceDisplay');
+      if (balEl) balEl.textContent = formatted;
+
+      const modalBalEl = document.getElementById('checkoutModalWalletBal');
+      if (modalBalEl) modalBalEl.textContent = formatted;
+
+      const kpiBalEl = document.getElementById('ledgerKpiWallet');
+      if (kpiBalEl) kpiBalEl.textContent = formatted;
+    }
+
+    function filterFeeCategory(cat, tabBtn) {
+      activeCategoryFilter = cat;
+      if (tabBtn) {
+        document.querySelectorAll('.fee-tab-btn').forEach(b => b.classList.remove('active'));
+        tabBtn.classList.add('active');
+      }
+      const items = document.querySelectorAll('#currentSessionFeeList .fee-row-item');
+      items.forEach(item => {
+        if (cat === 'all' || item.getAttribute('data-cat') === cat) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    function updateSelectedCount() {
+      const checked = document.querySelectorAll('#currentSessionFeeList .fee-select-check:checked:not([disabled])');
+      const countEl = document.getElementById('selectedFeesCount');
+      if (countEl) countEl.textContent = checked.length;
+    }
+
+    function openFundWalletModal() {
+      openModal('fundWalletModal');
+    }
+
+    function setFundPreset(amt) {
+      document.getElementById('fundAmountInput').value = amt;
+    }
+
+    function copyVirtualAccount() {
+      const acc = document.getElementById('virtualAccNum').textContent;
+      navigator.clipboard.writeText(acc).then(() => {
+        showToast('Copied', `Virtual Account Number ${acc} copied to clipboard`, 'success');
+      });
+    }
+
+    function copyCode(code) {
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Copied to Clipboard', `Transaction Ref: ${code}`, 'success');
+      });
+    }
+
+    function copyRrrCode() {
+      const rrr = document.getElementById('checkoutRrr').textContent;
+      navigator.clipboard.writeText(rrr).then(() => {
+        showToast('Copied', `Remita RRR Code: ${rrr}`, 'success');
+      });
+    }
+
+    function processFundWallet() {
+      const input = document.getElementById('fundAmountInput');
+      const amt = parseFloat(input.value);
+      if (isNaN(amt) || amt < 1000) {
+        showToast('Invalid Amount', 'Please enter a minimum deposit of ₦1,000.', 'error');
+        return;
+      }
+
+      const res = window.UniStore.fundWallet(amt, 'Debit Card Top-up');
+      if (res.success) {
+        closeModal('fundWalletModal');
+        refreshAllPortalFinances();
+        showToast('Wallet Funded', `Successfully deposited ₦${amt.toLocaleString('en-NG', {minimumFractionDigits:2})} into your UNILESA wallet.`, 'success');
+      }
+    }
+
+    function filterLedgerTab(type, tabBtn) {
+      activeLedgerFilter = type;
+      if (tabBtn) {
+        document.querySelectorAll('.ledger-pill-tab').forEach(p => p.classList.remove('active'));
+        tabBtn.classList.add('active');
+      }
+      applyLedgerFilters();
+    }
+
+    function filterLedgerSearch() {
+      applyLedgerFilters();
+    }
+
+    function applyLedgerFilters() {
+      const query = (document.getElementById('ledgerSearchInput').value || '').toLowerCase().trim();
+      const rows = document.querySelectorAll('#financialLedgerTbody tr');
+      const mobCards = document.querySelectorAll('#ledgerMobileFeed .ledger-mobile-item');
+
+      let visibleCount = 0;
+      rows.forEach(tr => {
+        const type = tr.getAttribute('data-type');
+        const sess = tr.getAttribute('data-session');
+        const searchText = (tr.getAttribute('data-search') || tr.innerText).toLowerCase();
+
+        let matchesTab = false;
+        if (activeLedgerFilter === 'all') matchesTab = true;
+        else if (activeLedgerFilter === 'sess_25' && sess === 'sess_25') matchesTab = true;
+        else if (activeLedgerFilter === 'sess_24' && sess === 'sess_24') matchesTab = true;
+        else if (activeLedgerFilter === type) matchesTab = true;
+
+        const matchesQuery = (!query || searchText.includes(query));
+
+        if (matchesTab && matchesQuery) {
+          tr.style.display = '';
+          visibleCount++;
+        } else {
+          tr.style.display = 'none';
+        }
+      });
+
+      mobCards.forEach(card => {
+        const type = card.getAttribute('data-type');
+        const sess = card.getAttribute('data-session');
+        const searchText = card.innerText.toLowerCase();
+
+        let matchesTab = false;
+        if (activeLedgerFilter === 'all') matchesTab = true;
+        else if (activeLedgerFilter === 'sess_25' && sess === 'sess_25') matchesTab = true;
+        else if (activeLedgerFilter === 'sess_24' && sess === 'sess_24') matchesTab = true;
+        else if (activeLedgerFilter === type) matchesTab = true;
+
+        const matchesQuery = (!query || searchText.includes(query));
+        card.style.display = (matchesTab && matchesQuery) ? 'flex' : 'none';
+      });
+
+      const counter = document.getElementById('ledgerFooterCounter');
+      if (counter) {
+        counter.textContent = `Showing ${visibleCount} entries • Ledger reconciled across all academic sessions with UNILESA Central Bursary Database`;
+      }
+    }
+  </script>
+</body>
+</html>
+

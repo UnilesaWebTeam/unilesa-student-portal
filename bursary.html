@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Directorate of Bursary — Executive Revenue Dashboard | UNILESA</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* ==================== BURSARY EXECUTIVE DASHBOARD STYLES ==================== */
+    .bursary-admin-hero {
+      background: linear-gradient(135deg, #091530 0%, #0F1F42 60%, #162E62 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 12px 30px -5px rgba(15, 31, 66, 0.2);
+      border: 1px solid rgba(205, 164, 52, 0.35);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .bursary-admin-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(205,164,52,0.2), transparent 70%);
+      pointer-events: none;
+    }
+    .bursary-hero-title h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--white);
+      margin: 0 0 0.35rem;
+      letter-spacing: -0.01em;
+    }
+    .bursary-hero-title p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.82);
+      margin: 0;
+      line-height: 1.45;
+      max-width: 680px;
+    }
+
+    /* Executive KPI Grid */
+    .bursary-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 1.5rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .bursary-kpi-card {
+      background: var(--white);
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.25rem 1.35rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.75rem;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bursary-kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(15, 31, 66, 0.08);
+      border-color: #CBD5E1;
+    }
+    .bursary-kpi-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .bursary-kpi-amount {
+      font-size: 1.5rem;
+      font-weight: 800;
+      font-family: 'Inter', sans-serif;
+      color: var(--navy-950);
+      letter-spacing: -0.02em;
+    }
+
+    /* 2-Column Analytics Layout */
+    .analytics-2col-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: 1.3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .bursary-section-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 8px 25px -5px rgba(15, 23, 42, 0.04);
+      padding: 1.6rem 1.8rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .bursary-section-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0F1F42 0%, #CDA434 50%, #0F1F42 100%);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+    .section-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .section-header-row h2 {
+      font-size: 1.22rem;
+      font-family: 'Playfair Display', serif;
+      color: var(--navy-950);
+      margin: 0 0 0.2rem;
+    }
+    .section-header-row p {
+      font-size: 0.77rem;
+      color: var(--grey-600);
+      margin: 0;
+    }
+
+    /* Revenue Bar Rows */
+    .faculty-revenue-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .faculty-rev-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .faculty-rev-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--navy-950);
+    }
+    .faculty-rev-bar {
+      height: 8px;
+      background: #F1F5F9;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .faculty-rev-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    /* Quick Operations Grid */
+    .quick-ops-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .quick-op-card {
+      background: #FAFBFD;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: var(--navy-950);
+      transition: all 0.2s ease;
+    }
+    .quick-op-card:hover {
+      background: #FFFDF8;
+      border-color: var(--gold-500);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(205, 164, 52, 0.15);
+    }
+    .quick-op-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 1200px) {
+      .bursary-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .analytics-2col-grid { grid-template-columns: 1fr; }
+      .quick-ops-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .bursary-kpi-grid { grid-template-columns: 1fr; }
+      .quick-ops-grid { grid-template-columns: 1fr; }
+      .bursary-admin-hero { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST NOTIFICATION ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="bursary"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- ENTERPRISE ADMIN SIDEBAR COMPONENT -->
+    <unilesa-admin-sidebar active="bursary"></unilesa-admin-sidebar>
+
+    <!-- MAIN PAGE WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- ENTERPRISE ADMIN TOP HEADER COMPONENT -->
+      <unilesa-admin-header title="Directorate of Bursary &amp; Financial Services" subtitle="University Central Revenue &amp; Financial Operations"></unilesa-admin-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+
+        <!-- 1. Bursary Administration Hero Banner -->
+        <section class="bursary-admin-hero">
+          <div class="bursary-hero-title">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+              <span class="badge badge-gold" style="font-size:0.68rem; font-weight:800;">🏛️ BURSARY EXECUTIVE SUITE</span>
+              <span class="badge badge-success" style="font-size:0.68rem; font-weight:700;">● Active Academic Session: 2025/2026</span>
+            </div>
+            <h1>Executive Revenue &amp; Treasury Intelligence</h1>
+            <p>
+              Centrally supervise institutional collections across Remita, bank branch remittances, student wallet escrow, multi-session debt recovery, and examination fee clearance dockets.
+            </p>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:0.65rem; flex-wrap:wrap;">
+            <a href="bursary-policy.html" class="btn btn-outline btn-sm" style="color:var(--white); border-color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.1);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+              Payment Policy
+            </a>
+            <a href="bursary-audit.html" class="btn btn-outline btn-sm" style="color:var(--white); border-color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.1);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              Clearance Audit
+            </a>
+            <a href="bursary-reports.html" class="btn btn-gold btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+              Master Ledger &amp; Reports
+            </a>
+          </div>
+        </section>
+
+        <!-- 2. Bursary Financial Executive KPIs -->
+        <section class="bursary-kpi-grid">
+          
+          <div class="bursary-kpi-card">
+            <div class="bursary-kpi-top">
+              <span style="font-size:0.7rem; font-weight:800; text-transform:uppercase; color:#64748B;">Total Session Inflow</span>
+              <div style="width:32px; height:32px; border-radius:8px; background:#ECFDF5; color:#059669; display:flex; align-items:center; justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              </div>
+            </div>
+            <div>
+              <div class="bursary-kpi-amount" style="color:#059669;">₦482,540,000</div>
+              <div style="font-size:0.72rem; color:#64748B; margin-top:0.25rem;">
+                <span style="color:#059669; font-weight:700;">↑ +14.2%</span> reconciled vs 2024/2025
+              </div>
+            </div>
+          </div>
+
+          <div class="bursary-kpi-card">
+            <div class="bursary-kpi-top">
+              <span style="font-size:0.7rem; font-weight:800; text-transform:uppercase; color:#64748B;">Direct Remita Gateway</span>
+              <div style="width:32px; height:32px; border-radius:8px; background:#EFF6FF; color:#1D4ED8; display:flex; align-items:center; justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+              </div>
+            </div>
+            <div>
+              <div class="bursary-kpi-amount" style="color:#1D4ED8;">₦394,220,000</div>
+              <div style="font-size:0.72rem; color:#64748B; margin-top:0.25rem;">
+                81.7% of institutional collections
+              </div>
+            </div>
+          </div>
+
+          <div class="bursary-kpi-card">
+            <div class="bursary-kpi-top">
+              <span style="font-size:0.7rem; font-weight:800; text-transform:uppercase; color:#64748B;">Student Wallet Escrow</span>
+              <div style="width:32px; height:32px; border-radius:8px; background:#FEF3C7; color:#B45309; display:flex; align-items:center; justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              </div>
+            </div>
+            <div>
+              <div class="bursary-kpi-amount" id="kpiWalletEscrow" style="color:#B45309;">₦88,320,000</div>
+              <div style="font-size:0.72rem; color:#64748B; margin-top:0.25rem;">
+                Restricted for university fee deductions
+              </div>
+            </div>
+          </div>
+
+          <div class="bursary-kpi-card">
+            <div class="bursary-kpi-top">
+              <span style="font-size:0.7rem; font-weight:800; text-transform:uppercase; color:#64748B;">First Semester Clearance</span>
+              <div style="width:32px; height:32px; border-radius:8px; background:#F5F3FF; color:#7C3AED; display:flex; align-items:center; justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              </div>
+            </div>
+            <div>
+              <div class="bursary-kpi-amount" style="color:#6D28D9;">89.4%</div>
+              <div style="font-size:0.72rem; color:#64748B; margin-top:0.25rem;">
+                4,120 / 4,610 students eligible
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- 3. Two-Column Revenue Intelligence Grid -->
+        <div class="analytics-2col-grid">
+          
+          <!-- Faculty Revenue Performance -->
+          <div class="bursary-section-card" style="margin-bottom:0;">
+            <div class="section-header-row">
+              <div>
+                <h2>Revenue Performance by Faculty</h2>
+                <p>2025/2026 tuition collections, departmental dues &amp; laboratory fees.</p>
+              </div>
+              <span class="badge badge-info">5 Faculties</span>
+            </div>
+
+            <div class="faculty-revenue-stack">
+              
+              <div class="faculty-rev-item">
+                <div class="faculty-rev-header">
+                  <span>Faculty of Science &amp; Computing</span>
+                  <span style="color:#059669;">₦148,600,000 (94.2%)</span>
+                </div>
+                <div class="faculty-rev-bar">
+                  <div class="faculty-rev-fill" style="width:94.2%; background:linear-gradient(90deg, #0F1F42, #2563EB);"></div>
+                </div>
+              </div>
+
+              <div class="faculty-rev-item">
+                <div class="faculty-rev-header">
+                  <span>Faculty of Management &amp; Social Sciences</span>
+                  <span style="color:#059669;">₦122,400,000 (88.6%)</span>
+                </div>
+                <div class="faculty-rev-bar">
+                  <div class="faculty-rev-fill" style="width:88.6%; background:linear-gradient(90deg, #059669, #10B981);"></div>
+                </div>
+              </div>
+
+              <div class="faculty-rev-item">
+                <div class="faculty-rev-header">
+                  <span>Faculty of Humanities</span>
+                  <span style="color:#059669;">₦98,200,000 (85.1%)</span>
+                </div>
+                <div class="faculty-rev-bar">
+                  <div class="faculty-rev-fill" style="width:85.1%; background:linear-gradient(90deg, #D97706, #F59E0B);"></div>
+                </div>
+              </div>
+
+              <div class="faculty-rev-item">
+                <div class="faculty-rev-header">
+                  <span>Faculty of Education</span>
+                  <span style="color:#059669;">₦74,100,000 (81.4%)</span>
+                </div>
+                <div class="faculty-rev-bar">
+                  <div class="faculty-rev-fill" style="width:81.4%; background:linear-gradient(90deg, #7C3AED, #8B5CF6);"></div>
+                </div>
+              </div>
+
+              <div class="faculty-rev-item">
+                <div class="faculty-rev-header">
+                  <span>Faculty of Agriculture &amp; Environmental Sciences</span>
+                  <span style="color:#059669;">₦39,240,000 (79.8%)</span>
+                </div>
+                <div class="faculty-rev-bar">
+                  <div class="faculty-rev-fill" style="width:79.8%; background:linear-gradient(90deg, #DC2626, #EF4444);"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Multi-Session Debt Recovery & Gateway Channels -->
+          <div class="bursary-section-card" style="margin-bottom:0;">
+            <div class="section-header-row">
+              <div>
+                <h2>Multi-Session Arrears Recovery</h2>
+                <p>2024/2025 carryover liquidation progress &amp; channel distribution.</p>
+              </div>
+              <span class="badge badge-warning">2024/2025 Arrears</span>
+            </div>
+
+            <!-- Arrears Recovery Status Box -->
+            <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:12px; padding:1.1rem; margin-bottom:1.2rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+                <span style="font-size:0.75rem; font-weight:700; color:#991B1B;">Prior Debt Liquidation Rate</span>
+                <span style="font-weight:800; color:#DC2626; font-size:0.9rem;">76.4% Recovered</span>
+              </div>
+              <div style="height:8px; background:#FEE2E2; border-radius:4px; overflow:hidden; margin-bottom:0.5rem;">
+                <div style="width:76.4%; height:100%; background:#DC2626; border-radius:4px;"></div>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:#7F1D1D;">
+                <span>Recovered: <b>₦28,450,000</b></span>
+                <span>Outstanding: <b>₦8,800,000</b></span>
+              </div>
+            </div>
+
+            <!-- Channels Summary -->
+            <div>
+              <h4 style="margin:0 0 0.6rem; font-size:0.84rem; color:var(--navy-950); text-transform:uppercase; letter-spacing:0.03em;">Collection Channels</h4>
+              <div style="display:flex; flex-direction:column; gap:0.55rem; font-size:0.78rem;">
+                <div style="display:flex; justify-content:space-between; padding:0.5rem 0.7rem; background:#F8FAFC; border-radius:8px; border:1px solid #E2E8F0;">
+                  <span style="color:#334155; font-weight:600;">Remita Online Card / Bank Checkout</span>
+                  <b style="color:var(--navy-950);">₦394,220,000 (81.7%)</b>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:0.5rem 0.7rem; background:#F8FAFC; border-radius:8px; border:1px solid #E2E8F0;">
+                  <span style="color:#334155; font-weight:600;">UNILESA Student Portal Wallet</span>
+                  <b style="color:#B45309;">₦65,400,000 (13.5%)</b>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:0.5rem 0.7rem; background:#F8FAFC; border-radius:8px; border:1px solid #E2E8F0;">
+                  <span style="color:#334155; font-weight:600;">Commercial Bank Branch Over-the-Counter</span>
+                  <b style="color:#059669;">₦22,920,000 (4.8%)</b>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- 4. Bursary Directorate Dedicated Modules Quick Links -->
+        <section class="bursary-section-card">
+          <div class="section-header-row">
+            <div>
+              <h2>Bursary Administrative Workstations</h2>
+              <p>Direct navigation to dedicated policy, fee catalog, student clearance, and reporting modules.</p>
+            </div>
+          </div>
+
+          <div class="quick-ops-grid">
+            
+            <a href="bursary-policy.html" class="quick-op-card">
+              <div class="quick-op-icon" style="background:#FEF3C7; color:#B45309;">
+                ⚖️
+              </div>
+              <div>
+                <h3 style="margin:0; font-size:0.92rem; font-weight:700;">Payment Policy &amp; Split Modes</h3>
+                <p style="margin:0.2rem 0 0; font-size:0.73rem; color:var(--grey-600); line-height:1.35;">
+                  Authorize 60/40 splits, full session, late registration surcharges, and docket thresholds.
+                </p>
+              </div>
+            </a>
+
+            <a href="bursary-tariffs.html" class="quick-op-card">
+              <div class="quick-op-icon" style="background:#EFF6FF; color:#1D4ED8;">
+                🏷️
+              </div>
+              <div>
+                <h3 style="margin:0; font-size:0.92rem; font-weight:700;">Approved Fee Tariffs</h3>
+                <p style="margin:0.2rem 0 0; font-size:0.73rem; color:var(--grey-600); line-height:1.35;">
+                  Add, edit, and categorize tuition, faculty lab levies, departmental dues, and hostel fees.
+                </p>
+              </div>
+            </a>
+
+            <a href="bursary-audit.html" class="quick-op-card">
+              <div class="quick-op-icon" style="background:#F5F3FF; color:#6D28D9;">
+                🔍
+              </div>
+              <div>
+                <h3 style="margin:0; font-size:0.92rem; font-weight:700;">Clearance &amp; Arrears Audit</h3>
+                <p style="margin:0.2rem 0 0; font-size:0.73rem; color:var(--grey-600); line-height:1.35;">
+                  Search student ledgers, evaluate prior session debts, apply waivers, and issue clearance seals.
+                </p>
+              </div>
+            </a>
+
+            <a href="bursary-reports.html" class="quick-op-card">
+              <div class="quick-op-icon" style="background:#ECFDF5; color:#059669;">
+                📊
+              </div>
+              <div>
+                <h3 style="margin:0; font-size:0.92rem; font-weight:700;">Master Ledger &amp; Reports</h3>
+                <p style="margin:0.2rem 0 0; font-size:0.73rem; color:var(--grey-600); line-height:1.35;">
+                  Inspect chronological central transactions journal, daily reconciliation, and print audit sheets.
+                </p>
+              </div>
+            </a>
+
+          </div>
+        </section>
+
+        <!-- 5. Live Central Transaction Journal Stream -->
+        <section class="bursary-section-card">
+          <div class="section-header-row">
+            <div>
+              <div style="display:flex; align-items:center; gap:0.45rem; margin-bottom:0.2rem;">
+                <span class="badge badge-success" style="font-size:0.62rem;">● LIVE CENTRAL TICKER</span>
+                <span style="font-size:0.72rem; color:var(--grey-500);">Auto-Reconciled with Central TSA</span>
+              </div>
+              <h2>Recent University Collections &amp; Fee Receipts</h2>
+              <p>Real-time stream of incoming payments across all academic sessions and payment gateways.</p>
+            </div>
+            <a href="bursary-reports.html" class="btn btn-outline btn-sm">View Complete Master Ledger &rarr;</a>
+          </div>
+
+          <div style="border:1px solid #E2E8F0; border-radius:12px; overflow-x:auto;">
+            <table style="width:100%; min-width:800px; border-collapse:collapse; text-align:left; font-size:0.8rem;">
+              <thead style="background:#F8FAFC; border-bottom:1px solid #E2E8F0;">
+                <tr>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800;">Ref Code</th>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800;">Session</th>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800;">Student / Matric</th>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800;">Fee Purpose</th>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800;">Channel</th>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800;">Date</th>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800;">Amount</th>
+                  <th style="padding:0.75rem 0.95rem; color:#475569; font-weight:800; text-align:right;">Status</th>
+                </tr>
+              </thead>
+              <tbody id="bursaryLiveTickerTbody">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Unified Modals & Overlays -->
+  <unilesa-role-switcher></unilesa-role-switcher>
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+
+  <!-- SHARED JS LOGIC & REUSABLE COMPONENTS -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-admin-sidebar.js"></script>
+  <script src="components/unilesa-admin-header.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      refreshBursaryDashboard();
+    });
+
+    window.addEventListener('unilesa:finances-updated', () => {
+      refreshBursaryDashboard();
+    });
+
+    window.addEventListener('unilesa:wallet-updated', () => {
+      refreshBursaryDashboard();
+    });
+
+    function refreshBursaryDashboard() {
+      const wallet = window.UniStore ? window.UniStore.getWallet() : { balance: 35000 };
+      const kpiWalletEl = document.getElementById('kpiWalletEscrow');
+      if (kpiWalletEl) {
+        kpiWalletEl.textContent = '₦' + (wallet.balance + 88285000).toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      }
+
+      renderLiveTicker();
+    }
+
+    function renderLiveTicker() {
+      const tbody = document.getElementById('bursaryLiveTickerTbody');
+      if (!tbody) return;
+
+      const ledger = window.UniStore && window.UniStore.getFinancialLedger ? window.UniStore.getFinancialLedger() : [];
+      
+      const defaultRows = [
+        { ref: 'REM-881920-TUI', session: '2025/2026', student: 'Jane Adaeze Doe (CSC/0142)', desc: '100L First Semester Tuition (60% Split)', channel: 'Remita Card', date: 'Today, 09:42 AM', amount: 185000, status: 'Settled' },
+        { ref: 'WAL-991823-ICT', session: '2025/2026', student: 'Jane Adaeze Doe (CSC/0142)', desc: 'ICT Directorate Technological Levy', channel: 'UNILESA Wallet', date: 'Today, 02:30 PM', amount: 10000, status: 'Settled' },
+        { ref: 'REM-992140-TUI', session: '2025/2026', student: 'Babatunde Adeleke (CSC/0088)', desc: '100L First Semester Tuition', channel: 'Remita Gateway', date: 'Today, 01:15 PM', amount: 185000, status: 'Settled' },
+        { ref: 'WAL-991824-MED', session: '2025/2026', student: 'Jane Adaeze Doe (CSC/0142)', desc: 'Health Services & TISHIP Insurance', channel: 'UNILESA Wallet', date: 'Today, 02:45 PM', amount: 6000, status: 'Settled' },
+        { ref: 'REM-883910-MOR', session: '2025/2026', student: 'Jane Adaeze Doe (CSC/0142)', desc: 'Hostel Accommodation (Moremi Hall)', channel: 'Remita Gateway', date: 'Yesterday', amount: 40000, status: 'Settled' },
+        { ref: 'REM-771920-CYB', session: '2025/2026', student: 'Amina Yusuf (CYB/0023)', desc: 'Full Session 100% Tuition Clearance', channel: 'Remita Gateway', date: 'Yesterday', amount: 308000, status: 'Settled' },
+        { ref: 'WAL-2024-TUI-01', session: '2024/2025', student: 'Jane Adaeze Doe (CSC/0142)', desc: '2024/2025 Prior Tuition Liquidation', channel: 'UNILESA Wallet', date: 'Prior Session', amount: 180000, status: 'Settled' }
+      ];
+
+      tbody.innerHTML = defaultRows.map(r => `
+        <tr style="border-bottom:1px solid #F1F5F9;">
+          <td style="padding:0.75rem 0.95rem; font-family:'Fira Code', monospace; font-weight:700; color:var(--navy-950);">${r.ref}</td>
+          <td style="padding:0.75rem 0.95rem;"><span class="badge ${r.session === '2024/2025' ? 'badge-danger' : 'badge-gold'}" style="font-size:0.62rem;">${r.session}</span></td>
+          <td style="padding:0.75rem 0.95rem; font-weight:600; color:var(--navy-950);">${r.student}</td>
+          <td style="padding:0.75rem 0.95rem; color:#334155;">${r.desc}</td>
+          <td style="padding:0.75rem 0.95rem; color:#64748B;">${r.channel}</td>
+          <td style="padding:0.75rem 0.95rem; color:#64748B;">${r.date}</td>
+          <td style="padding:0.75rem 0.95rem; font-weight:800; color:var(--navy-950); font-family:'Inter', sans-serif;">₦${r.amount.toLocaleString('en-NG', {minimumFractionDigits:2})}</td>
+          <td style="padding:0.75rem 0.95rem; text-align:right;">
+            <span style="font-size:0.68rem; font-weight:800; background:#ECFDF5; color:#059669; padding:0.18rem 0.5rem; border-radius:6px;">✓ ${r.status}</span>
+          </td>
+        </tr>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

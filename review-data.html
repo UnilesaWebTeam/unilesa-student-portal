@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Your Information — UNILESA Student Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;0,600;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Auth Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+
+  <style>
+    .data-section {
+      border: 1.5px solid var(--grey-300);
+      border-radius: 10px;
+      padding: 0.58rem 0.85rem;
+      margin-bottom: 0.5rem;
+      background: var(--white);
+      transition: all 0.2s ease;
+    }
+    .data-section.flagged {
+      border-color: #FCD34D;
+      background: #FFFDF7;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.35rem;
+    }
+    .section-head h3 {
+      margin: 0;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--navy-800);
+    }
+    .flag-btn {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--rose-tag);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.15rem 0.3rem;
+      border-radius: 4px;
+    }
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.32rem 0.85rem;
+    }
+    .field-item .k {
+      font-size: 0.64rem;
+      color: var(--grey-500);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.1rem;
+    }
+    .field-item .v {
+      font-size: 0.79rem;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .olevel-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.15rem;
+    }
+    .olevel-table th {
+      text-align: left;
+      font-size: 0.63rem;
+      color: var(--grey-500);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding-bottom: 0.25rem;
+      border-bottom: 1.5px solid var(--grey-300);
+    }
+    .olevel-table td {
+      font-size: 0.76rem;
+      padding: 0.22rem 0;
+      border-bottom: 1px solid var(--grey-200);
+      color: var(--ink);
+    }
+    .olevel-table td.grade {
+      font-weight: 700;
+      color: var(--navy-800);
+    }
+    .correction-panel {
+      display: none;
+      margin-top: 0.45rem;
+      padding-top: 0.45rem;
+      border-top: 1px dashed var(--grey-300);
+    }
+    .correction-panel.show { display: block; }
+    .correction-panel textarea {
+      width: 100%;
+      min-height: 45px;
+      resize: vertical;
+      border: 1.5px solid var(--grey-300);
+      border-radius: 6px;
+      padding: 0.4rem 0.5rem;
+      font-family: inherit;
+      font-size: 0.75rem;
+      outline: none;
+      margin-bottom: 0.4rem;
+    }
+  </style>
+</head>
+<body class="auth-page">
+
+  <!-- REUSABLE PARTICLES & MESH BACKGROUND COMPONENT -->
+  <unilesa-auth-bg></unilesa-auth-bg>
+  <unilesa-toast></unilesa-toast>
+
+  <div class="auth-card">
+    
+    <!-- Left Column: Review Bio-Data Form -->
+    <div class="form-col">
+      
+      <!-- Top Group: Auth Header & Page Heading -->
+      <div>
+        <unilesa-auth-header step="3" total="4"></unilesa-auth-header>
+        <div style="margin: 0.75rem 0 0.5rem;">
+          <h1 style="font-family:'Playfair Display', serif; font-size:1.42rem; margin:0 0 0.15rem; color:var(--navy-900);">Review Bio-Data &amp; Records</h1>
+          <p style="margin:0; font-size:0.77rem; color:var(--grey-600);">Please cross-check all imported admissions records before final confirmation.</p>
+        </div>
+      </div>
+
+      <!-- Middle Group: Data Sections -->
+      <div>
+        <!-- Section 1: Personal Data -->
+        <div class="data-section" id="secPersonal">
+          <div class="section-head">
+            <h3>Personal Details</h3>
+            <button type="button" class="flag-btn" onclick="toggleCorrection('secPersonal')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+              Flag issue
+            </button>
+          </div>
+          <div class="field-grid">
+            <div class="field-item"><div class="k">Full Name</div><div class="v">Jane Adaeze Doe</div></div>
+            <div class="field-item"><div class="k">JAMB Reg No</div><div class="v">202610948210EF</div></div>
+            <div class="field-item"><div class="k">Date of Birth</div><div class="v">14 Aug 2004</div></div>
+            <div class="field-item"><div class="k">State / LGA</div><div class="v">Osun &bull; Ilesa East</div></div>
+          </div>
+
+          <div class="correction-panel" id="secPersonalPanel">
+            <textarea placeholder="Describe the discrepancy in your personal information..."></textarea>
+            <div style="display:flex; gap:0.5rem;">
+              <button type="button" class="btn btn-primary btn-sm" onclick="submitCorrection('secPersonal')">Submit Flag</button>
+              <button type="button" class="btn btn-ghost btn-sm" onclick="toggleCorrection('secPersonal')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Academic Program -->
+        <div class="data-section" id="secAcademic">
+          <div class="section-head">
+            <h3>Academic Program</h3>
+            <button type="button" class="flag-btn" onclick="toggleCorrection('secAcademic')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+              Flag issue
+            </button>
+          </div>
+          <div class="field-grid">
+            <div class="field-item"><div class="k">Faculty</div><div class="v">Faculty of Science &amp; Computing</div></div>
+            <div class="field-item"><div class="k">Department</div><div class="v">Department of Computer Science</div></div>
+            <div class="field-item"><div class="k">Degree</div><div class="v">B.Sc. Computer Science (100L)</div></div>
+            <div class="field-item"><div class="k">Entry Mode</div><div class="v">UTME (2025/2026)</div></div>
+          </div>
+
+          <div class="correction-panel" id="secAcademicPanel">
+            <textarea placeholder="Describe the discrepancy in your academic details..."></textarea>
+            <div style="display:flex; gap:0.5rem;">
+              <button type="button" class="btn btn-primary btn-sm" onclick="submitCorrection('secAcademic')">Submit Flag</button>
+              <button type="button" class="btn btn-ghost btn-sm" onclick="toggleCorrection('secAcademic')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: O'Level Subjects -->
+        <div class="data-section" id="secOlevel">
+          <div class="section-head">
+            <h3>Verified O'Level Subjects (WAEC 2024)</h3>
+          </div>
+          <table class="olevel-table">
+            <thead>
+              <tr><th>Subject</th><th>Grade</th><th>Exam Center</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>English Language</td><td class="grade">B2</td><td>Ilesa Grammar School</td></tr>
+              <tr><td>Mathematics</td><td class="grade">A1</td><td>Ilesa Grammar School</td></tr>
+              <tr><td>Physics</td><td class="grade">B3</td><td>Ilesa Grammar School</td></tr>
+              <tr><td>Chemistry</td><td class="grade">B2</td><td>Ilesa Grammar School</td></tr>
+              <tr><td>Biology</td><td class="grade">A1</td><td>Ilesa Grammar School</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Confirmation Checkbox -->
+        <div style="display:flex; align-items:flex-start; gap:0.6rem; margin:0.6rem 0;">
+          <input type="checkbox" id="confirmDataCheck" style="width:17px; height:17px; accent-color:var(--gold-500); margin-top:2px;">
+          <label for="confirmDataCheck" style="font-size:0.77rem; color:var(--grey-700); line-height:1.35;">
+            I hereby confirm that all information displayed above is authentic and correctly represents my university admission record.
+          </label>
+        </div>
+      </div>
+
+      <!-- Bottom Group: Actions -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:0.6rem; border-top:1px solid var(--grey-200);">
+        <a href="documents.html" class="btn btn-ghost btn-sm">&larr; Back</a>
+        <button type="button" class="btn btn-gold btn-sm" style="height:38px; padding:0 1.15rem; font-size:0.85rem;" onclick="proceedToCompletion()">Confirm &amp; Complete Setup &rarr;</button>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Registry Statement -->
+    <div class="hero-col">
+      <div>
+        <span class="badge badge-gold" style="margin-bottom:0.6rem;">Step 3 &bull; Bio-Data Audit</span>
+        <h2 style="font-family:'Playfair Display', serif; font-size:1.52rem; color:var(--white); margin:0 0 0.5rem; line-height:1.25;">
+          Official Matriculation Bio-Data File
+        </h2>
+        <p style="font-size:0.79rem; color:rgba(255,255,255,0.85); line-height:1.5; margin:0;">
+          The information confirmed here forms your official university matriculation register and permanent transcript master sheet.
+        </p>
+      </div>
+
+      <!-- Feature Highlight Row -->
+      <div class="hero-features-list">
+        <div class="hero-feature-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span>JAMB CAPS &amp; Registry Bio-Data Verification</span>
+        </div>
+        <div class="hero-feature-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>Official University Transcript &amp; Exam Docket Master</span>
+        </div>
+        <div class="hero-feature-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path></svg>
+          <span>Immediate Discrepancy Flagging &amp; Resolution Support</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:0.85rem 1rem; backdrop-filter:blur(6px);">
+        <div style="font-size:0.72rem; font-weight:700; color:var(--gold-400); margin-bottom:0.2rem;">FLAGGING ERRORS</div>
+        <div style="font-size:0.72rem; color:rgba(255,255,255,0.85); line-height:1.35;">
+          If your name spelling or date of birth is incorrect, use the "Flag issue" feature to alert registry officers.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- REUSABLE SCRIPT LOGIC -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-auth-bg.js"></script>
+  <script src="components/unilesa-auth-header.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <!-- PAGE-SPECIFIC SCRIPT -->
+  <script>
+    function toggleCorrection(secId) {
+      const panel = document.getElementById(secId + 'Panel');
+      if (panel) panel.classList.toggle('show');
+    }
+
+    function submitCorrection(secId) {
+      toggleCorrection(secId);
+      document.getElementById(secId).classList.add('flagged');
+      showToast('Issue Flagged', 'Your correction request was dispatched to Academic Records.', 'info');
+    }
+
+    function proceedToCompletion() {
+      const check = document.getElementById('confirmDataCheck');
+      if (!check.checked) {
+        showToast('Confirmation Required', 'Please check the declaration box to proceed.', 'warning');
+        return;
+      }
+
+      showToast('Bio-Data Confirmed', 'Your student file is finalized.', 'success');
+      setTimeout(() => {
+        window.location.href = 'onboarding-complete.html';
+      }, 700);
+    }
+  </script>
+</body>
+</html>

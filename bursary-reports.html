@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Master Ledger &amp; Financial Reports — Directorate of Bursary | UNILESA</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* ==================== BURSARY REPORTS & LEDGER STYLES ==================== */
+    .bursary-admin-hero {
+      background: linear-gradient(135deg, #091530 0%, #0F1F42 60%, #162E62 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 12px 30px -5px rgba(15, 31, 66, 0.2);
+      border: 1px solid rgba(205, 164, 52, 0.35);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .bursary-admin-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(205,164,52,0.2), transparent 70%);
+      pointer-events: none;
+    }
+    .bursary-hero-title h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--white);
+      margin: 0 0 0.35rem;
+      letter-spacing: -0.01em;
+    }
+    .bursary-hero-title p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.85);
+      margin: 0;
+      line-height: 1.45;
+      max-width: 680px;
+    }
+
+    /* Metrics Strip (Desktop 4-Col Grid) */
+    .reports-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .reports-stat-card {
+      background: var(--white);
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.25rem 1.35rem;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.5rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .reports-stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(15, 31, 66, 0.08);
+      border-color: #CBD5E1;
+    }
+    .reports-stat-card .label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--grey-600);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .reports-stat-card .val {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--navy-950);
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.02em;
+    }
+    .reports-stat-card .sub {
+      font-size: 0.72rem;
+      color: var(--grey-600);
+      font-weight: 500;
+    }
+
+    /* Channel Reconciliation Grid (Desktop 3-Col Grid) */
+    .channel-recon-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .recon-box {
+      background: var(--white);
+      border: 1.5px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.35rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .recon-box:hover {
+      border-color: #CBD5E1;
+      box-shadow: 0 8px 24px rgba(15, 31, 66, 0.07);
+    }
+    .recon-box-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .recon-box-title {
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: var(--navy-950);
+    }
+    .recon-amount {
+      font-size: 1.3rem;
+      font-weight: 800;
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* Master Table Container */
+    .bursary-section-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 8px 25px -5px rgba(15, 23, 42, 0.04);
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.6rem;
+      position: relative;
+    }
+    .bursary-section-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0F1F42 0%, #CDA434 50%, #0F1F42 100%);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+
+    .report-filters-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .filter-select {
+      padding: 0.5rem 0.85rem;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      color: var(--navy-950);
+      background: #FFFFFF;
+      outline: none;
+      font-family: inherit;
+    }
+    .filter-select:focus {
+      border-color: #0F1F42;
+    }
+
+    .tariff-table-wrapper {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid #E2E8F0;
+      background: #FFFFFF;
+      -webkit-overflow-scrolling: touch;
+    }
+    .ledger-table {
+      width: 100%;
+      min-width: 900px;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    .ledger-table th {
+      text-align: left;
+      padding: 0.85rem 1.15rem;
+      background: #F8FAFC;
+      color: var(--grey-700);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid #E2E8F0;
+      white-space: nowrap;
+    }
+    .ledger-table td {
+      padding: 0.95rem 1.15rem;
+      border-bottom: 1px solid #F1F5F9;
+      vertical-align: middle;
+    }
+    .ledger-table tbody tr:hover {
+      background: #F8FAFC;
+    }
+
+    /* Desktop Responsive Breakpoints */
+    @media (max-width: 1200px) {
+      .reports-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .channel-recon-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 768px) {
+      .reports-stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .report-filters-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .bursary-admin-hero {
+        padding: 1.4rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .bursary-section-card {
+        padding: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST NOTIFICATION ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="bursary"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- ENTERPRISE ADMIN SIDEBAR COMPONENT -->
+    <unilesa-admin-sidebar active="reports"></unilesa-admin-sidebar>
+
+    <!-- MAIN PAGE WRAPPER (Desktop Offset by 260px) -->
+    <div class="main-wrapper">
+      
+      <!-- ENTERPRISE ADMIN TOP HEADER COMPONENT -->
+      <unilesa-admin-header 
+        title="Directorate of Bursary &amp; Financial Services" 
+        subtitle="Master Financial Ledger, Daily Cash Journal &amp; Gateway Reconciliation">
+      </unilesa-admin-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+        
+        <!-- 1. Bursary Administration Hero Banner -->
+        <section class="bursary-admin-hero">
+          <div class="bursary-hero-title">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+              <span class="badge badge-gold" style="font-size:0.68rem; font-weight:800;">📊 MASTER FINANCIAL AUDIT LEDGER</span>
+              <span class="badge badge-success" style="font-size:0.68rem; font-weight:700;">● Multi-Session Financial Reconciliation</span>
+            </div>
+            <h1>Master Financial Ledger &amp; Revenue Reconciliation</h1>
+            <p>
+              Unified audit ledger tracking live institutional fee collections, Remita gateway settlements, UNILESA Wallet escrow flows, and 2024/2025 prior session arrears liquidations across all academic faculties.
+            </p>
+          </div>
+          <div style="display:flex; gap:0.65rem; z-index:2; flex-wrap:wrap;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="exportMasterLedgerCSV()" style="background:rgba(255,255,255,0.15); color:#fff; border-color:rgba(255,255,255,0.3); font-weight:700;">
+              <span>📥 Export Audit CSV</span>
+            </button>
+            <button type="button" class="btn btn-gold btn-sm" onclick="window.print()">
+              <span>🖨️ Print Daily Reconciliation Journal</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. Summary Metrics Strip (4-Col Grid) -->
+        <div class="reports-stats-grid">
+          <div class="reports-stat-card">
+            <div class="label">Gross Ledger Inflow</div>
+            <div class="val" style="color:var(--navy-950);">₦482,500,000.00</div>
+            <div class="sub">Total reconciled across all sessions</div>
+          </div>
+          <div class="reports-stat-card">
+            <div class="label">Remita Gateway Inflow</div>
+            <div class="val" style="color:#2563EB;">₦394,200,000.00</div>
+            <div class="sub">Direct debit, card &amp; branch collections</div>
+          </div>
+          <div class="reports-stat-card">
+            <div class="label">Wallet Escrow Settlements</div>
+            <div class="val" style="color:#059669;">₦88,300,000.00</div>
+            <div class="sub">Internal sundry &amp; dues batch deductions</div>
+          </div>
+          <div class="reports-stat-card">
+            <div class="label">2024/2025 Arrears Recovered</div>
+            <div class="val" style="color:#D97706;">₦28,450,000.00</div>
+            <div class="sub">76.4% prior session debt liquidated</div>
+          </div>
+        </div>
+
+        <!-- 3. Settlement Gateway Reconciliation Overview (3-Col Grid) -->
+        <div class="channel-recon-grid">
+          <div class="recon-box">
+            <div class="recon-box-header">
+              <span class="recon-box-title">Remita Payment Gateway</span>
+              <span class="badge badge-success" style="font-size:0.68rem; font-weight:800;">ACTIVE SYNC</span>
+            </div>
+            <div class="recon-amount" style="color:#2563EB;">₦394,200,000.00</div>
+            <div style="font-size:0.73rem; color:var(--grey-600); display:flex; justify-content:space-between;">
+              <span>Settlement Cycle:</span>
+              <strong>T+1 Direct CBN Remittance</strong>
+            </div>
+            <div style="font-size:0.73rem; color:var(--grey-600); display:flex; justify-content:space-between;">
+              <span>Transaction Success:</span>
+              <strong style="color:#059669;">99.8% (1,420 Txns)</strong>
+            </div>
+          </div>
+
+          <div class="recon-box">
+            <div class="recon-box-header">
+              <span class="recon-box-title">UNILESA Student Wallet Escrow</span>
+              <span class="badge badge-navy" style="font-size:0.68rem; font-weight:800;">REAL-TIME</span>
+            </div>
+            <div class="recon-amount" style="color:#059669;">₦88,300,000.00</div>
+            <div style="font-size:0.73rem; color:var(--grey-600); display:flex; justify-content:space-between;">
+              <span>Disbursement Speed:</span>
+              <strong>Instant Ledger Transfer</strong>
+            </div>
+            <div style="font-size:0.73rem; color:var(--grey-600); display:flex; justify-content:space-between;">
+              <span>Batch Clearances:</span>
+              <strong style="color:#2563EB;">3,110 Automated Txns</strong>
+            </div>
+          </div>
+
+          <div class="recon-box">
+            <div class="recon-box-header">
+              <span class="recon-box-title">Wema Collections (Branch Deposit)</span>
+              <span class="badge badge-gold" style="font-size:0.68rem; font-weight:800;">RECONCILED</span>
+            </div>
+            <div class="recon-amount" style="color:#D97706;">₦14,250,000.00</div>
+            <div style="font-size:0.73rem; color:var(--grey-600); display:flex; justify-content:space-between;">
+              <span>Teller Verification:</span>
+              <strong>E-Slip Matched</strong>
+            </div>
+            <div style="font-size:0.73rem; color:var(--grey-600); display:flex; justify-content:space-between;">
+              <span>Physical Audits:</span>
+              <strong>245 Verified Slips</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Master Transaction Ledger Card -->
+        <div class="bursary-section-card">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.25rem; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <h2 style="font-family:'Playfair Display', serif; font-size:1.25rem; color:var(--navy-950); margin:0 0 0.25rem;">
+                Master Multi-Session Transaction Journal
+              </h2>
+              <p style="font-size:0.76rem; color:var(--grey-600); margin:0;">
+                Live journal of settled tuition tranches, sundry deductions, wallet funding, and prior session arrears liquidations.
+              </p>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="report-filters-bar">
+              <select id="sessionFilter" class="filter-select" onchange="applyFilters()">
+                <option value="all">All Academic Sessions</option>
+                <option value="2025/2026" selected>2025/2026 Session (Current)</option>
+                <option value="2024/2025">2024/2025 Session (Arrears Record)</option>
+              </select>
+
+              <select id="channelFilter" class="filter-select" onchange="applyFilters()">
+                <option value="all">All Payment Channels</option>
+                <option value="remita">Remita Gateway</option>
+                <option value="wallet">UNILESA Wallet</option>
+                <option value="bank">Bank Direct / Branch</option>
+              </select>
+
+              <input type="text" id="ledgerSearchInput" placeholder="Search reference, title..." oninput="applyFilters()" style="padding:0.5rem 0.85rem; border:1.5px solid #CBD5E1; border-radius:8px; font-size:0.78rem; width:220px; font-family:inherit;">
+            </div>
+          </div>
+
+          <!-- Responsive Table Wrapper -->
+          <div class="tariff-table-wrapper">
+            <table class="ledger-table">
+              <thead>
+                <tr>
+                  <th style="width:140px;">Transaction Ref</th>
+                  <th style="width:140px;">Academic Session</th>
+                  <th>Fee Title &amp; Purpose</th>
+                  <th style="width:180px;">Payment Channel</th>
+                  <th style="width:160px;">Timestamp</th>
+                  <th style="width:150px; text-align:right;">Amount Settled</th>
+                  <th style="width:120px; text-align:center;">Status</th>
+                  <th style="width:90px; text-align:center;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="ledgerTableBody">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Receipt Inspection Modal -->
+  <div class="modal-backdrop" id="receiptModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:9999; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(3px);">
+    <div class="modal-card" style="background:#FFFFFF; border-radius:16px; width:100%; max-width:540px; box-shadow:0 20px 40px rgba(0,0,0,0.2); overflow:hidden; border:1px solid #E2E8F0;">
+      <div style="padding:1.4rem 1.6rem; border-bottom:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center; background:#F8FAFC;">
+        <div>
+          <h3 style="margin:0; font-size:1.15rem; font-family:'Playfair Display', serif; color:var(--navy-950);">Official Institutional Receipt</h3>
+          <p style="margin:0.2rem 0 0; font-size:0.75rem; color:var(--grey-600);">Verified Electronic Payment Voucher</p>
+        </div>
+        <button type="button" onclick="closeReceiptModal()" style="border:none; background:transparent; font-size:1.4rem; color:var(--grey-600); cursor:pointer;">&times;</button>
+      </div>
+
+      <div style="padding:1.8rem;" id="receiptModalBody">
+        <!-- Dynamically rendered receipt slip via JS -->
+      </div>
+
+      <div style="padding:1rem 1.6rem; background:#F8FAFC; border-top:1px solid #E2E8F0; display:flex; justify-content:flex-end; gap:0.75rem;">
+        <button type="button" class="btn btn-secondary" onclick="closeReceiptModal()" style="font-size:0.8rem;">Close</button>
+        <button type="button" class="btn btn-gold" onclick="window.print()" style="font-size:0.8rem; font-weight:800;">
+          🖨️ Print Receipt Voucher
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared Scripts & Logic -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-admin-sidebar.js"></script>
+  <script src="components/unilesa-admin-header.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <script>
+    let ledgerRecords = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadLedger();
+      window.addEventListener('unilesa:finances-updated', loadLedger);
+      window.addEventListener('unilesa:wallet-updated', loadLedger);
+    });
+
+    function loadLedger() {
+      if (!window.UniStore) return;
+      ledgerRecords = window.UniStore.getFinancialLedger() || [];
+      renderLedgerTable();
+    }
+
+    function renderLedgerTable() {
+      const tbody = document.getElementById('ledgerTableBody');
+      if (!tbody) return;
+
+      const sessionVal = document.getElementById('sessionFilter').value;
+      const channelVal = document.getElementById('channelFilter').value;
+      const searchVal = (document.getElementById('ledgerSearchInput').value || '').toLowerCase().trim();
+
+      const filtered = ledgerRecords.filter(rec => {
+        // Session filter
+        if (sessionVal !== 'all' && rec.session !== sessionVal) {
+          return false;
+        }
+        // Channel filter
+        if (channelVal !== 'all') {
+          const m = (rec.method || '').toLowerCase();
+          if (channelVal === 'remita' && !m.includes('remita') && !m.includes('card')) return false;
+          if (channelVal === 'wallet' && !m.includes('wallet')) return false;
+          if (channelVal === 'bank' && !m.includes('bank') && !m.includes('branch') && !m.includes('transfer')) return false;
+        }
+        // Search
+        if (searchVal) {
+          const text = `${rec.ref} ${rec.title} ${rec.description} ${rec.method}`.toLowerCase();
+          if (!text.includes(searchVal)) return false;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align:center; padding:3rem; color:var(--grey-600);">
+              <div style="font-size:1.6rem; margin-bottom:0.4rem;">🔍</div>
+              <div style="font-weight:700; color:var(--navy-950); font-size:0.9rem;">No matching transactions found</div>
+              <div style="font-size:0.75rem; margin-top:0.2rem;">Modify your session filter or search query.</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(rec => {
+        const isArrears = rec.isArrears || rec.session === '2024/2025';
+        const amt = parseFloat(rec.amount) || 0;
+        const isDeposit = rec.type === 'deposit';
+
+        return `
+          <tr>
+            <td>
+              <span style="font-family:'Fira Code', monospace; font-size:0.75rem; font-weight:700; color:var(--navy-950);">
+                ${escapeHTML(rec.ref)}
+              </span>
+            </td>
+            <td>
+              <span class="badge ${isArrears ? 'badge-danger' : 'badge-gold'}" style="font-size:0.68rem; font-weight:800;">
+                ${isArrears ? '2024/2025 Arrears' : '2025/2026 Session'}
+              </span>
+            </td>
+            <td>
+              <div style="font-weight:700; color:var(--navy-950); font-size:0.82rem;">${escapeHTML(rec.title)}</div>
+              <div style="font-size:0.71rem; color:var(--grey-600); line-height:1.35;">${escapeHTML(rec.description || '')}</div>
+            </td>
+            <td>
+              <span style="font-size:0.75rem; font-weight:600; color:var(--grey-700);">
+                ${escapeHTML(rec.method)}
+              </span>
+            </td>
+            <td style="font-size:0.74rem; color:var(--grey-600);">
+              ${escapeHTML(rec.date)}
+            </td>
+            <td style="text-align:right; font-family:'Fira Code', monospace; font-weight:800; color:${isDeposit ? '#059669' : '#0F1F42'};">
+              ${isDeposit ? '+' : ''}₦${amt.toLocaleString('en-NG', {minimumFractionDigits:2})}
+            </td>
+            <td style="text-align:center;">
+              <span class="badge badge-success" style="font-size:0.68rem; font-weight:800;">
+                RECONCILED
+              </span>
+            </td>
+            <td style="text-align:center;">
+              <button type="button" class="btn btn-secondary" onclick="viewReceiptSlip('${escapeHTML(rec.ref)}')" style="padding:0.35rem 0.65rem; font-size:0.72rem; font-weight:700;">
+                Receipt
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function applyFilters() {
+      renderLedgerTable();
+    }
+
+    function viewReceiptSlip(ref) {
+      const rec = ledgerRecords.find(r => r.ref === ref);
+      if (!rec) return;
+
+      const body = document.getElementById('receiptModalBody');
+      const stu = window.UniStore ? window.UniStore.getStudent() : {};
+
+      body.innerHTML = `
+        <div style="border:2px dashed #CBD5E1; border-radius:12px; padding:1.5rem; background:#FAFAFA; font-family:'Inter', sans-serif;">
+          <div style="text-align:center; border-bottom:1px solid #E2E8F0; padding-bottom:1rem; margin-bottom:1rem;">
+            <div style="font-family:'Playfair Display', serif; font-size:1.2rem; font-weight:800; color:#0F1F42;">UNIVERSITY OF ILESA</div>
+            <div style="font-size:0.75rem; color:#CDA434; font-weight:700; text-transform:uppercase;">Directorate of Bursary — Official Remittance Slip</div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; font-size:0.78rem; margin-bottom:1.25rem;">
+            <div><span style="color:#64748B;">Payer Name:</span><br><strong>${escapeHTML(stu.fullName || 'Jane Adaeze Doe')}</strong></div>
+            <div><span style="color:#64748B;">Matric Number:</span><br><strong style="font-family:'Fira Code', monospace;">${escapeHTML(stu.matricNumber || 'UNILESA/2026/CSC/0142')}</strong></div>
+            <div><span style="color:#64748B;">Transaction Ref:</span><br><strong style="font-family:'Fira Code', monospace;">${escapeHTML(rec.ref)}</strong></div>
+            <div><span style="color:#64748B;">Academic Session:</span><br><strong>${escapeHTML(rec.sessionTitle || rec.session)}</strong></div>
+            <div><span style="color:#64748B;">Payment Channel:</span><br><strong>${escapeHTML(rec.method)}</strong></div>
+            <div><span style="color:#64748B;">Date Settled:</span><br><strong>${escapeHTML(rec.date)}</strong></div>
+          </div>
+
+          <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:0.9rem; display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem;">
+            <div>
+              <div style="font-size:0.8rem; font-weight:700; color:#0F1F42;">${escapeHTML(rec.title)}</div>
+              <div style="font-size:0.7rem; color:#64748B;">Institutional Revenue Purpose</div>
+            </div>
+            <div style="font-size:1.2rem; font-weight:800; font-family:'Fira Code', monospace; color:#0F1F42;">
+              ₦${(parseFloat(rec.amount) || 0).toLocaleString('en-NG', {minimumFractionDigits:2})}
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; color:#64748B; border-top:1px dashed #CBD5E1; padding-top:0.75rem;">
+            <span>Digital Cryptographic Audit Stamp:</span>
+            <strong style="color:#059669; font-family:'Fira Code', monospace;">BUR-HASH-AUTH-VALID</strong>
+          </div>
+        </div>
+      `;
+
+      const modal = document.getElementById('receiptModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeReceiptModal() {
+      const modal = document.getElementById('receiptModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function exportMasterLedgerCSV() {
+      if (!ledgerRecords.length) {
+        showToast('No ledger records available to export.');
+        return;
+      }
+
+      let csv = 'TRANSACTION REF,SESSION,FEE TITLE,CATEGORY,PAYMENT CHANNEL,TIMESTAMP,AMOUNT (NGN),STATUS\n';
+      ledgerRecords.forEach(r => {
+        csv += `"${r.ref}","${r.session}","${(r.title || '').replace(/"/g, '""')}","${r.category || ''}","${(r.method || '').replace(/"/g, '""')}","${r.date}",${r.amount || 0},"${r.status || 'Reconciled'}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `UNILESA_Master_Financial_Ledger_${Date.now()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast('Master Financial Ledger exported as CSV.');
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+    }
+  </script>
+</body>
+</html>

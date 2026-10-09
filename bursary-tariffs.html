@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Approved Fee Tariffs &amp; Sundry Catalog — Directorate of Bursary | UNILESA</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* ==================== BURSARY TARIFFS SPECIFIC STYLES ==================== */
+    .bursary-admin-hero {
+      background: linear-gradient(135deg, #091530 0%, #0F1F42 60%, #162E62 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 12px 30px -5px rgba(15, 31, 66, 0.2);
+      border: 1px solid rgba(205, 164, 52, 0.35);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .bursary-admin-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(205,164,52,0.2), transparent 70%);
+      pointer-events: none;
+    }
+    .bursary-hero-title h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--white);
+      margin: 0 0 0.35rem;
+      letter-spacing: -0.01em;
+    }
+    .bursary-hero-title p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.85);
+      margin: 0;
+      line-height: 1.45;
+      max-width: 680px;
+    }
+
+    /* Desktop Responsive KPI Grid */
+    .tariff-stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .tariff-stat-card {
+      background: var(--white);
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.25rem 1.35rem;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.5rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .tariff-stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(15, 31, 66, 0.08);
+      border-color: #CBD5E1;
+    }
+    .tariff-stat-card .label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--grey-600);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .tariff-stat-card .val {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--navy-950);
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.02em;
+    }
+    .tariff-stat-card .sub {
+      font-size: 0.72rem;
+      color: var(--grey-600);
+      font-weight: 500;
+    }
+
+    /* Section Card */
+    .bursary-section-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 8px 25px -5px rgba(15, 23, 42, 0.04);
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.6rem;
+      position: relative;
+    }
+    .bursary-section-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0F1F42 0%, #CDA434 50%, #0F1F42 100%);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+
+    /* Filter Toolbar */
+    .tariff-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.4rem;
+      flex-wrap: wrap;
+    }
+    .tariff-filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-pill {
+      padding: 0.5rem 0.95rem;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid #E2E8F0;
+      background: #F8FAFC;
+      color: var(--grey-700);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .filter-pill:hover {
+      background: #EDF2F7;
+      border-color: #CBD5E1;
+      color: var(--navy-950);
+    }
+    .filter-pill.active {
+      background: #0F1F42;
+      color: #FFFFFF;
+      border-color: #0F1F42;
+      box-shadow: 0 4px 12px rgba(15, 31, 66, 0.15);
+    }
+
+    .tariff-search-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 0.5rem 0.85rem;
+      width: 100%;
+      max-width: 340px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .tariff-search-box:focus-within {
+      border-color: #0F1F42;
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(15, 31, 66, 0.08);
+    }
+    .tariff-search-box input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 0.82rem;
+      color: var(--navy-950);
+      width: 100%;
+      font-family: inherit;
+    }
+
+    /* Table Container & Table */
+    .tariff-table-wrapper {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid #E2E8F0;
+      background: #FFFFFF;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tariff-table {
+      width: 100%;
+      min-width: 860px;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      text-align: left;
+    }
+    .tariff-table th {
+      text-align: left;
+      padding: 0.85rem 1.15rem;
+      background: #F8FAFC;
+      color: var(--grey-700);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid #E2E8F0;
+      white-space: nowrap;
+    }
+    .tariff-table td {
+      padding: 1.05rem 1.15rem;
+      border-bottom: 1px solid #F1F5F9;
+      vertical-align: middle;
+    }
+    .tariff-table tbody tr:hover {
+      background: #F8FAFC;
+    }
+
+    .code-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.74rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .code-badge.tuition { background: #EEF2FF; color: #3730A3; border: 1px solid #C7D2FE; }
+    .code-badge.sundry { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+    .code-badge.dues { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+    .code-badge.hostel { background: #F3E8FF; color: #6B21A8; border: 1px solid #E9D5FF; }
+
+    .tariff-name-title {
+      font-weight: 700;
+      color: var(--navy-950);
+      font-size: 0.84rem;
+      margin-bottom: 0.2rem;
+    }
+    .tariff-name-desc {
+      font-size: 0.73rem;
+      color: var(--grey-600);
+      line-height: 1.4;
+      max-width: 380px;
+    }
+
+    .action-btn-sm {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid #CBD5E1;
+      background: #FFFFFF;
+      color: var(--grey-700);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .action-btn-sm:hover {
+      background: #F1F5F9;
+      color: var(--navy-950);
+      border-color: #94A3B8;
+    }
+    .action-btn-sm.delete:hover {
+      background: #FEE2E2;
+      color: #991B1B;
+      border-color: #FCA5A5;
+    }
+
+    /* Modal Form Styles */
+    .form-group-custom {
+      margin-bottom: 1.15rem;
+    }
+    .form-group-custom label {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--navy-950);
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-group-custom input,
+    .form-group-custom select,
+    .form-group-custom textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.65rem 0.85rem;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: var(--navy-950);
+      background: #FFFFFF;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      font-family: inherit;
+    }
+    .form-group-custom input:focus,
+    .form-group-custom select:focus,
+    .form-group-custom textarea:focus {
+      border-color: #0F1F42;
+      box-shadow: 0 0 0 3px rgba(15, 31, 66, 0.08);
+    }
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    /* Desktop Responsive Breakpoints */
+    @media (max-width: 1200px) {
+      .tariff-stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 768px) {
+      .tariff-stats-row {
+        grid-template-columns: 1fr;
+      }
+      .tariff-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .tariff-search-box {
+        max-width: none;
+      }
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .bursary-admin-hero {
+        padding: 1.4rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .bursary-section-card {
+        padding: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST NOTIFICATION ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="bursary"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- ENTERPRISE ADMIN SIDEBAR COMPONENT -->
+    <unilesa-admin-sidebar active="tariffs"></unilesa-admin-sidebar>
+
+    <!-- MAIN PAGE WRAPPER (Desktop Offset by 260px) -->
+    <div class="main-wrapper">
+      
+      <!-- ENTERPRISE ADMIN TOP HEADER COMPONENT -->
+      <unilesa-admin-header 
+        title="Directorate of Bursary &amp; Financial Services" 
+        subtitle="Approved University Fee Tariffs &amp; Sundry Catalog Gazette">
+      </unilesa-admin-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+        
+        <!-- 1. Bursary Administration Hero Banner -->
+        <section class="bursary-admin-hero">
+          <div class="bursary-hero-title">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+              <span class="badge badge-gold" style="font-size:0.68rem; font-weight:800;">🏛️ INSTITUTIONAL FINANCIAL GAZETTE</span>
+              <span class="badge badge-success" style="font-size:0.68rem; font-weight:700;">● 2025/2026 Academic Session</span>
+            </div>
+            <h1>Approved Fee Tariffs &amp; Sundry Catalog</h1>
+            <p>
+              Official University Senate &amp; Bursary Directorate fee schedule. Manage statutory tuition tranches, departmental lab levies, NACOS/SUG subscriptions, and hostel tariffs enforced across the student portal.
+            </p>
+          </div>
+          <div style="display:flex; gap:0.65rem; z-index:2; flex-wrap:wrap;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="exportGazetteCSV()" style="background:rgba(255,255,255,0.15); color:#fff; border-color:rgba(255,255,255,0.3); font-weight:700;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Export Gazette (CSV)</span>
+            </button>
+            <button type="button" class="btn btn-gold btn-sm" onclick="openAddFeeModal()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>Add Approved Tariff</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. Quick KPI Summary Bar -->
+        <div class="tariff-stats-row">
+          <div class="tariff-stat-card">
+            <div class="label">Total Catalog Items</div>
+            <div class="val" id="statTotalItems">8 Tariffs</div>
+            <div class="sub">Active statutory fees scheduled</div>
+          </div>
+          <div class="tariff-stat-card">
+            <div class="label">First Semester Inflow / Student</div>
+            <div class="val" id="statFirstSemTotal" style="color:#2563EB;">₦255,500.00</div>
+            <div class="sub">Standard 100L billing schedule</div>
+          </div>
+          <div class="tariff-stat-card">
+            <div class="label">Full Session Total / Student</div>
+            <div class="val" id="statSessionTotal" style="color:#059669;">₦378,500.00</div>
+            <div class="sub">Consolidated mandatory &amp; optional</div>
+          </div>
+          <div class="tariff-stat-card">
+            <div class="label">Mandatory Core Total</div>
+            <div class="val" id="statMandatoryTotal" style="color:#D97706;">₦338,500.00</div>
+            <div class="sub">Excludes optional bedspace fees</div>
+          </div>
+        </div>
+
+        <!-- 3. Tariffs Management Table Card -->
+        <div class="bursary-section-card">
+          <!-- Table Toolbar -->
+          <div class="tariff-toolbar">
+            <div class="tariff-filter-pills" id="categoryPills">
+              <button type="button" class="filter-pill active" onclick="filterCategory('all', this)">All Tariffs (<span id="countAll">8</span>)</button>
+              <button type="button" class="filter-pill" onclick="filterCategory('tuition', this)">Tuition &amp; Levies (<span id="countTuition">1</span>)</button>
+              <button type="button" class="filter-pill" onclick="filterCategory('sundry', this)">Sundry Levies (<span id="countSundry">5</span>)</button>
+              <button type="button" class="filter-pill" onclick="filterCategory('dues', this)">Association Dues (<span id="countDues">1</span>)</button>
+              <button type="button" class="filter-pill" onclick="filterCategory('hostel', this)">Accommodation (<span id="countHostel">1</span>)</button>
+            </div>
+
+            <div class="tariff-search-box">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" id="tariffSearchInput" placeholder="Search tariffs by code, title..." oninput="handleSearch()">
+            </div>
+          </div>
+
+          <!-- Responsive Table Container -->
+          <div class="tariff-table-wrapper">
+            <table class="tariff-table">
+              <thead>
+                <tr>
+                  <th style="width:140px;">Tariff Code</th>
+                  <th>Fee Title &amp; Institutional Purpose</th>
+                  <th style="width:160px;">Category</th>
+                  <th style="width:160px; text-align:right;">1st Sem Tranche</th>
+                  <th style="width:160px; text-align:right;">Session Total</th>
+                  <th style="width:130px; text-align:center;">Obligation</th>
+                  <th style="width:110px; text-align:center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tariffTableBody">
+                <!-- Dynamically Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. Tariff Regulatory Notice Card -->
+        <div class="bursary-section-card" style="background:#FFFDF5; border-color:#FDE68A;">
+          <div style="display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+            <div style="width:42px; height:42px; border-radius:12px; background:#FEF3C7; color:#B45309; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </div>
+            <div style="flex:1; min-width:260px;">
+              <h3 style="font-size:0.95rem; font-weight:800; color:#92400E; margin:0 0 0.25rem;">Statutory Tariff Enforcement &amp; Senate Gazette Notice</h3>
+              <p style="font-size:0.78rem; color:#78350F; line-height:1.5; margin:0;">
+                All modifications made to the approved tariffs catalog immediately propagate to student payment checkout screens, UNILESA Wallet batch deduction processors, and administrative clearance audit gates. Modifying tuition rates during an active session requires prior Senate Financial Committee ratification.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Add/Edit Fee Tariff Modal -->
+  <div class="modal-backdrop" id="feeModalBackdrop" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:9999; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(3px);">
+    <div class="modal-card" style="background:#FFFFFF; border-radius:16px; width:100%; max-width:580px; box-shadow:0 20px 40px rgba(0,0,0,0.2); overflow:hidden; border:1px solid #E2E8F0;">
+      <div style="padding:1.4rem 1.6rem; border-bottom:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center; background:#F8FAFC;">
+        <div>
+          <h3 id="feeModalTitle" style="margin:0; font-size:1.15rem; font-family:'Playfair Display', serif; color:var(--navy-950);">Add Approved Tariff</h3>
+          <p style="margin:0.2rem 0 0; font-size:0.75rem; color:var(--grey-600);">Configure official institutional billing schedule item</p>
+        </div>
+        <button type="button" onclick="closeFeeModal()" style="border:none; background:transparent; font-size:1.4rem; color:var(--grey-600); cursor:pointer;">&times;</button>
+      </div>
+
+      <form id="feeForm" onsubmit="saveFeeItem(event)" style="padding:1.6rem;">
+        <input type="hidden" id="feeIdInput">
+
+        <div class="form-grid-2">
+          <div class="form-group-custom">
+            <label for="feeCodeInput">Tariff Code / ID *</label>
+            <input type="text" id="feeCodeInput" placeholder="e.g. SND-ICT-26" required style="font-family:'Fira Code', monospace; font-weight:600;">
+          </div>
+          <div class="form-group-custom">
+            <label for="feeCategoryInput">Tariff Category *</label>
+            <select id="feeCategoryInput" required>
+              <option value="tuition">Tuition &amp; Statutory Levies</option>
+              <option value="sundry" selected>Sundry / Institutional Levy</option>
+              <option value="dues">Departmental / Student Dues</option>
+              <option value="hostel">Hostel Accommodation</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group-custom">
+          <label for="feeNameInput">Tariff Official Title *</label>
+          <input type="text" id="feeNameInput" placeholder="e.g. ICT Directorate Technological Levy" required>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group-custom">
+            <label for="feeTermAmountInput">1st Semester Tranche (₦) *</label>
+            <input type="number" id="feeTermAmountInput" placeholder="10000" min="0" step="100" required>
+          </div>
+          <div class="form-group-custom">
+            <label for="feeSessionTotalInput">Full Session Total (₦) *</label>
+            <input type="number" id="feeSessionTotalInput" placeholder="10000" min="0" step="100" required>
+          </div>
+        </div>
+
+        <div class="form-group-custom">
+          <label for="feeDescInput">Institutional Purpose &amp; Rationale</label>
+          <textarea id="feeDescInput" rows="2" placeholder="e.g. Campus Wi-Fi bandwidth expansion and CBT examination server maintenance."></textarea>
+        </div>
+
+        <div class="form-grid-2" style="align-items:center; background:#F8FAFC; padding:0.85rem 1rem; border-radius:10px; border:1px solid #E2E8F0; margin-bottom:1.4rem;">
+          <div>
+            <label style="margin:0; font-size:0.8rem; font-weight:700; color:var(--navy-950); display:flex; align-items:center; gap:0.45rem; cursor:pointer;">
+              <input type="checkbox" id="feeMandatoryInput" checked style="width:16px; height:16px; margin:0;">
+              Mandatory Obligation
+            </label>
+            <div style="font-size:0.7rem; color:var(--grey-600); margin-top:0.2rem;">Required before docket clearance seal</div>
+          </div>
+          <div>
+            <label for="feeStatusInput" style="font-size:0.7rem; font-weight:700; color:var(--grey-600); display:block; margin-bottom:0.2rem;">STATUS</label>
+            <select id="feeStatusInput" style="padding:0.4rem 0.6rem; font-size:0.76rem;">
+              <option value="Active">Active (Published)</option>
+              <option value="Suspended">Suspended</option>
+              <option value="Phased Out">Phased Out</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeFeeModal()" style="font-size:0.8rem;">Cancel</button>
+          <button type="submit" class="btn btn-gold" style="font-size:0.8rem; font-weight:800;">
+            💾 Save &amp; Ratify Tariff
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop" id="deleteModalBackdrop" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:9999; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(3px);">
+    <div class="modal-card" style="background:#FFFFFF; border-radius:16px; width:100%; max-width:440px; box-shadow:0 20px 40px rgba(0,0,0,0.2); overflow:hidden; border:1px solid #E2E8F0; padding:1.8rem; text-align:center;">
+      <div style="width:52px; height:52px; border-radius:50%; background:#FEE2E2; color:#991B1B; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+      </div>
+      <h3 style="margin:0 0 0.4rem; font-size:1.15rem; color:var(--navy-950); font-family:'Playfair Display', serif;">Revoke Approved Tariff</h3>
+      <p id="deleteModalDesc" style="font-size:0.78rem; color:var(--grey-600); line-height:1.45; margin:0 0 1.5rem;">
+        Are you sure you want to remove this tariff item from the official university schedule?
+      </p>
+      <input type="hidden" id="deleteFeeId">
+      <div style="display:flex; justify-content:center; gap:0.75rem;">
+        <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()" style="font-size:0.8rem;">Cancel</button>
+        <button type="button" class="btn btn-danger" onclick="confirmDeleteFee()" style="background:#DC2626; color:#fff; border:none; font-size:0.8rem; font-weight:700;">
+          Confirm Revocation
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared Scripts & Logic -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-admin-sidebar.js"></script>
+  <script src="components/unilesa-admin-header.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <script>
+    let activeFilterCategory = 'all';
+    let searchQuery = '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTariffs();
+      window.addEventListener('unilesa:bursary-updated', renderTariffs);
+    });
+
+    function getFeesList() {
+      const policy = window.UniStore ? window.UniStore.getBursaryPolicy() : {};
+      return policy.approvedFees || [];
+    }
+
+    function renderTariffs() {
+      const allFees = getFeesList();
+      const tableBody = document.getElementById('tariffTableBody');
+      if (!tableBody) return;
+
+      // Update counters
+      document.getElementById('countAll').textContent = allFees.length;
+      document.getElementById('countTuition').textContent = allFees.filter(f => f.category === 'tuition').length;
+      document.getElementById('countSundry').textContent = allFees.filter(f => f.category === 'sundry').length;
+      document.getElementById('countDues').textContent = allFees.filter(f => f.category === 'dues').length;
+      document.getElementById('countHostel').textContent = allFees.filter(f => f.category === 'hostel').length;
+
+      // Compute summary stats
+      let firstSemTotal = 0;
+      let sessionTotal = 0;
+      let mandatoryTotal = 0;
+
+      allFees.forEach(f => {
+        const tAmt = parseFloat(f.termAmount) || 0;
+        const sAmt = parseFloat(f.sessionTotal) || tAmt;
+        firstSemTotal += tAmt;
+        sessionTotal += sAmt;
+        if (f.mandatory) {
+          mandatoryTotal += sAmt;
+        }
+      });
+
+      document.getElementById('statTotalItems').textContent = `${allFees.length} Tariffs`;
+      document.getElementById('statFirstSemTotal').textContent = `₦${firstSemTotal.toLocaleString('en-NG', {minimumFractionDigits:2})}`;
+      document.getElementById('statSessionTotal').textContent = `₦${sessionTotal.toLocaleString('en-NG', {minimumFractionDigits:2})}`;
+      document.getElementById('statMandatoryTotal').textContent = `₦${mandatoryTotal.toLocaleString('en-NG', {minimumFractionDigits:2})}`;
+
+      // Filter by category & search query
+      const filtered = allFees.filter(f => {
+        const matchesCategory = (activeFilterCategory === 'all') || (f.category === activeFilterCategory);
+        const matchesSearch = !searchQuery || 
+          (f.name && f.name.toLowerCase().includes(searchQuery)) ||
+          (f.code && f.code.toLowerCase().includes(searchQuery)) ||
+          (f.description && f.description.toLowerCase().includes(searchQuery));
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align:center; padding:3rem; color:var(--grey-600);">
+              <div style="font-size:1.6rem; margin-bottom:0.4rem;">🔍</div>
+              <div style="font-weight:700; color:var(--navy-950); font-size:0.9rem;">No matching tariffs found</div>
+              <div style="font-size:0.75rem; margin-top:0.2rem;">Try modifying your search keywords or category filters.</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tableBody.innerHTML = filtered.map(fee => {
+        const cat = fee.category || 'sundry';
+        const termAmt = parseFloat(fee.termAmount) || 0;
+        const sessAmt = parseFloat(fee.sessionTotal) || termAmt;
+        const isMandatory = fee.mandatory !== false;
+
+        return `
+          <tr>
+            <td>
+              <span class="code-badge ${cat}">${fee.code || 'SND-FEE'}</span>
+            </td>
+            <td>
+              <div class="tariff-name-title">${escapeHTML(fee.name)}</div>
+              <div class="tariff-name-desc">${escapeHTML(fee.description || 'Senate approved statutory fee tariff.')}</div>
+            </td>
+            <td>
+              <span style="font-size:0.75rem; text-transform:capitalize; font-weight:600; color:var(--grey-700);">
+                ${cat === 'tuition' ? 'Tuition & Statutory' : (cat === 'dues' ? 'Departmental Dues' : (cat === 'hostel' ? 'Hostel Bedspace' : 'Sundry Levy'))}
+              </span>
+            </td>
+            <td style="text-align:right; font-weight:700; font-family:'Fira Code', monospace; color:var(--navy-950);">
+              ₦${termAmt.toLocaleString('en-NG', {minimumFractionDigits:2})}
+            </td>
+            <td style="text-align:right; font-weight:800; font-family:'Fira Code', monospace; color:#0F1F42;">
+              ₦${sessAmt.toLocaleString('en-NG', {minimumFractionDigits:2})}
+            </td>
+            <td style="text-align:center;">
+              <span class="badge ${isMandatory ? 'badge-gold' : 'badge-navy'}" style="font-size:0.68rem; font-weight:800;">
+                ${isMandatory ? 'MANDATORY' : 'OPTIONAL'}
+              </span>
+            </td>
+            <td style="text-align:center;">
+              <div style="display:inline-flex; gap:0.4rem;">
+                <button type="button" class="action-btn-sm" title="Edit Tariff" onclick="openEditFeeModal('${fee.id}')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </button>
+                <button type="button" class="action-btn-sm delete" title="Revoke Tariff" onclick="openDeleteFeeModal('${fee.id}')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterCategory(cat, btnEl) {
+      activeFilterCategory = cat;
+      document.querySelectorAll('#categoryPills .filter-pill').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      renderTariffs();
+    }
+
+    function handleSearch() {
+      const input = document.getElementById('tariffSearchInput');
+      searchQuery = (input ? input.value : '').toLowerCase().trim();
+      renderTariffs();
+    }
+
+    function openAddFeeModal() {
+      document.getElementById('feeModalTitle').textContent = 'Add Approved Fee Tariff';
+      document.getElementById('feeIdInput').value = '';
+      document.getElementById('feeCodeInput').value = '';
+      document.getElementById('feeCategoryInput').value = 'sundry';
+      document.getElementById('feeNameInput').value = '';
+      document.getElementById('feeTermAmountInput').value = '';
+      document.getElementById('feeSessionTotalInput').value = '';
+      document.getElementById('feeDescInput').value = '';
+      document.getElementById('feeMandatoryInput').checked = true;
+      document.getElementById('feeStatusInput').value = 'Active';
+
+      const modal = document.getElementById('feeModalBackdrop');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function openEditFeeModal(feeId) {
+      const allFees = getFeesList();
+      const target = allFees.find(f => f.id === feeId);
+      if (!target) return;
+
+      document.getElementById('feeModalTitle').textContent = 'Edit Approved Fee Tariff';
+      document.getElementById('feeIdInput').value = target.id;
+      document.getElementById('feeCodeInput').value = target.code || '';
+      document.getElementById('feeCategoryInput').value = target.category || 'sundry';
+      document.getElementById('feeNameInput').value = target.name || '';
+      document.getElementById('feeTermAmountInput').value = target.termAmount || '';
+      document.getElementById('feeSessionTotalInput').value = target.sessionTotal || target.termAmount || '';
+      document.getElementById('feeDescInput').value = target.description || '';
+      document.getElementById('feeMandatoryInput').checked = target.mandatory !== false;
+      document.getElementById('feeStatusInput').value = target.status || 'Active';
+
+      const modal = document.getElementById('feeModalBackdrop');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeFeeModal() {
+      const modal = document.getElementById('feeModalBackdrop');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function saveFeeItem(e) {
+      e.preventDefault();
+      const feeId = document.getElementById('feeIdInput').value;
+      const code = document.getElementById('feeCodeInput').value.trim();
+      const category = document.getElementById('feeCategoryInput').value;
+      const name = document.getElementById('feeNameInput').value.trim();
+      const termAmount = parseFloat(document.getElementById('feeTermAmountInput').value) || 0;
+      const sessionTotal = parseFloat(document.getElementById('feeSessionTotalInput').value) || termAmount;
+      const description = document.getElementById('feeDescInput').value.trim();
+      const mandatory = document.getElementById('feeMandatoryInput').checked;
+      const status = document.getElementById('feeStatusInput').value;
+
+      const feePayload = {
+        id: feeId || 'fee_' + Date.now(),
+        code,
+        category,
+        name,
+        termAmount,
+        sessionTotal,
+        description,
+        mandatory,
+        status
+      };
+
+      if (feeId) {
+        window.UniStore.updateApprovedFee(feePayload);
+        showToast(`Tariff "${code}" updated successfully.`);
+      } else {
+        window.UniStore.addApprovedFee(feePayload);
+        showToast(`New tariff "${code}" registered and published.`);
+      }
+
+      closeFeeModal();
+      renderTariffs();
+    }
+
+    function openDeleteFeeModal(feeId) {
+      const allFees = getFeesList();
+      const target = allFees.find(f => f.id === feeId);
+      if (!target) return;
+
+      document.getElementById('deleteFeeId').value = target.id;
+      document.getElementById('deleteModalDesc').textContent = `Are you sure you want to remove tariff "${target.name}" (${target.code}) from the official university schedule?`;
+      
+      const modal = document.getElementById('deleteModalBackdrop');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+      const modal = document.getElementById('deleteModalBackdrop');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function confirmDeleteFee() {
+      const feeId = document.getElementById('deleteFeeId').value;
+      if (feeId) {
+        window.UniStore.deleteApprovedFee(feeId);
+        showToast('Tariff item revoked successfully.');
+      }
+      closeDeleteModal();
+      renderTariffs();
+    }
+
+    function exportGazetteCSV() {
+      const fees = getFeesList();
+      if (!fees.length) {
+        showToast('No tariff data available to export.');
+        return;
+      }
+
+      let csv = 'TARIFF CODE,TARIFF NAME,CATEGORY,1ST SEMESTER (NGN),SESSION TOTAL (NGN),MANDATORY,STATUS,DESCRIPTION\n';
+      fees.forEach(f => {
+        csv += `"${f.code}","${f.name.replace(/"/g, '""')}","${f.category}",${f.termAmount || 0},${f.sessionTotal || 0},"${f.mandatory ? 'YES' : 'NO'}","${f.status || 'Active'}","${(f.description || '').replace(/"/g, '""')}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `UNILESA_Approved_Tariffs_2025_2026.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast('Official Fee Gazette downloaded as CSV.');
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup Complete — UNILESA Student Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;0,600;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Auth Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+
+  <style>
+    .success-celebrate-box {
+      text-align: center;
+      padding: 0.45rem 0;
+    }
+    .check-circle-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--green-bg);
+      border: 2px solid var(--green-border);
+      color: var(--green-ok);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.4rem;
+      animation: pulseSubtle 2s infinite ease-in-out;
+    }
+    .milestone-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin: 0.55rem 0;
+    }
+    .milestone-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.4rem 0.7rem;
+      background: #FAFAFA;
+      border: 1px solid var(--grey-300);
+      border-radius: 8px;
+      font-size: 0.74rem;
+      color: var(--navy-900);
+      font-weight: 600;
+    }
+    .milestone-item .check {
+      color: var(--green-ok);
+      font-weight: 800;
+      font-size: 0.84rem;
+    }
+  </style>
+</head>
+<body class="auth-page">
+
+  <!-- REUSABLE PARTICLES & MESH BACKGROUND COMPONENT -->
+  <unilesa-auth-bg></unilesa-auth-bg>
+  <unilesa-toast></unilesa-toast>
+
+  <div class="auth-card">
+    
+    <!-- Left Column: Congratulations & Summary -->
+    <div class="form-col">
+      
+      <!-- Top Group: Auth Header -->
+      <unilesa-auth-header step="4" total="4" step-label="Completed"></unilesa-auth-header>
+
+      <!-- Middle Group: Celebration & Milestones -->
+      <div>
+        <div class="success-celebrate-box">
+          <div class="check-circle-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+
+          <h1 style="font-family:'Playfair Display', serif; font-size:1.4rem; margin:0 0 0.15rem; color:var(--navy-900);">Account Setup Complete!</h1>
+          <p style="margin:0; font-size:0.77rem; color:var(--grey-600); line-height:1.4;">
+            Congratulations, <strong>Jane Adaeze Doe</strong>! Your first-time onboarding has been completed and your student account is active.
+          </p>
+        </div>
+
+        <!-- Completed Milestones -->
+        <div class="milestone-list" style="margin: 0.8rem 0;">
+          <div class="milestone-item">
+            <span class="check">&#10003;</span>
+            <span>Permanent Password Configured</span>
+          </div>
+          <div class="milestone-item">
+            <span class="check">&#10003;</span>
+            <span>Clearance Documents Uploaded to Registry</span>
+          </div>
+          <div class="milestone-item">
+            <span class="check">&#10003;</span>
+            <span>Bio-Data &amp; O'Level Records Confirmed</span>
+          </div>
+          <div class="milestone-item">
+            <span class="check">&#10003;</span>
+            <span>Matriculation Profile: <code>UNILESA/2026/CSC/0142</code></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Group: Launch Action -->
+      <div style="padding-top:0.6rem; border-top:1px solid var(--grey-200);">
+        <a href="dashboard.html" class="btn btn-gold" style="width:100%; height:40px; font-size:0.88rem; text-decoration:none;">
+          Launch Student Dashboard &rarr;
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Portal Welcome -->
+    <div class="hero-col">
+      <div>
+        <span class="badge badge-gold" style="margin-bottom:0.6rem;">Ready for Classes</span>
+        <h2 style="font-family:'Playfair Display', serif; font-size:1.52rem; color:var(--white); margin:0 0 0.5rem; line-height:1.25;">
+          Welcome to the University of Ilesa Community
+        </h2>
+        <p style="font-size:0.79rem; color:rgba(255,255,255,0.85); line-height:1.5; margin:0;">
+          Your portal now provides full access to course registration, bursary fee receipts, semester examination timetables, hostel room allocation, and health clearance.
+        </p>
+      </div>
+
+      <!-- Feature Highlight Row -->
+      <div class="hero-features-list">
+        <div class="hero-feature-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span>First Semester Course Registration Open</span>
+        </div>
+        <div class="hero-feature-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="6" y1="12" x2="18" y2="12"></line></svg>
+          <span>Examination Docket &amp; Timetable Generation</span>
+        </div>
+        <div class="hero-feature-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>Direct Bursary Tuition Payment Invoicing &amp; Receipts</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:0.85rem 1rem; backdrop-filter:blur(6px);">
+        <div style="font-size:0.72rem; font-weight:700; color:var(--gold-400); margin-bottom:0.2rem;">NEXT RECOMMENDED ACTIONS</div>
+        <div style="font-size:0.72rem; color:rgba(255,255,255,0.85); line-height:1.35;">
+          1. Complete Course Registration &bull; 2. Print Exam Docket &bull; 3. Generate Receipts
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- REUSABLE SCRIPT LOGIC -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-auth-bg.js"></script>
+  <script src="components/unilesa-auth-header.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+</body>
+</html>

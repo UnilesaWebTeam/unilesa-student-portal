@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Course Registration &amp; Docket — UNILESA Student Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Libre+Barcode+39+Text&family=Courier+Prime:wght@700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* ==================== COURSE REGISTRATION SPECIFIC STYLES ==================== */
+    
+    /* 1. Academic Hero Card */
+    .courses-hero {
+      background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-900) 45%, var(--navy-800) 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px -5px rgba(10, 23, 48, 0.35);
+      border: 1px solid rgba(205, 164, 52, 0.3);
+    }
+    .courses-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(205,164,52,0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-info-side {
+      z-index: 1;
+      max-width: 640px;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(205, 164, 52, 0.22);
+      border: 1px solid rgba(224, 193, 104, 0.45);
+      color: var(--gold-400);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .courses-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin: 0 0 0.4rem;
+      color: var(--white);
+      line-height: 1.2;
+    }
+    .courses-hero p {
+      font-size: 0.88rem;
+      color: var(--grey-300);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .hero-action-side {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: flex-end;
+      z-index: 1;
+      flex-shrink: 0;
+    }
+
+    /* 2. Term Switcher Tabs */
+    .term-tabs-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: var(--white);
+      padding: 0.6rem 0.8rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+    }
+    .term-pills {
+      display: flex;
+      gap: 0.4rem;
+      background: var(--grey-100);
+      padding: 0.3rem;
+      border-radius: 12px;
+    }
+    .term-pill-btn {
+      padding: 0.55rem 1.2rem;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      color: var(--grey-600);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .term-pill-btn.active {
+      background: var(--white);
+      color: var(--navy-950);
+      box-shadow: 0 2px 8px rgba(10, 23, 48, 0.08);
+    }
+    .term-status-badge {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 12px;
+      font-weight: 800;
+    }
+
+    /* 3. Bursary Clearance Notice Strip */
+    .bursary-clearance-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1.2rem;
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      border-radius: var(--radius-md);
+      color: #166534;
+      gap: 1rem;
+      flex-wrap: wrap;
+      transition: all 0.2s ease;
+    }
+    .bursary-clearance-strip.locked {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+      color: #92400E;
+    }
+    .clearance-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .clearance-icon-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #DCFCE7;
+      color: #15803D;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .bursary-clearance-strip.locked .clearance-icon-circle {
+      background: #FEF3C7;
+      color: #D97706;
+    }
+
+    /* Add/Drop Mode Banner */
+    .add-drop-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.2rem;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: var(--radius-md);
+      color: #1E40AF;
+      gap: 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .add-drop-banner.show {
+      display: flex;
+    }
+
+    /* 4. Credit Units Metric Engine */
+    .units-metric-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      padding: 1.4rem 1.6rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .units-metric-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+    .unit-stat-group {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+    }
+    .unit-stat-num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--navy-950);
+      line-height: 1;
+      font-family: 'Inter', sans-serif;
+    }
+    .unit-stat-max {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--grey-500);
+    }
+    .units-progress-track {
+      width: 100%;
+      height: 12px;
+      background: var(--grey-200);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+    .units-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-500), #22C55E);
+      border-radius: 20px;
+      transition: width 0.3s var(--ease-spring);
+    }
+    .units-progress-bar.warning {
+      background: linear-gradient(90deg, #EAB308, #EF4444);
+    }
+    .units-breakdown-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: var(--grey-600);
+      padding-top: 0.4rem;
+      border-top: 1px dashed var(--grey-200);
+    }
+    .unit-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-weight: 600;
+    }
+    .unit-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* 5. Course Catalog Controls & Filter */
+    .catalog-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .category-filter-chips {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      padding: 0.45rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid var(--grey-300);
+      background: var(--white);
+      color: var(--grey-700);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .filter-chip:hover {
+      border-color: var(--gold-500);
+      background: #FFFDF8;
+    }
+    .filter-chip.active {
+      background: var(--navy-900);
+      color: var(--white);
+      border-color: var(--navy-900);
+    }
+
+    /* 6. Course Table & Card Grid */
+    .courses-table-container {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .courses-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .courses-table th {
+      background: #F8FAFC;
+      color: #475569;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.9rem 1.1rem;
+      border-bottom: 1px solid var(--grey-300);
+    }
+    .courses-table td {
+      padding: 1rem 1.1rem;
+      border-bottom: 1px solid var(--grey-200);
+      font-size: 0.84rem;
+      color: var(--navy-950);
+      vertical-align: middle;
+    }
+    .courses-table tr:hover td {
+      background: #FAFCFF;
+    }
+    .courses-table tr.selected-row td {
+      background: #F8FAFC;
+    }
+    .course-code-badge {
+      font-family: 'Courier Prime', monospace;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--navy-950);
+      background: #F1F5F9;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      display: inline-block;
+      border: 1px solid #CBD5E1;
+      cursor: pointer;
+    }
+    .course-code-badge:hover {
+      border-color: var(--navy-800);
+      background: #E2E8F0;
+    }
+    .course-title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .course-title-text {
+      font-weight: 700;
+      color: var(--navy-950);
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .course-title-text:hover {
+      color: var(--gold-600);
+      text-decoration: underline;
+    }
+    .course-meta-sub {
+      font-size: 0.74rem;
+      color: var(--grey-500);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .type-badge {
+      font-size: 0.66rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .type-badge.core {
+      background: #EEF2FF;
+      color: #4F46E5;
+      border: 1px solid #C7D2FE;
+    }
+    .type-badge.gst {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FDE68A;
+    }
+    .type-badge.elective {
+      background: #ECFDF5;
+      color: #065F46;
+      border: 1px solid #A7F3D0;
+    }
+
+    /* Custom Checkbox */
+    .course-checkbox-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .course-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--navy-900);
+      cursor: pointer;
+    }
+    .course-checkbox:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    /* 7. Action Footer Bar */
+    .course-actions-bar {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      padding: 1.1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+    }
+
+    /* 8. Course Details Modal */
+    .course-detail-modal-box {
+      max-width: 540px;
+      width: 90%;
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem;
+      box-shadow: 0 20px 50px rgba(10, 23, 48, 0.25);
+      border: 1px solid var(--grey-300);
+      position: relative;
+    }
+
+    /* 9. Official Printable Course Form (CRF) - Print Mode */
+    .printable-crf-container {
+      display: none;
+      background: #FFFFFF;
+      color: #000000;
+      padding: 2.5rem;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .crf-header {
+      text-align: center;
+      border-bottom: 2px solid #0F1F42;
+      padding-bottom: 1.2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .crf-header img {
+      width: 65px;
+      height: 65px;
+      object-fit: contain;
+      margin-bottom: 0.5rem;
+    }
+    .crf-title-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #0F1F42;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .crf-subtitle {
+      font-size: 0.85rem;
+      color: #475569;
+      margin: 0.2rem 0;
+      font-weight: 600;
+    }
+    .crf-doc-tag {
+      display: inline-block;
+      background: #0F1F42;
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.8rem;
+      border-radius: 4px;
+      margin-top: 0.4rem;
+      letter-spacing: 0.05em;
+    }
+    .crf-student-bio {
+      display: grid;
+      grid-template-columns: 1fr 100px;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #CBD5E1;
+      padding: 1rem;
+      border-radius: 6px;
+    }
+    .crf-bio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem 1.2rem;
+      font-size: 0.8rem;
+    }
+    .crf-bio-item span.label {
+      font-weight: 700;
+      color: #334155;
+      display: inline-block;
+      width: 120px;
+    }
+    .crf-bio-item span.val {
+      color: #0F172A;
+      font-weight: 600;
+    }
+    .crf-passport-box {
+      width: 90px;
+      height: 105px;
+      border: 1px solid #94A3B8;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .crf-passport-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .crf-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5rem;
+      font-size: 0.78rem;
+    }
+    .crf-table th {
+      background: #F1F5F9;
+      color: #0F172A;
+      font-weight: 800;
+      border: 1px solid #94A3B8;
+      padding: 0.5rem 0.6rem;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+    .crf-table td {
+      border: 1px solid #CBD5E1;
+      padding: 0.5rem 0.6rem;
+      color: #1E293B;
+    }
+    .crf-signatures-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #94A3B8;
+    }
+    .crf-sign-box {
+      text-align: center;
+      font-size: 0.72rem;
+    }
+    .crf-sign-line {
+      height: 35px;
+      border-bottom: 1px solid #0F172A;
+      margin-bottom: 0.4rem;
+      position: relative;
+    }
+    .crf-sign-seal {
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: #15803D;
+      border: 1px solid #86EFAC;
+      background: #DCFCE7;
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+    }
+    .crf-barcode-area {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .crf-barcode-font {
+      font-family: 'Libre Barcode 39 Text', cursive;
+      font-size: 2.2rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* Print Stylesheet Overrides */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .printable-crf-container, .printable-crf-container * {
+        visibility: visible;
+      }
+      .printable-crf-container {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 1.5cm;
+      }
+      unilesa-sidebar, unilesa-header, unilesa-mobile-nav, .courses-hero, .term-tabs-wrap, .bursary-clearance-strip, .add-drop-banner, .units-metric-card, .catalog-controls, .courses-table-container, .course-actions-bar {
+        display: none !important;
+      }
+    }
+
+    /* Mobile Responsive Optimizations */
+    @media (max-width: 768px) {
+      .courses-hero {
+        padding: 1.3rem 1.4rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .hero-action-side {
+        align-items: flex-start;
+        width: 100%;
+      }
+      .hero-action-side .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .term-tabs-wrap {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .term-pills {
+        width: 100%;
+      }
+      .term-pill-btn {
+        flex: 1;
+        justify-content: center;
+      }
+      .units-metric-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .courses-table-container {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+      }
+      .courses-table, .courses-table tbody, .courses-table tr, .courses-table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .courses-table thead {
+        display: none;
+      }
+      .courses-table tr {
+        background: var(--white);
+        border: 1px solid var(--grey-300);
+        border-radius: var(--radius-lg);
+        margin-bottom: 0.85rem;
+        padding: 1rem;
+        box-shadow: var(--shadow-sm);
+      }
+      .courses-table td {
+        padding: 0.35rem 0;
+        border: none;
+      }
+      .courses-table td.col-checkbox {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 0.6rem;
+        border-bottom: 1px solid var(--grey-200);
+        margin-bottom: 0.6rem;
+      }
+      .courses-table td.col-checkbox .mobile-only-label {
+        display: inline-block;
+      }
+      .course-actions-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .course-actions-bar .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <unilesa-role-switcher current="student"></unilesa-role-switcher>
+
+  <div class="app-layout">
+    
+    <!-- STATIC UNILESA SIDEBAR -->
+    <unilesa-sidebar active="courses"></unilesa-sidebar>
+
+    <div class="main-wrapper">
+      
+      <!-- TOP NAVIGATION BAR -->
+      <unilesa-header title="Course Registration &amp; Docket" subtitle="2025/2026 Academic Session &bull; Directorate of Academic Affairs"></unilesa-header>
+
+      <main class="content-container">
+        
+        <!-- 1. ACADEMIC HERO PROFILE BANNER -->
+        <section class="courses-hero">
+          <div class="hero-info-side">
+            <div class="hero-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+              <span>Faculty of Science &amp; Computing &bull; 100 Level</span>
+            </div>
+            <h1>B.Sc. Computer Science Course Registration</h1>
+            <p>Select your approved core departmental, GST statutory, and elective courses for the current academic session. Ensure total registered units stay within the approved university threshold (15 &ndash; 24 Units).</p>
+          </div>
+
+          <div class="hero-action-side">
+            <button type="button" class="btn btn-gold" id="printCrfBtn" onclick="printOfficialCourseForm()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+              <span>Print Course Form (CRF)</span>
+            </button>
+            <div style="font-size:0.75rem; color:var(--grey-300); display:flex; align-items:center; gap:0.35rem;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span>Registration Closes: <strong>15 Nov 2026</strong></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. SEMESTER SELECTOR TABS -->
+        <section class="term-tabs-wrap">
+          <div class="term-pills">
+            <button type="button" class="term-pill-btn active" id="tabFirstSemester" onclick="switchAcademicSemester('First Semester')">
+              <span>First Semester (Current)</span>
+              <span class="term-status-badge badge-green" id="badgeTerm1">Approved</span>
+            </button>
+            <button type="button" class="term-pill-btn" id="tabSecondSemester" onclick="switchAcademicSemester('Second Semester')">
+              <span>Second Semester</span>
+              <span class="term-status-badge badge-gold" id="badgeTerm2">Draft</span>
+            </button>
+          </div>
+
+          <div style="font-size:0.8rem; color:var(--grey-600); display:flex; align-items:center; gap:0.75rem;">
+            <span>Level Adviser: <strong>Dr. M. K. Alabi</strong></span>
+            <span style="color:var(--grey-300);">&bull;</span>
+            <span>HOD: <strong>Dr. A. O. Babalola</strong></span>
+          </div>
+        </section>
+
+        <!-- 3. BURSARY PREREQUISITE CLEARANCE GATE STRIP -->
+        <section class="bursary-clearance-strip" id="bursaryClearanceStrip">
+          <div class="clearance-left">
+            <div class="clearance-icon-circle" id="clearanceIconBox">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <div>
+              <div style="font-weight:800; font-size:0.88rem;" id="clearanceTitle">Bursary Clearance Verified &mdash; Course Registration Authorized</div>
+              <div style="font-size:0.75rem; opacity:0.9;" id="clearanceDesc">Minimum First Semester fee installment paid and confirmed by the University Bursar.</div>
+            </div>
+          </div>
+          <div id="clearanceActionWrap">
+            <a href="payments.html" class="btn btn-sm btn-outline" style="background:#FFF; color:#15803D; border-color:#86EFAC; font-weight:700;">
+              <span>View Fee Clearance</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+          </div>
+        </section>
+
+        <!-- ADD/DROP EDITING BANNER -->
+        <section class="add-drop-banner" id="addDropBanner">
+          <div style="display:flex; align-items:center; gap:0.6rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            <span><strong>Course Add/Drop Editing Mode Active:</strong> You can now adjust your elective courses. Compulsory core courses remain fixed.</span>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline" style="background:#FFF; color:#1E40AF; border-color:#BFDBFE;" onclick="cancelAddDropMode()">
+            <span>Cancel Edit</span>
+          </button>
+        </section>
+
+        <!-- 4. CREDIT UNITS ENGINE GAUGE -->
+        <section class="units-metric-card">
+          <div class="units-metric-header">
+            <div>
+              <div style="font-size:0.75rem; font-weight:700; color:var(--grey-500); text-transform:uppercase; letter-spacing:0.04em;">Selected Credit Units Load</div>
+              <div class="unit-stat-group">
+                <span class="unit-stat-num" id="currentUnitsNum">21</span>
+                <span class="unit-stat-max">/ 24 Units Maximum</span>
+              </div>
+            </div>
+
+            <div style="text-align:right;">
+              <span class="badge badge-green" id="loadStatusBadge" style="font-size:0.8rem; padding:0.4rem 0.8rem; font-weight:700;">
+                Optimal Academic Load (15 &ndash; 24 Units)
+              </span>
+              <div style="font-size:0.74rem; color:var(--grey-500); margin-top:0.3rem;">Minimum required to maintain full-time status: 15 Units</div>
+            </div>
+          </div>
+
+          <div class="units-progress-track">
+            <div class="units-progress-bar" id="unitsProgressBar" style="width: 87.5%;"></div>
+          </div>
+
+          <div class="units-breakdown-row">
+            <div class="unit-badge-pill">
+              <span class="unit-dot" style="background:#4F46E5;"></span>
+              <span>Core Departmental: <strong id="coreUnitsCount">13 Units</strong></span>
+            </div>
+            <div class="unit-badge-pill">
+              <span class="unit-dot" style="background:#D97706;"></span>
+              <span>GST Statutory Core: <strong id="gstUnitsCount">6 Units</strong></span>
+            </div>
+            <div class="unit-badge-pill">
+              <span class="unit-dot" style="background:#10B981;"></span>
+              <span>Elective / Borrowed: <strong id="electiveUnitsCount">2 Units</strong></span>
+            </div>
+            <div class="unit-badge-pill">
+              <span class="unit-dot" style="background:var(--navy-900);"></span>
+              <span>Total Selected Courses: <strong id="selectedCoursesCount">9 Courses</strong></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. COURSE CATALOG FILTER & SEARCH CONTROLS -->
+        <section class="catalog-controls">
+          <div class="category-filter-chips">
+            <button type="button" class="filter-chip active" data-filter="all" onclick="filterCourseCategory('all')">All Courses (<span id="countAll">11</span>)</button>
+            <button type="button" class="filter-chip" data-filter="departmental" onclick="filterCourseCategory('departmental')">Departmental Core (<span id="countDept">2</span>)</button>
+            <button type="button" class="filter-chip" data-filter="faculty" onclick="filterCourseCategory('faculty')">Faculty Core (<span id="countFac">3</span>)</button>
+            <button type="button" class="filter-chip" data-filter="university" onclick="filterCourseCategory('university')">GST Statutory (<span id="countGst">3</span>)</button>
+            <button type="button" class="filter-chip" data-filter="elective" onclick="filterCourseCategory('elective')">Electives (<span id="countElective">3</span>)</button>
+          </div>
+
+          <div style="position:relative; width:100%; max-width:280px;">
+            <input type="text" id="courseSearchInput" placeholder="Search course code, title, lecturer..." style="width:100%; padding:0.5rem 1rem 0.5rem 2.2rem; border-radius:10px; border:1px solid var(--grey-300); font-size:0.82rem; outline:none;" oninput="handleCourseSearch(this.value)">
+            <svg style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); color:var(--grey-400);" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </div>
+        </section>
+
+        <!-- 6. COURSE TABLE -->
+        <section class="courses-table-container">
+          <table class="courses-table" id="coursesTable">
+            <thead>
+              <tr>
+                <th style="width:52px; text-align:center;">
+                  <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAllFilteredCourses(this.checked)" title="Select/Deselect All Visible Courses" style="cursor:pointer; width:17px; height:17px; accent-color:var(--gold-500); vertical-align:middle;">
+                </th>
+                <th style="width:110px;">Course Code</th>
+                <th>Course Title &amp; Syllabus Details</th>
+                <th style="width:80px; text-align:center;">Units</th>
+                <th style="width:110px;">Category</th>
+                <th style="width:230px;">Lecturer &amp; Lecture Schedule</th>
+                <th style="width:100px;">Prerequisite</th>
+              </tr>
+            </thead>
+            <tbody id="courseTableBody">
+              <!-- Dynamically Populated by JavaScript -->
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 7. SUBMISSION & ACTION BAR -->
+        <section class="course-actions-bar">
+          <div>
+            <div style="font-weight:700; color:var(--navy-950); font-size:0.9rem;" id="registrationStatusTitle">Registration Status: Official CRF Approved</div>
+            <div style="font-size:0.75rem; color:var(--grey-500);" id="registrationStatusDesc">Endorsed digitally by HOD Computer Science &bull; Form locked for editing.</div>
+          </div>
+
+          <div style="display:flex; gap:0.65rem; align-items:center; flex-wrap:wrap;">
+            <button type="button" class="btn btn-outline" id="saveDraftBtn" onclick="saveCourses('Draft')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+              <span>Save Draft</span>
+            </button>
+            <button type="button" class="btn btn-navy" id="submitRegBtn" onclick="handleSubmitButtonClick()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              <span id="submitBtnText">Submit Course Form</span>
+            </button>
+            <button type="button" class="btn btn-gold" onclick="printOfficialCourseForm()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+              <span>Print Slip</span>
+            </button>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- COURSE SYLLABUS DETAILS MODAL -->
+  <div class="modal-backdrop" id="courseDetailModal" onclick="if(event.target===this) closeModal('courseDetailModal')">
+    <div class="modal-box" style="max-width:560px;">
+      <div class="modal-header-clean">
+        <div>
+          <h3 id="modalCourseCodeTitle">CSC 101 - Introduction to Computer Science</h3>
+          <div style="font-size:0.72rem; color:var(--grey-500); margin-top:0.2rem;" id="modalCourseDept">Department of Computer Science &bull; 3 Units</div>
+        </div>
+        <button type="button" class="modal-close-icon" onclick="closeModal('courseDetailModal')" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-content-inner">
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div>
+            <h4 style="font-size:0.78rem; font-weight:700; color:var(--grey-500); text-transform:uppercase; margin:0 0 0.3rem;">Course Description</h4>
+            <p id="modalCourseDesc" style="font-size:0.84rem; color:var(--navy-950); line-height:1.5; margin:0;"></p>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; background:#FAFBFD; border:1px solid var(--grey-300); border-radius:10px; padding:0.9rem;">
+            <div>
+              <div style="font-size:0.68rem; color:var(--grey-500); font-weight:700;">ASSIGNED LECTURER</div>
+              <div style="font-size:0.82rem; font-weight:700; color:var(--navy-900);" id="modalCourseLecturer">Dr. A. O. Babalola</div>
+            </div>
+            <div>
+              <div style="font-size:0.68rem; color:var(--grey-500); font-weight:700;">LECTURE VENUE</div>
+              <div style="font-size:0.82rem; font-weight:700; color:var(--navy-900);" id="modalCourseVenue">ICT Lecture Hall 1</div>
+            </div>
+            <div style="grid-column:1 / -1;">
+              <div style="font-size:0.68rem; color:var(--grey-500); font-weight:700;">WEEKLY SCHEDULE</div>
+              <div style="font-size:0.82rem; font-weight:600; color:var(--navy-900);" id="modalCourseSchedule">Mon 08:00 AM - 10:00 AM</div>
+            </div>
+          </div>
+
+          <div>
+            <h4 style="font-size:0.78rem; font-weight:700; color:var(--grey-500); text-transform:uppercase; margin:0 0 0.4rem;">Grading &amp; Assessment Structure</h4>
+            <div style="display:flex; gap:0.5rem; font-size:0.75rem;">
+              <span class="badge" style="background:#EEF2FF; color:#4338CA; padding:0.3rem 0.6rem;">Continuous Assessment: 30%</span>
+              <span class="badge" style="background:#FEF3C7; color:#92400E; padding:0.3rem 0.6rem;">Practical / Lab: 20%</span>
+              <span class="badge" style="background:#ECFDF5; color:#065F46; padding:0.3rem 0.6rem;">Final Examination: 50%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-sm" onclick="closeModal('courseDetailModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. OFFICIAL PRINTABLE COURSE FORM (CRF) - PRINT ONLY CONTAINER -->
+  <div class="printable-crf-container" id="printableCrf">
+    <div class="crf-header">
+      <img src="https://unilesa.edu.ng/static/frontpage/assets/img/icons/unilesa_origina.png" alt="University of Ilesa Crest">
+      <div class="crf-title-main">University of Ilesa, Osun State</div>
+      <div class="crf-subtitle">Directorate of Academic Affairs &bull; Student Records &amp; Examination Division</div>
+      <div class="crf-doc-tag">OFFICIAL COURSE REGISTRATION FORM (CRF)</div>
+      <div style="font-size:0.75rem; color:#64748B; margin-top:0.3rem;" id="printSessionTerm">2025/2026 Academic Session &bull; First Semester</div>
+    </div>
+
+    <div class="crf-student-bio">
+      <div class="crf-bio-grid">
+        <div class="crf-bio-item"><span class="label">Full Name:</span> <span class="val" id="crfName">Jane Adaeze Doe</span></div>
+        <div class="crf-bio-item"><span class="label">Matric No:</span> <span class="val" id="crfMatric">UNILESA/2026/CSC/0142</span></div>
+        <div class="crf-bio-item"><span class="label">Faculty:</span> <span class="val">Faculty of Science &amp; Computing</span></div>
+        <div class="crf-bio-item"><span class="label">Department:</span> <span class="val">Computer Science</span></div>
+        <div class="crf-bio-item"><span class="label">Programme:</span> <span class="val">B.Sc. (Hons) Computer Science</span></div>
+        <div class="crf-bio-item"><span class="label">Level / Session:</span> <span class="val">100 Level &bull; 2025/2026</span></div>
+        <div class="crf-bio-item"><span class="label">Level Adviser:</span> <span class="val">Dr. M. K. Alabi</span></div>
+        <div class="crf-bio-item"><span class="label">Head of Dept:</span> <span class="val">Dr. A. O. Babalola</span></div>
+      </div>
+      <div class="crf-passport-box">
+        <img id="crfAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Student Passport">
+      </div>
+    </div>
+
+    <table class="crf-table">
+      <thead>
+        <tr>
+          <th style="width:35px; text-align:center;">S/N</th>
+          <th style="width:90px;">Course Code</th>
+          <th>Course Title</th>
+          <th style="width:50px; text-align:center;">Units</th>
+          <th style="width:70px; text-align:center;">Status</th>
+          <th style="width:160px;">Course Lecturer</th>
+          <th style="width:100px; text-align:center;">Adviser Sign</th>
+        </tr>
+      </thead>
+      <tbody id="crfPrintTableBody">
+        <!-- Dynamically Populated for Print -->
+      </tbody>
+      <tfoot>
+        <tr style="background:#F8FAFC; font-weight:800;">
+          <td colspan="3" style="text-align:right; text-transform:uppercase;">Total Registered Credit Units:</td>
+          <td style="text-align:center;" id="crfTotalUnits">21</td>
+          <td colspan="3" style="font-size:0.72rem; color:#15803D;">Status: COMPLIANT WITH UNIVERSITY MIN (15) / MAX (24) STATUTE</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div style="font-size:0.72rem; color:#475569; font-style:italic; line-height:1.4; margin-bottom:1.5rem;">
+      <strong>Student Solemn Declaration:</strong> I hereby certify that the courses listed above were duly selected in compliance with UNILESA Academic Regulations. I understand that failure to register a course renders any examination sat in it null and void.
+    </div>
+
+    <div class="crf-signatures-grid">
+      <div class="crf-sign-box">
+        <div class="crf-sign-line">
+          <div class="crf-sign-seal">SIGNED DIGITAL</div>
+        </div>
+        <strong>Jane Adaeze Doe</strong>
+        <div>Student Signature &amp; Date</div>
+      </div>
+
+      <div class="crf-sign-box">
+        <div class="crf-sign-line">
+          <div class="crf-sign-seal">APPROVED</div>
+        </div>
+        <strong>Dr. M. K. Alabi</strong>
+        <div>Level Academic Adviser</div>
+      </div>
+
+      <div class="crf-sign-box">
+        <div class="crf-sign-line">
+          <div class="crf-sign-seal">VERIFIED</div>
+        </div>
+        <strong>Dr. A. O. Babalola</strong>
+        <div>Head of Department (HOD)</div>
+      </div>
+
+      <div class="crf-sign-box">
+        <div class="crf-sign-line">
+          <div class="crf-sign-seal">SEALED</div>
+        </div>
+        <strong>Prof. O. J. Adebayo</strong>
+        <div>Faculty Dean / Registrar</div>
+      </div>
+    </div>
+
+    <div class="crf-barcode-area">
+      <div class="crf-barcode-font" id="crfBarcode">*UNL-CRF-2026-0142-S1*</div>
+      <div style="font-size:0.65rem; color:#64748B; margin-top:0.2rem;">Official Security Verification Key &bull; Directorate of ICT &bull; University of Ilesa</div>
+    </div>
+  </div>
+
+  <!-- Reusable App Modals & Bottom Navigation -->
+  <unilesa-mobile-nav active="courses"></unilesa-mobile-nav>
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast id="toastContainer"></unilesa-toast>
+
+  <!-- Web Component Scripts -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-sidebar.js"></script>
+  <script src="components/unilesa-header.js"></script>
+  <script src="components/unilesa-mobile-nav.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <!-- PAGE LOGIC SCRIPT -->
+  <script>
+    let currentSemester = 'First Semester';
+    let currentCategoryFilter = 'all';
+    let currentSearchTerm = '';
+    let selectedCourses = [];
+    let isAddDropMode = false;
+
+    // Backward compatibility aliases
+    let currentTerm = currentSemester;
+    function switchAcademicTerm(term) {
+      switchAcademicSemester(term.includes('Second') ? 'Second Semester' : 'First Semester');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadCourseRegistrationData();
+      initLiveListeners();
+    });
+
+    function initLiveListeners() {
+      window.addEventListener('unilesa:courses-updated', (e) => {
+        if (e.detail && (e.detail.semester === currentSemester || e.detail.term === currentSemester)) {
+          loadCourseRegistrationData();
+        }
+      });
+      window.addEventListener('unilesa:student-updated', () => {
+        loadCourseRegistrationData();
+      });
+      window.addEventListener('unilesa:ict-settings-updated', () => {
+        loadCourseRegistrationData();
+      });
+    }
+
+    function switchAcademicSemester(semester) {
+      currentSemester = semester;
+      currentTerm = semester;
+      isAddDropMode = false;
+      document.getElementById('addDropBanner').classList.remove('show');
+      
+      const tab1 = document.getElementById('tabFirstSemester') || document.getElementById('tabFirstTerm');
+      const tab2 = document.getElementById('tabSecondSemester') || document.getElementById('tabSecondTerm');
+      if (tab1 && tab2) {
+        tab1.classList.toggle('active', semester === 'First Semester' || semester === 'First Term');
+        tab2.classList.toggle('active', semester === 'Second Semester' || semester === 'Second Term');
+      }
+
+      loadCourseRegistrationData();
+    }
+
+    function loadCourseRegistrationData() {
+      const student = UniStore.getStudent();
+      const catalog = UniStore.getCourseCatalog(currentSemester);
+      const reg = UniStore.getCourseRegistration(currentSemester);
+
+      selectedCourses = [...reg.selectedCourseIds];
+
+      // Update Semester Badges
+      const regS1 = UniStore.getCourseRegistration('First Semester');
+      const regS2 = UniStore.getCourseRegistration('Second Semester');
+      const b1 = document.getElementById('badgeTerm1');
+      const b2 = document.getElementById('badgeTerm2');
+      if (b1) {
+        b1.textContent = regS1.status;
+        b1.className = `term-status-badge ${regS1.status === 'Approved' ? 'badge-green' : 'badge-gold'}`;
+      }
+      if (b2) {
+        b2.textContent = regS2.status;
+        b2.className = `term-status-badge ${regS2.status === 'Approved' ? 'badge-green' : 'badge-gold'}`;
+      }
+
+      // Update Bursary Clearance Strip
+      const strip = document.getElementById('bursaryClearanceStrip');
+      const cTitle = document.getElementById('clearanceTitle');
+      const cDesc = document.getElementById('clearanceDesc');
+      const cActionWrap = document.getElementById('clearanceActionWrap');
+
+      if (strip && cTitle && cDesc && cActionWrap) {
+        if (reg.bursaryCleared) {
+          strip.className = 'bursary-clearance-strip';
+          cTitle.textContent = `Bursary Clearance Verified \u2014 ${currentSemester} Course Registration Authorized`;
+          cDesc.textContent = `Fee clearance confirmed by the University Bursar for the ${currentSemester}.`;
+          cActionWrap.innerHTML = `
+            <a href="payments.html" class="btn btn-sm btn-outline" style="background:#FFF; color:#15803D; border-color:#86EFAC; font-weight:700;">
+              <span>View Fee Clearance</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+          `;
+        } else {
+          strip.className = 'bursary-clearance-strip locked';
+          cTitle.textContent = `Bursary Fee Clearance Pending for ${currentSemester}`;
+          cDesc.textContent = `Please complete your required fee payment to obtain official clearance seal from the Bursary Division.`;
+          cActionWrap.innerHTML = `
+            <button type="button" class="btn btn-sm btn-gold" onclick="simulateBursaryClearance('${currentSemester}')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+              <span>Settle Fee &amp; Clear Now</span>
+            </button>
+          `;
+        }
+      }
+
+      // Update Category Counts
+      const cDept = catalog.filter(c => c.category === 'departmental').length;
+      const cFac = catalog.filter(c => c.category === 'faculty').length;
+      const cGst = catalog.filter(c => c.category === 'university').length;
+      const cElec = catalog.filter(c => c.category === 'elective').length;
+      document.getElementById('countAll').textContent = catalog.length;
+      document.getElementById('countDept').textContent = cDept;
+      document.getElementById('countFac').textContent = cFac;
+      document.getElementById('countGst').textContent = cGst;
+      document.getElementById('countElective').textContent = cElec;
+
+      // Update Action Bar Status & Buttons with ICT Gate Enforcement
+      const statTitle = document.getElementById('registrationStatusTitle');
+      const statDesc = document.getElementById('registrationStatusDesc');
+      const saveBtn = document.getElementById('saveDraftBtn');
+      const submitBtn = document.getElementById('submitRegBtn');
+      const submitBtnText = document.getElementById('submitBtnText');
+
+      const isGateOpen = window.UniStore && window.UniStore.isGateOpen ? window.UniStore.isGateOpen('courseRegistration') : true;
+      const gates = window.UniStore && window.UniStore.getPortalGates ? window.UniStore.getPortalGates() : {};
+      const courseGate = gates.courseRegistration || {};
+      const deadlineStr = courseGate.deadline || '15 Nov 2026';
+
+      if (statTitle && statDesc) {
+        if (!isGateOpen) {
+          statTitle.textContent = `Registration Status: Restricted by ICT Directive`;
+          statDesc.textContent = courseGate.restrictionMessage || 'Course Registration for the current semester is currently restricted by the Directorate of ICT.';
+          if (saveBtn) saveBtn.style.display = 'none';
+          if (submitBtn) {
+            submitBtn.className = 'btn btn-outline';
+            submitBtn.style.color = '#EF4444';
+            submitBtn.style.borderColor = '#FECACA';
+            submitBtnText.textContent = '🔒 Portal Window Locked';
+            submitBtn.disabled = true;
+          }
+        } else if (isAddDropMode) {
+          statTitle.textContent = `Registration Status: Add/Drop Editing Mode Active`;
+          statDesc.textContent = `Modify your elective courses and click Save Changes to re-submit for approval.`;
+          if (saveBtn) saveBtn.style.display = 'inline-flex';
+          if (submitBtn) {
+            submitBtn.className = 'btn btn-navy';
+            submitBtn.style.color = '';
+            submitBtn.style.borderColor = '';
+            submitBtnText.textContent = 'Save & Re-Submit Form';
+            submitBtn.disabled = false;
+          }
+        } else if (reg.status === 'Approved') {
+          statTitle.textContent = `Registration Status: Approved by HOD (${reg.approvedDate || '25 Oct 2026'})`;
+          statDesc.textContent = `Digitally endorsed by ${reg.approvedBy || 'Dr. A. O. Babalola'}. Official CRF generated.`;
+          if (saveBtn) saveBtn.style.display = 'none';
+          if (submitBtn) {
+            submitBtn.className = 'btn btn-outline';
+            submitBtn.style.color = '';
+            submitBtn.style.borderColor = '';
+            submitBtnText.textContent = 'Unlock for Add/Drop Edit';
+            submitBtn.disabled = false;
+          }
+        } else if (reg.status === 'Submitted') {
+          statTitle.textContent = `Registration Status: Submitted \u2014 Awaiting HOD Endorsement`;
+          statDesc.textContent = `Submitted on ${reg.submittedDate}. Level Adviser is reviewing course schedule.`;
+          if (saveBtn) saveBtn.style.display = 'none';
+          if (submitBtn) {
+            submitBtn.className = 'btn btn-outline';
+            submitBtn.style.color = '';
+            submitBtn.style.borderColor = '';
+            submitBtnText.textContent = 'Modify Submission';
+            submitBtn.disabled = false;
+          }
+        } else {
+          statTitle.textContent = `Registration Status: Open (Draft Mode)`;
+          statDesc.textContent = `Select your courses and submit before registration deadline (${deadlineStr}).`;
+          if (saveBtn) saveBtn.style.display = 'inline-flex';
+          if (submitBtn) {
+            submitBtn.className = 'btn btn-navy';
+            submitBtn.style.color = '';
+            submitBtn.style.borderColor = '';
+            submitBtnText.textContent = 'Submit Course Form';
+            submitBtn.disabled = false;
+          }
+        }
+      }
+
+      renderCoursesTable();
+      updateCreditUnitsMetrics();
+    }
+
+    function renderCoursesTable() {
+      const catalog = UniStore.getCourseCatalog(currentSemester);
+      const tbody = document.getElementById('courseTableBody');
+      if (!tbody) return;
+
+      const filtered = catalog.filter(course => {
+        const matchesCat = currentCategoryFilter === 'all' || course.category === currentCategoryFilter;
+        const matchesSearch = currentSearchTerm === '' || 
+          course.code.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+          course.title.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+          course.lecturer.toLowerCase().includes(currentSearchTerm.toLowerCase());
+        return matchesCat && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align:center; padding:2.5rem; color:var(--grey-500);">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:0.5rem;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <div>No courses matched your query.</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      // Update selectAllCheckbox status based on current filtered view
+      const selectAllCb = document.getElementById('selectAllCheckbox');
+      if (selectAllCb && filtered.length > 0) {
+        const allFilteredSelected = filtered.every(c => selectedCourses.includes(c.id));
+        selectAllCb.checked = allFilteredSelected;
+      }
+
+      tbody.innerHTML = filtered.map(c => {
+        const isChecked = selectedCourses.includes(c.id);
+
+        return `
+          <tr class="${isChecked ? 'selected-row' : ''}" style="cursor:pointer;" onclick="handleRowClick(event, '${c.id}')">
+            <td class="col-checkbox" style="text-align:center;" onclick="event.stopPropagation()">
+              <span class="mobile-only-label" style="display:none; font-weight:700; font-size:0.75rem; color:var(--grey-600);">Select Course</span>
+              <input type="checkbox" class="course-checkbox" data-id="${c.id}" ${isChecked ? 'checked' : ''} onchange="toggleCourseSelection('${c.id}', this.checked)" style="cursor:pointer; width:18px; height:18px; accent-color:var(--gold-500); vertical-align:middle;">
+            </td>
+            <td>
+              <span class="course-code-badge" onclick="event.stopPropagation(); openCourseDetailsModal('${c.id}')" title="Click to view course syllabus">${c.code}</span>
+            </td>
+            <td>
+              <div class="course-title-wrap">
+                <span class="course-title-text" onclick="event.stopPropagation(); openCourseDetailsModal('${c.id}')" title="View Syllabus">
+                  ${c.title}
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </span>
+                <span class="course-meta-sub">
+                  <span>${c.description}</span>
+                </span>
+              </div>
+            </td>
+            <td style="text-align:center; font-weight:800; color:var(--navy-950); font-size:0.95rem;">
+              ${c.units}
+            </td>
+            <td>
+              <span class="type-badge ${c.type.toLowerCase()}">${c.type}</span>
+            </td>
+            <td>
+              <div style="font-weight:700; color:var(--navy-900); font-size:0.8rem;">${c.lecturer}</div>
+              <div style="font-size:0.72rem; color:var(--grey-500); margin-top:0.15rem;">${c.schedule} &bull; <strong>${c.venue}</strong></div>
+            </td>
+            <td style="font-size:0.75rem; color:${c.prerequisite === 'None' ? 'var(--grey-500)' : 'var(--gold-600)'}; font-weight:600;">
+              ${c.prerequisite}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function handleRowClick(event, courseId) {
+      if (event.target.closest('.col-checkbox') || event.target.tagName === 'INPUT') return;
+      if (event.target.closest('.course-code-badge') || event.target.closest('.course-title-text')) return;
+      
+      const isCurrentlySelected = selectedCourses.includes(courseId);
+      toggleCourseSelection(courseId, !isCurrentlySelected);
+    }
+
+    function toggleCourseSelection(courseId, isChecked) {
+      if (isChecked) {
+        if (!selectedCourses.includes(courseId)) {
+          selectedCourses.push(courseId);
+        }
+      } else {
+        selectedCourses = selectedCourses.filter(id => id !== courseId);
+      }
+
+      renderCoursesTable();
+      updateCreditUnitsMetrics();
+    }
+
+    function toggleSelectAllFilteredCourses(isChecked) {
+      const catalog = UniStore.getCourseCatalog(currentSemester);
+      const filtered = catalog.filter(course => {
+        const matchesCat = currentCategoryFilter === 'all' || course.category === currentCategoryFilter;
+        const matchesSearch = currentSearchTerm === '' || 
+          course.code.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+          course.title.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+          course.lecturer.toLowerCase().includes(currentSearchTerm.toLowerCase());
+        return matchesCat && matchesSearch;
+      });
+
+      if (isChecked) {
+        filtered.forEach(c => {
+          if (!selectedCourses.includes(c.id)) selectedCourses.push(c.id);
+        });
+      } else {
+        const filteredIds = filtered.map(c => c.id);
+        selectedCourses = selectedCourses.filter(id => !filteredIds.includes(id));
+      }
+
+      renderCoursesTable();
+      updateCreditUnitsMetrics();
+    }
+
+    function updateCreditUnitsMetrics() {
+      const catalog = UniStore.getCourseCatalog(currentSemester);
+      const selectedObjList = catalog.filter(c => selectedCourses.includes(c.id));
+
+      const totalUnits = selectedObjList.reduce((sum, c) => sum + c.units, 0);
+      const coreUnits = selectedObjList.filter(c => c.category === 'departmental' || c.category === 'faculty').reduce((sum, c) => sum + c.units, 0);
+      const gstUnits = selectedObjList.filter(c => c.category === 'university').reduce((sum, c) => sum + c.units, 0);
+      const electiveUnits = selectedObjList.filter(c => c.category === 'elective').reduce((sum, c) => sum + c.units, 0);
+
+      document.getElementById('currentUnitsNum').textContent = totalUnits;
+      document.getElementById('coreUnitsCount').textContent = `${coreUnits} Units`;
+      document.getElementById('gstUnitsCount').textContent = `${gstUnits} Units`;
+      document.getElementById('electiveUnitsCount').textContent = `${electiveUnits} Units`;
+      document.getElementById('selectedCoursesCount').textContent = `${selectedCourses.length} Courses`;
+
+      // Progress bar percentage (max 24)
+      const percent = Math.min(100, Math.round((totalUnits / 24) * 100));
+      const pBar = document.getElementById('unitsProgressBar');
+      const badge = document.getElementById('loadStatusBadge');
+
+      if (pBar) {
+        pBar.style.width = percent + '%';
+        pBar.className = totalUnits > 24 ? 'units-progress-bar warning' : 'units-progress-bar';
+      }
+
+      if (badge) {
+        if (totalUnits < 15) {
+          badge.textContent = `Under-enrolled (${totalUnits}/15 Min Units)`;
+          badge.className = 'badge badge-gold';
+        } else if (totalUnits > 24) {
+          badge.textContent = `Overload Limit Exceeded (${totalUnits}/24 Max Units)`;
+          badge.className = 'badge badge-rose';
+        } else {
+          badge.textContent = `Optimal Academic Load (${totalUnits}/24 Units)`;
+          badge.className = 'badge badge-green';
+        }
+      }
+    }
+
+    function filterCourseCategory(cat) {
+      currentCategoryFilter = cat;
+      document.querySelectorAll('.filter-chip').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-filter') === cat);
+      });
+      renderCoursesTable();
+    }
+
+    function handleCourseSearch(val) {
+      currentSearchTerm = val;
+      renderCoursesTable();
+    }
+
+    function openCourseDetailsModal(courseId) {
+      const catalog = UniStore.getCourseCatalog(currentSemester);
+      const course = catalog.find(c => c.id === courseId);
+      if (!course) return;
+
+      document.getElementById('modalCourseCodeTitle').textContent = `${course.code} \u2014 ${course.title}`;
+      document.getElementById('modalCourseDept').textContent = `${course.category.toUpperCase()} \u2022 ${course.units} Credit Units \u2022 ${course.type}`;
+      document.getElementById('modalCourseDesc').textContent = course.description;
+      document.getElementById('modalCourseLecturer').textContent = course.lecturer;
+      document.getElementById('modalCourseVenue').textContent = course.venue;
+      document.getElementById('modalCourseSchedule').innerHTML = course.schedule;
+
+      openModal('courseDetailModal');
+    }
+
+    function toggleAddDropMode() {
+      isAddDropMode = true;
+      document.getElementById('addDropBanner').classList.add('show');
+      if (window.UniToast) {
+        UniToast.show('Add/Drop Mode Active', 'You can now select or remove elective courses.', 'info');
+      }
+      loadCourseRegistrationData();
+    }
+
+    function cancelAddDropMode() {
+      isAddDropMode = false;
+      document.getElementById('addDropBanner').classList.remove('show');
+      if (window.UniToast) {
+        UniToast.show('Edit Cancelled', 'Course selections reverted to approved form.', 'info');
+      }
+      loadCourseRegistrationData();
+    }
+
+    function handleSubmitButtonClick() {
+      const reg = UniStore.getCourseRegistration(currentSemester);
+      if (!isAddDropMode && (reg.status === 'Approved' || reg.status === 'Submitted')) {
+        toggleAddDropMode();
+      } else {
+        submitOfficialRegistration();
+      }
+    }
+
+    function saveCourses(status = 'Draft') {
+      const res = UniStore.saveCourseRegistration(currentSemester, selectedCourses, status);
+      if (res.success) {
+        isAddDropMode = false;
+        document.getElementById('addDropBanner').classList.remove('show');
+        if (window.UniToast) {
+          UniToast.show('Draft Saved', `Course registration saved as ${status} successfully!`, 'success');
+        } else {
+          alert(`Course registration saved as ${status}!`);
+        }
+        loadCourseRegistrationData();
+      }
+    }
+
+    function submitOfficialRegistration() {
+      const catalog = UniStore.getCourseCatalog(currentSemester);
+      const selectedObjList = catalog.filter(c => selectedCourses.includes(c.id));
+      const totalUnits = selectedObjList.reduce((sum, c) => sum + c.units, 0);
+
+      if (totalUnits < 15) {
+        if (window.UniToast) {
+          UniToast.show('Under-enrolled Warning', 'Minimum required is 15 Credit Units. Please select electives.', 'warning');
+        } else {
+          alert('Cannot submit: Minimum credit units required is 15.');
+        }
+        return;
+      }
+      if (totalUnits > 24) {
+        if (window.UniToast) {
+          UniToast.show('Overload Error', 'Maximum allowed is 24 Credit Units. Please deselect courses.', 'error');
+        } else {
+          alert('Cannot submit: Maximum credit units allowed is 24.');
+        }
+        return;
+      }
+
+      saveCourses('Approved');
+      if (window.UniToast) {
+        UniToast.show('Registration Approved!', `Official CRF generated & endorsed digitally by HOD Dr. A. O. Babalola.`, 'success', 5000);
+      }
+    }
+
+    function simulateBursaryClearance(sem) {
+      UniStore.setCourseBursaryClearance(sem, true);
+      if (window.UniToast) {
+        UniToast.show('Bursary Clearance Granted', `${sem} statutory fees settled. Course registration is now unlocked!`, 'success', 5000);
+      }
+      loadCourseRegistrationData();
+    }
+
+    function printOfficialCourseForm() {
+      const student = UniStore.getStudent();
+      const catalog = UniStore.getCourseCatalog(currentSemester);
+      const reg = UniStore.getCourseRegistration(currentSemester);
+      const selectedObjList = catalog.filter(c => selectedCourses.includes(c.id));
+      const totalUnits = selectedObjList.reduce((sum, c) => sum + c.units, 0);
+
+      // Populate print table
+      document.getElementById('printSessionTerm').textContent = `2025/2026 Academic Session \u2022 ${currentSemester}`;
+      document.getElementById('crfName').textContent = student.fullName;
+      document.getElementById('crfMatric').textContent = student.matricNumber;
+      document.getElementById('crfAvatar').src = student.avatarUrl;
+      document.getElementById('crfTotalUnits').textContent = totalUnits;
+      document.getElementById('crfBarcode').textContent = `*${reg.barcode || 'UNL-CRF-2026-0142'}*`;
+
+      const tbody = document.getElementById('crfPrintTableBody');
+      if (tbody) {
+        tbody.innerHTML = selectedObjList.map((c, i) => `
+          <tr>
+            <td style="text-align:center;">${i + 1}</td>
+            <td style="font-weight:700; font-family:'Courier Prime', monospace;">${c.code}</td>
+            <td style="font-weight:600;">${c.title}</td>
+            <td style="text-align:center; font-weight:700;">${c.units}</td>
+            <td style="text-align:center; text-transform:uppercase;">${c.compulsory ? 'Compulsory' : 'Elective'}</td>
+            <td>${c.lecturer}</td>
+            <td style="text-align:center; font-size:0.65rem; color:#15803D; font-weight:700;">APPROVED</td>
+          </tr>
+        `).join('');
+      }
+
+      window.print();
+    }
+  </script>
+</body>
+</html>

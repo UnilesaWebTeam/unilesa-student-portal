@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>User Accounts Directory — Directorate of ICT (UNILESA)</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Design System & Layout Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <style>
+    /* Hero Banner */
+    .users-hero {
+      background: linear-gradient(135deg, #050E21 0%, #0F1F42 55%, #1E3A8A 100%);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 2.2rem;
+      color: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 12px 30px -5px rgba(15, 31, 66, 0.25);
+      border: 1px solid rgba(205, 164, 52, 0.35);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .users-hero::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -40px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(205,164,52,0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .users-hero-title h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--white);
+      margin: 0 0 0.35rem;
+    }
+    .users-hero-title p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.85);
+      margin: 0;
+      line-height: 1.45;
+      max-width: 660px;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .kpi-card {
+      background: var(--white);
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 1.25rem 1.35rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.75rem;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(15, 31, 66, 0.08);
+      border-color: #CBD5E1;
+    }
+    .kpi-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .kpi-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .kpi-icon.navy { background: #EFF6FF; color: #1D4ED8; }
+    .kpi-icon.emerald { background: #ECFDF5; color: #059669; }
+    .kpi-icon.gold { background: #FEF3C7; color: #B45309; }
+    .kpi-icon.purple { background: #F5F3FF; color: #7C3AED; }
+
+    .kpi-amount {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--navy-950);
+      letter-spacing: -0.02em;
+    }
+    .kpi-sub {
+      font-size: 0.74rem;
+      color: #64748B;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* Directory Container Card */
+    .directory-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 8px 25px -5px rgba(15, 23, 42, 0.04);
+      padding: 1.6rem 1.8rem;
+      margin-bottom: 1.6rem;
+      position: relative;
+    }
+    .directory-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0F1F42 0%, #CDA434 50%, #0F1F42 100%);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+
+    /* Toolbar Filter Row */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 0.65rem 0.95rem;
+    }
+    .filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .filter-pill {
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--grey-700);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .filter-pill:hover {
+      background: #F1F5F9;
+      color: var(--navy-900);
+    }
+    .filter-pill.active {
+      background: var(--navy-900);
+      color: var(--white);
+      border-color: var(--navy-900);
+    }
+
+    .user-avatar-cell {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.78rem;
+      color: #fff;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .user-online-dot {
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #10B981;
+      border: 2px solid #fff;
+    }
+
+    /* Modal Backdrop & Box Overrides */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 14, 33, 0.72);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+    .modal-backdrop.show {
+      display: flex !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    .modal-box {
+      background: #FFFFFF;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+      overflow: hidden;
+      border: 1px solid #E2E8F0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (max-width: 900px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- REUSABLE MODALS & TOAST ENGINE -->
+  <unilesa-modals></unilesa-modals>
+  <unilesa-toast></unilesa-toast>
+  <unilesa-role-switcher current="ict"></unilesa-role-switcher>
+
+  <div class="app-layout" id="appLayout">
+    
+    <!-- ENTERPRISE ADMIN SIDEBAR COMPONENT -->
+    <unilesa-admin-sidebar active="users"></unilesa-admin-sidebar>
+
+    <!-- MAIN PAGE WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- ENTERPRISE ADMIN TOP HEADER COMPONENT -->
+      <unilesa-admin-header title="User Accounts Directory" subtitle="Directorate of ICT &bull; Identity Lifecycle, Bio-data Provisioning &amp; Role Management"></unilesa-admin-header>
+
+      <!-- PAGE CONTENT CONTAINER -->
+      <main class="content-container">
+
+        <!-- 1. Hero Command Banner -->
+        <section class="users-hero">
+          <div class="users-hero-title">
+            <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.45rem; flex-wrap:wrap;">
+              <span class="badge badge-gold" id="heroSessionBadge" style="font-size:0.7rem; font-weight:800;">2025/2026 Academic Session</span>
+              <span class="badge" id="heroTermBadge" style="background:rgba(255,255,255,0.15); color:#FFFFFF; font-size:0.7rem;">First Semester (Harmattan)</span>
+              <span class="badge" style="background:rgba(74, 222, 128, 0.2); color:#4ADE80; border:1px solid rgba(74, 222, 128, 0.4); font-size:0.7rem;">
+                ● IDENTITY ENGINE ONLINE
+              </span>
+            </div>
+            <h1>Enterprise Identity &amp; User Accounts Directory</h1>
+            <p>
+              Provision fresh matriculation records, manage staff credentials, modify biometric bio-data, execute bulk CSV onboarding, and issue official 1-time password reset dockets.
+            </p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="display:flex; align-items:center; gap:0.65rem; flex-wrap:wrap; position:relative; z-index:2;">
+            <button type="button" class="btn btn-gold btn-sm" onclick="openProvisionModal()" style="font-weight:800;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>+ Provision New User</span>
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="openBulkUserModal()" style="color:var(--white); border-color:rgba(255,255,255,0.35); background:rgba(255,255,255,0.08);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <span>Bulk CSV Import</span>
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="exportUserRosterCsv()" style="color:var(--white); border-color:rgba(255,255,255,0.35); background:rgba(255,255,255,0.08);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Export Roster CSV</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. KPI Metrics -->
+        <div class="kpi-grid">
+          
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span style="font-size:0.72rem; font-weight:700; color:#64748B; text-transform:uppercase;">Enrolled Students</span>
+              <div class="kpi-icon navy">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+              </div>
+            </div>
+            <div>
+              <div class="kpi-amount" id="kpiTotalStudents">4,892</div>
+              <div class="kpi-sub">
+                <span class="badge badge-success" style="font-size:0.6rem; padding:0.1rem 0.4rem;">+142 Freshmen</span>
+                <span>Across 5 Faculties</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span style="font-size:0.72rem; font-weight:700; color:#64748B; text-transform:uppercase;">Provisioned Accounts</span>
+              <div class="kpi-icon emerald">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              </div>
+            </div>
+            <div>
+              <div class="kpi-amount" id="kpiTotalUsers">4,750</div>
+              <div class="kpi-sub">
+                <span style="color:#059669; font-weight:700;">● 98% Active</span>
+                <span>• Live Authenticated</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span style="font-size:0.72rem; font-weight:700; color:#64748B; text-transform:uppercase;">Academic Lecturers &amp; Staff</span>
+              <div class="kpi-icon gold">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+              </div>
+            </div>
+            <div>
+              <div class="kpi-amount" id="kpiTotalStaff">248</div>
+              <div class="kpi-sub">
+                <span>Lecturers, Bursary &amp; Registry</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span style="font-size:0.72rem; font-weight:700; color:#64748B; text-transform:uppercase;">Credential Security</span>
+              <div class="kpi-icon purple">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              </div>
+            </div>
+            <div>
+              <div class="kpi-amount" id="kpiSecStatus">0 Flags</div>
+              <div class="kpi-sub">
+                <span style="color:#059669; font-weight:700;">● NDPR Strict</span>
+                <span>• 256-bit Encrypted</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 3. User Directory Workspace -->
+        <div class="directory-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem; flex-wrap:wrap; gap:0.8rem;">
+            <div>
+              <h2 style="font-family:'Playfair Display', serif; font-size:1.25rem; color:var(--navy-950); margin:0 0 0.2rem;">
+                Official University User Directory
+              </h2>
+              <p style="margin:0; font-size:0.76rem; color:#64748B;">
+                Search, filter by role, modify profile records, and generate 1-time password reset dockets.
+              </p>
+            </div>
+          </div>
+
+          <!-- Toolbar -->
+          <div class="toolbar-row">
+            <div class="filter-pills">
+              <button type="button" class="filter-pill active" onclick="filterRole('all', this)">All Accounts</button>
+              <button type="button" class="filter-pill" onclick="filterRole('student', this)">Undergraduate Students</button>
+              <button type="button" class="filter-pill" onclick="filterRole('lecturer', this)">Academic Lecturers</button>
+              <button type="button" class="filter-pill" onclick="filterRole('bursary', this)">Bursary Officers</button>
+              <button type="button" class="filter-pill" onclick="filterRole('ict', this)">ICT Administrators</button>
+              <button type="button" class="filter-pill" onclick="filterRole('admissions', this)">Admissions &amp; Registry</button>
+            </div>
+
+            <!-- Search -->
+            <div style="position:relative;">
+              <input type="text" id="userSearchInput" placeholder="Search name, matric or staff ID..." oninput="filterUserSearch()" style="width:280px; height:36px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem 0 2.1rem; font-size:0.8rem;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" style="position:absolute; left:0.7rem; top:50%; transform:translateY(-50%);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+          </div>
+
+          <!-- User Directory Table -->
+          <div class="table-responsive" style="overflow-x:auto;">
+            <table class="table" style="width:100%; border-collapse:collapse;" id="userDirectoryTable">
+              <thead>
+                <tr style="border-bottom:2px solid #E2E8F0; background:#F8FAFC;">
+                  <th style="padding:0.8rem 1rem; font-size:0.72rem; font-weight:800; color:#475569; text-transform:uppercase;">User Identity</th>
+                  <th style="padding:0.8rem 1rem; font-size:0.72rem; font-weight:800; color:#475569; text-transform:uppercase;">ID / Matriculation</th>
+                  <th style="padding:0.8rem 1rem; font-size:0.72rem; font-weight:800; color:#475569; text-transform:uppercase;">Department / Level</th>
+                  <th style="padding:0.8rem 1rem; font-size:0.72rem; font-weight:800; color:#475569; text-transform:uppercase;">System Role</th>
+                  <th style="padding:0.8rem 1rem; font-size:0.72rem; font-weight:800; color:#475569; text-transform:uppercase;">Status</th>
+                  <th style="padding:0.8rem 1rem; font-size:0.72rem; font-weight:800; color:#475569; text-transform:uppercase; text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="userDirectoryTbody">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- 1. PROVISION USER MODAL -->
+  <div class="modal-backdrop" id="provisionModal" style="display:none;">
+    <div class="modal-box" style="max-width:540px;">
+      <div style="background:linear-gradient(135deg, #050E21 0%, #0F1F42 100%); color:#fff; padding:1.2rem 1.5rem; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 style="margin:0; font-size:1.15rem; font-family:'Playfair Display', serif; color:#fff;">Provision User Account</h3>
+          <p style="margin:0.2rem 0 0; font-size:0.72rem; color:var(--gold-400);">Generate official matriculation or staff identity record</p>
+        </div>
+        <button type="button" onclick="closeModal('provisionModal')" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer;">&times;</button>
+      </div>
+      <form id="provisionForm" onsubmit="handleProvisionSubmit(event)" style="padding:1.5rem; display:flex; flex-direction:column; gap:1rem;">
+        <div>
+          <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Full Name *</label>
+          <input type="text" id="provFullName" required placeholder="e.g. Oluwaseun Emmanuel Adeleke" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.9rem;">
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Email Address *</label>
+            <input type="email" id="provEmail" required placeholder="e.g. o.adeleke@unilesa.edu.ng" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">User Role *</label>
+            <select id="provRole" onchange="handleRoleSelectChange()" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem; font-weight:700;">
+              <option value="student">Undergraduate Student</option>
+              <option value="lecturer">Academic Lecturer</option>
+              <option value="bursary">Bursary Officer</option>
+              <option value="admissions">Admissions Officer</option>
+              <option value="ict">ICT Administrator</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.9rem;">
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Department *</label>
+            <input type="text" id="provDepartment" required value="Computer Science" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+          </div>
+          <div id="levelWrap">
+            <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Academic Level</label>
+            <select id="provLevel" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+              <option value="100 Level">100 Level</option>
+              <option value="200 Level">200 Level</option>
+              <option value="300 Level">300 Level</option>
+              <option value="400 Level">400 Level</option>
+              <option value="500 Level">500 Level</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.6rem; margin-top:0.8rem;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('provisionModal')">Cancel</button>
+          <button type="submit" class="btn btn-navy">Provision &amp; Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. EDIT USER MODAL -->
+  <div class="modal-backdrop" id="editUserModal" style="display:none;">
+    <div class="modal-box" style="max-width:540px;">
+      <div style="background:linear-gradient(135deg, #050E21 0%, #0F1F42 100%); color:#fff; padding:1.2rem 1.5rem; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 style="margin:0; font-size:1.15rem; font-family:'Playfair Display', serif; color:#fff;">Edit User Account Record</h3>
+          <p style="margin:0.2rem 0 0; font-size:0.72rem; color:var(--gold-400);">Modify bio-data and privileges</p>
+        </div>
+        <button type="button" onclick="closeModal('editUserModal')" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer;">&times;</button>
+      </div>
+      <form id="editUserForm" onsubmit="handleEditSubmit(event)" style="padding:1.5rem; display:flex; flex-direction:column; gap:1rem;">
+        <input type="hidden" id="editUserId" value="">
+
+        <div>
+          <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Full Name *</label>
+          <input type="text" id="editFullName" required style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.9rem;">
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Email Address *</label>
+            <input type="email" id="editEmail" required style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">System Role *</label>
+            <select id="editRole" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem; font-weight:700;">
+              <option value="student">Undergraduate Student</option>
+              <option value="lecturer">Academic Lecturer</option>
+              <option value="bursary">Bursary Officer</option>
+              <option value="admissions">Admissions Officer</option>
+              <option value="ict">ICT Administrator</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.9rem;">
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Department *</label>
+            <input type="text" id="editDepartment" required style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:block;">Account Status *</label>
+            <select id="editStatus" style="width:100%; height:38px; border:1px solid #CBD5E1; border-radius:8px; padding:0 0.8rem; font-size:0.84rem; font-weight:700;">
+              <option value="Active">Active (Unlocked)</option>
+              <option value="Suspended">Suspended (Locked)</option>
+              <option value="Pending Password Change">Pending 1st Login Reset</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.6rem; margin-top:0.8rem;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('editUserModal')">Cancel</button>
+          <button type="submit" class="btn btn-navy">Save Updates</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. RESET PASSWORD & 1-TIME PRINTABLE CREDENTIAL MODAL -->
+  <div class="modal-backdrop" id="resetPassModal" style="display:none;">
+    <div class="modal-box" style="max-width:540px;">
+      <div style="background:linear-gradient(135deg, #050E21 0%, #0F1F42 100%); color:#fff; padding:1.2rem 1.5rem; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 style="margin:0; font-size:1.15rem; font-family:'Playfair Display', serif; color:#fff;">Biometric Password Override</h3>
+          <p style="margin:0.2rem 0 0; font-size:0.72rem; color:var(--gold-400);">1-Time Temporary Credential Slip</p>
+        </div>
+        <button type="button" onclick="closeModal('resetPassModal')" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <div style="padding:1.5rem;" id="resetPrintArea">
+        <div style="text-align:center; padding-bottom:1rem; border-bottom:1px solid #E2E8F0; margin-bottom:1rem;">
+          <img src="https://unilesa.edu.ng/static/frontpage/assets/img/icons/unilesa_origina.png" alt="UNILESA" style="height:48px; object-fit:contain; margin-bottom:0.3rem;" onerror="this.style.display='none'">
+          <div style="font-size:0.74rem; font-weight:800; color:var(--navy-950); text-transform:uppercase;">University of Ilesa &bull; Directorate of ICT</div>
+          <div style="font-size:0.68rem; color:#64748B;">Official Student/Staff Temporary Access Credential</div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:0.6rem; font-size:0.8rem; margin-bottom:1.2rem;">
+          <div style="display:flex; justify-content:space-between; border-bottom:1px dashed #E2E8F0; padding-bottom:0.3rem;">
+            <span style="color:#64748B;">Account Holder:</span>
+            <strong id="resetUserName" style="color:var(--navy-950);">Jane Adaeze Doe</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-bottom:1px dashed #E2E8F0; padding-bottom:0.3rem;">
+            <span style="color:#64748B;">Matriculation / Staff No:</span>
+            <strong id="resetUserMatric" style="font-family:'Fira Code', monospace; color:var(--navy-950);">UNILESA/2026/CSC/0142</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-bottom:1px dashed #E2E8F0; padding-bottom:0.3rem;">
+            <span style="color:#64748B;">Registered Email:</span>
+            <span id="resetUserEmail" style="font-weight:600;">j.doe@student.unilesa.edu.ng</span>
+          </div>
+        </div>
+
+        <!-- Temporary Password Box -->
+        <div style="background:#FFFDF5; border:2px dashed #CDA434; border-radius:12px; padding:1.1rem; text-align:center; margin-bottom:1.2rem;">
+          <div style="font-size:0.72rem; font-weight:800; color:#B45309; text-transform:uppercase; margin-bottom:0.3rem;">One-Time Portal Password</div>
+          <div style="font-family:'Fira Code', monospace; font-size:1.45rem; font-weight:800; letter-spacing:0.08em; color:var(--navy-950);" id="resetTempPass">UNL#Temp9812</div>
+          <div style="font-size:0.68rem; color:#64748B; margin-top:0.4rem;">Student will be required to create a new password upon first sign in.</div>
+        </div>
+
+        <!-- Action Tools -->
+        <div style="display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
+          <button type="button" class="btn btn-gold btn-sm" onclick="copyTempPassword()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copy Password
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="printResetSlip()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print Credential Slip
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="simulateSmsDispatch()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            SMS Dispatch
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. BULK CSV IMPORT MODAL -->
+  <div class="modal-backdrop" id="bulkUserModal" style="display:none;">
+    <div class="modal-box" style="max-width:580px;">
+      <div style="background:linear-gradient(135deg, #050E21 0%, #0F1F42 100%); color:#fff; padding:1.2rem 1.5rem; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 style="margin:0; font-size:1.15rem; font-family:'Playfair Display', serif; color:#fff;">Batch User Roster Importer</h3>
+          <p style="margin:0.2rem 0 0; font-size:0.72rem; color:var(--gold-400);">Batch onboard students &amp; staff via CSV data</p>
+        </div>
+        <button type="button" onclick="closeModal('bulkUserModal')" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <div style="padding:1.5rem;">
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.85rem; font-size:0.74rem; color:#475569; margin-bottom:1rem;">
+          <div style="font-weight:700; color:var(--navy-950); margin-bottom:0.2rem;">CSV Format Specification:</div>
+          <code>fullName, email, role, department, level, idNumber</code>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:0.3rem; display:block;">Paste CSV Rows</label>
+          <textarea id="bulkCsvTextarea" rows="6" style="width:100%; border:1px solid #CBD5E1; border-radius:8px; padding:0.75rem; font-family:'Fira Code', monospace; font-size:0.78rem;" placeholder="Oluwaseun Adeleke, o.adeleke@unilesa.edu.ng, student, Computer Science, 100 Level, UNILESA/2026/CSC/0199&#10;Dr. Kehinde Afolabi, k.afolabi@unilesa.edu.ng, lecturer, Computer Science, Staff, STAFF/ACAD/2026/044"></textarea>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <button type="button" class="btn btn-outline btn-sm" onclick="loadSampleCsvData()">Load Sample Data</button>
+          <div style="display:flex; gap:0.5rem;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="closeModal('bulkUserModal')">Cancel</button>
+            <button type="button" class="btn btn-navy btn-sm" onclick="processBulkImport()">Execute Batch Import</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS SCRIPTS & COMPONENTS -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="components/unilesa-admin-sidebar.js"></script>
+  <script src="components/unilesa-admin-header.js"></script>
+  <script src="components/unilesa-role-switcher.js"></script>
+  <script src="components/unilesa-modals.js"></script>
+  <script src="components/unilesa-toast.js"></script>
+
+  <script>
+    let activeRoleFilter = 'all';
+    let activeSearchQuery = '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderUserDirectory();
+
+      window.addEventListener('unilesa:ict-settings-updated', () => {
+        renderUserDirectory();
+      });
+
+      document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+        backdrop.addEventListener('click', (e) => {
+          if (e.target === backdrop) {
+            closeModal(backdrop.id);
+          }
+        });
+      });
+
+      // Check URL parameters for instant actions
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('action') === 'provision') {
+        openProvisionModal();
+      } else if (params.get('action') === 'bulk') {
+        openBulkUserModal();
+      }
+    });
+
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('show');
+        el.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('show');
+        el.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    }
+
+    function renderUserDirectory() {
+      if (!window.UniStore) return;
+
+      let users = window.UniStore.getUserDirectory() || [];
+      const ictSettings = window.UniStore.getIctSettings() || {};
+
+      // Dynamic Session & Semester Badges
+      if (ictSettings.activeSession) {
+        const sBadge = document.getElementById('heroSessionBadge');
+        if (sBadge) sBadge.textContent = ictSettings.activeSession;
+      }
+      const activeSem = ictSettings.activeSemester || ictSettings.activeTerm;
+      if (activeSem) {
+        const tBadge = document.getElementById('heroTermBadge');
+        if (tBadge) tBadge.textContent = (activeSem === 'First Semester' || activeSem === 'First Term') ? 'First Semester (Harmattan)' : 'Second Semester (Rain)';
+      }
+
+      // Calculate KPIs
+      const totalUsers = users.length;
+      const students = users.filter(u => u.role === 'student' || u.role === 'Student').length;
+      const staff = users.filter(u => u.role !== 'student' && u.role !== 'Student').length;
+
+      document.getElementById('kpiTotalUsers').textContent = totalUsers.toLocaleString();
+      document.getElementById('kpiTotalStudents').textContent = students.toLocaleString();
+      document.getElementById('kpiTotalStaff').textContent = staff.toLocaleString();
+
+      // Apply Filters
+      if (activeRoleFilter !== 'all') {
+        users = users.filter(u => (u.role || '').toLowerCase() === activeRoleFilter.toLowerCase());
+      }
+
+      if (activeSearchQuery) {
+        const q = activeSearchQuery.toLowerCase();
+        users = users.filter(u =>
+          (u.name && u.name.toLowerCase().includes(q)) ||
+          (u.email && u.email.toLowerCase().includes(q)) ||
+          (u.idNumber && u.idNumber.toLowerCase().includes(q)) ||
+          (u.identifier && u.identifier.toLowerCase().includes(q)) ||
+          (u.department && u.department.toLowerCase().includes(q))
+        );
+      }
+
+      const tbody = document.getElementById('userDirectoryTbody');
+      if (!tbody) return;
+
+      if (users.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2.5rem; color:#94A3B8; font-weight:600;">No user records matched your filter criteria.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = users.map(u => {
+        const role = (u.role || 'student').toLowerCase();
+        let avatarBg = 'linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%)';
+        let roleBadge = 'badge-navy';
+        let roleLabel = 'STUDENT';
+
+        if (role === 'lecturer') {
+          avatarBg = 'linear-gradient(135deg, #064E3B 0%, #059669 100%)';
+          roleBadge = 'badge-emerald';
+          roleLabel = 'LECTURER';
+        } else if (role === 'bursary') {
+          avatarBg = 'linear-gradient(135deg, #78350F 0%, #D97706 100%)';
+          roleBadge = 'badge-gold';
+          roleLabel = 'BURSARY';
+        } else if (role === 'ict') {
+          avatarBg = 'linear-gradient(135deg, #0F172A 0%, #2563EB 100%)';
+          roleBadge = 'badge-navy';
+          roleLabel = 'ICT ADMIN';
+        } else if (role === 'admissions') {
+          avatarBg = 'linear-gradient(135deg, #4C1D95 0%, #7C3AED 100%)';
+          roleBadge = 'badge-purple';
+          roleLabel = 'ADMISSIONS';
+        }
+
+        const initials = (u.name || 'UN').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+        const displayId = u.idNumber || u.identifier || 'N/A';
+
+        return `
+          <tr style="border-bottom:1px solid #E2E8F0; font-size:0.82rem; transition:background 0.15s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''">
+            <td style="padding:0.85rem 1rem;">
+              <div style="display:flex; align-items:center; gap:0.75rem;">
+                <div class="user-avatar-cell" style="background:${avatarBg};">
+                  ${initials}
+                  <span class="user-online-dot"></span>
+                </div>
+                <div>
+                  <div style="font-weight:800; color:var(--navy-950); font-size:0.86rem;">${u.name}</div>
+                  <div style="font-size:0.72rem; color:#64748B;">${u.email}</div>
+                </div>
+              </div>
+            </td>
+            <td style="padding:0.85rem 1rem; font-family:'Fira Code', monospace; font-weight:700; color:#1E293B;">
+              ${displayId}
+            </td>
+            <td style="padding:0.85rem 1rem;">
+              <div style="font-weight:600; color:#334155;">${u.department || 'Computer Science'}</div>
+              <div style="font-size:0.7rem; color:#64748B;">${u.level || 'Faculty Staff'}</div>
+            </td>
+            <td style="padding:0.85rem 1rem;">
+              <span class="badge ${roleBadge}" style="font-size:0.62rem; font-weight:800;">${roleLabel}</span>
+            </td>
+            <td style="padding:0.85rem 1rem;">
+              <span class="badge ${u.status === 'Active' ? 'badge-emerald' : 'badge-gold'}" style="font-size:0.62rem; font-weight:700;">
+                ${u.status || 'Active'}
+              </span>
+            </td>
+            <td style="padding:0.85rem 1rem; text-align:right;">
+              <div style="display:inline-flex; gap:0.35rem;">
+                <button type="button" class="btn btn-outline btn-sm" style="font-size:0.72rem; padding:0.25rem 0.5rem;" onclick="openEditModal('${u.id}')">Edit</button>
+                <button type="button" class="btn btn-outline btn-sm" style="font-size:0.72rem; padding:0.25rem 0.5rem; color:#D97706; border-color:#FDE68A;" onclick="openResetPassword('${u.id}')">Reset</button>
+                <button type="button" class="btn btn-outline btn-sm" style="font-size:0.72rem; padding:0.25rem 0.5rem; color:#EF4444; border-color:#FECACA;" onclick="handleDeleteUser('${u.id}', '${u.name}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterRole(role, btn) {
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      activeRoleFilter = role;
+      renderUserDirectory();
+    }
+
+    function filterUserSearch() {
+      activeSearchQuery = document.getElementById('userSearchInput').value.trim();
+      renderUserDirectory();
+    }
+
+    function openProvisionModal() {
+      document.getElementById('provisionForm').reset();
+      openModal('provisionModal');
+    }
+
+    function handleRoleSelectChange() {
+      const role = document.getElementById('provRole').value;
+      const levelWrap = document.getElementById('levelWrap');
+      if (levelWrap) {
+        levelWrap.style.display = role === 'student' ? 'block' : 'none';
+      }
+    }
+
+    function handleProvisionSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('provFullName').value.trim();
+      const email = document.getElementById('provEmail').value.trim();
+      const role = document.getElementById('provRole').value;
+      const department = document.getElementById('provDepartment').value.trim();
+      const level = document.getElementById('provLevel').value;
+
+      if (!name || !email) {
+        showToast('Missing Details', 'Please complete all required fields.', 'error');
+        return;
+      }
+
+      // Generate ID
+      const randomDigits = Math.floor(1000 + Math.random() * 9000);
+      let idNumber = `UNILESA/2026/CSC/${randomDigits}`;
+      if (role === 'lecturer') idNumber = `STAFF/ACAD/2026/${randomDigits}`;
+      else if (role === 'bursary') idNumber = `STAFF/BUR/2026/${randomDigits}`;
+      else if (role === 'ict') idNumber = `STAFF/ICT/2026/${randomDigits}`;
+      else if (role === 'admissions') idNumber = `STAFF/ADM/2026/${randomDigits}`;
+
+      const newUser = {
+        name,
+        email,
+        role,
+        department,
+        level: role === 'student' ? level : 'Staff',
+        idNumber,
+        identifier: idNumber,
+        status: 'Active'
+      };
+
+      if (window.UniStore) {
+        window.UniStore.addUser(newUser);
+        window.UniStore.addAuditLog({
+          event: 'USER_ACCOUNT_PROVISIONED',
+          severity: 'Info',
+          user: 'ICT Admin (Directorate of ICT)',
+          description: `Provisioned new ${role} account for ${name} (${idNumber})`
+        });
+      }
+
+      closeModal('provisionModal');
+      renderUserDirectory();
+      showToast('Account Created', `Successfully provisioned ${name} with ID: ${idNumber}`, 'success');
+    }
+
+    function openEditModal(userId) {
+      const users = window.UniStore ? window.UniStore.getUserDirectory() : [];
+      const u = users.find(x => x.id === userId);
+      if (!u) return;
+
+      document.getElementById('editUserId').value = u.id;
+      document.getElementById('editFullName').value = u.name;
+      document.getElementById('editEmail').value = u.email;
+      document.getElementById('editRole').value = (u.role || 'student').toLowerCase();
+      document.getElementById('editDepartment').value = u.department || 'Computer Science';
+      document.getElementById('editStatus').value = u.status || 'Active';
+
+      openModal('editUserModal');
+    }
+
+    function handleEditSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editUserId').value;
+      const name = document.getElementById('editFullName').value.trim();
+      const email = document.getElementById('editEmail').value.trim();
+      const role = document.getElementById('editRole').value;
+      const department = document.getElementById('editDepartment').value.trim();
+      const status = document.getElementById('editStatus').value;
+
+      if (window.UniStore) {
+        window.UniStore.updateUser(id, { name, email, role, department, status });
+        window.UniStore.addAuditLog({
+          event: 'USER_DATA_MODIFIED',
+          severity: 'Info',
+          user: 'ICT Admin (Directorate of ICT)',
+          description: `Updated details for user ${name}`
+        });
+      }
+
+      closeModal('editUserModal');
+      renderUserDirectory();
+      showToast('User Updated', `Updated details for ${name}.`, 'success');
+    }
+
+    function openResetPassword(userId) {
+      const users = window.UniStore ? window.UniStore.getUserDirectory() : [];
+      const u = users.find(x => x.id === userId);
+      if (!u) return;
+
+      const randomChars = Math.random().toString(36).slice(-4).toUpperCase();
+      const tempPass = `UNL#Temp${randomChars}`;
+
+      document.getElementById('resetUserName').textContent = u.name;
+      document.getElementById('resetUserMatric').textContent = u.idNumber || u.identifier || 'UNILESA/2026/001';
+      document.getElementById('resetUserEmail').textContent = u.email;
+      document.getElementById('resetTempPass').textContent = tempPass;
+
+      if (window.UniStore) {
+        window.UniStore.resetUserPassword(userId, tempPass);
+      }
+
+      openModal('resetPassModal');
+    }
+
+    function copyTempPassword() {
+      const pass = document.getElementById('resetTempPass').textContent;
+      navigator.clipboard.writeText(pass).then(() => {
+        showToast('Copied to Clipboard', `Password "${pass}" copied.`, 'success');
+      });
+    }
+
+    function printResetSlip() {
+      window.print();
+    }
+
+    function simulateSmsDispatch() {
+      const name = document.getElementById('resetUserName').textContent;
+      showToast('SMS Gateway Simulated', `Dispatched SMS to user phone: "Your UNILESA temporary portal password is ${document.getElementById('resetTempPass').textContent}"`, 'info');
+    }
+
+    function handleDeleteUser(userId, name) {
+      if (confirm(`🚨 DANGER: Are you sure you want to permanently delete user account "${name}"?\n\nThis will remove all associated matriculation access.`)) {
+        if (window.UniStore) {
+          window.UniStore.deleteUser(userId);
+        }
+        renderUserDirectory();
+        showToast('Account Deleted', `Permanently removed ${name} from portal.`, 'error');
+      }
+    }
+
+    function openBulkUserModal() {
+      openModal('bulkUserModal');
+    }
+
+    function loadSampleCsvData() {
+      document.getElementById('bulkCsvTextarea').value = 
+`Babatunde Adeleke, b.adeleke@student.unilesa.edu.ng, student, Computer Science, 100 Level, UNILESA/2026/CSC/0201
+Chioma Nwosu, c.nwosu@student.unilesa.edu.ng, student, Nursing Science, 100 Level, UNILESA/2026/NUR/0091
+Dr. Funmilayo Bakare, f.bakare@unilesa.edu.ng, lecturer, Computer Science, Staff, STAFF/ACAD/2026/045
+Adewale Ojo, a.ojo@unilesa.edu.ng, bursary, Central Bursary, Staff, STAFF/BUR/2026/012`;
+    }
+
+    function processBulkImport() {
+      const text = document.getElementById('bulkCsvTextarea').value.trim();
+      if (!text) {
+        showToast('No Data', 'Please enter CSV rows or click "Load Sample Data".', 'error');
+        return;
+      }
+
+      const lines = text.split('\n');
+      const newUsers = [];
+
+      lines.forEach(line => {
+        const parts = line.split(',').map(p => p.trim());
+        if (parts.length >= 3) {
+          const genId = parts[5] || `UNILESA/2026/CSC/${Math.floor(1000 + Math.random() * 9000)}`;
+          newUsers.push({
+            name: parts[0],
+            email: parts[1],
+            role: parts[2] || 'student',
+            department: parts[3] || 'General Studies',
+            level: parts[4] || '100 Level',
+            idNumber: genId,
+            identifier: genId,
+            status: 'Active'
+          });
+        }
+      });
+
+      if (window.UniStore && newUsers.length > 0) {
+        window.UniStore.bulkAddUsers(newUsers);
+      }
+
+      closeModal('bulkUserModal');
+      renderUserDirectory();
+      showToast('Batch Import Complete', `Successfully imported ${newUsers.length} user records.`, 'success');
+    }
+
+    function exportUserRosterCsv() {
+      const users = window.UniStore ? window.UniStore.getUserDirectory() : [];
+      let csv = 'Full Name,Email,Role,Department,Level,ID Number,Status\n';
+      users.forEach(u => {
+        const id = u.idNumber || u.identifier || '';
+        csv += `"${u.name}","${u.email}","${u.role}","${u.department || ''}","${u.level || ''}","${id}","${u.status || 'Active'}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `UNILESA_User_Roster_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Roster Exported', 'Downloaded complete user accounts roster as CSV.', 'success');
+    }
+  </script>
+</body>
+</html>

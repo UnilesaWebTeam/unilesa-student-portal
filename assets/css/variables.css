@@ -1,0 +1,79 @@
+/* ==========================================================================
+   UNI-LESA PORTAL DESIGN SYSTEM: CSS VARIABLES & DESIGN TOKENS
+   ========================================================================== */
+
+:root {
+  /* Navy Brand Palette */
+  --navy-950: #050D1E;
+  --navy-900: #0A1730;
+  --navy-800: #0F1F42;
+  --navy-700: #152A58;
+  --navy-600: #1E3A78;
+  --navy-50: #F0F4FA;
+
+  /* Gold Accent Palette */
+  --gold-600: #B78F27;
+  --gold-500: #CDA434;
+  --gold-400: #E0C168;
+  --gold-100: #FAF5E6;
+
+  /* Text & Ink */
+  --ink: #101A2E;
+  --text-muted: #64748B;
+
+  /* Neutral Slate Palette */
+  --grey-800: #334155;
+  --grey-700: #475569;
+  --grey-600: #64748B;
+  --grey-500: #8E9CAE;
+  --grey-400: #CBD5E1;
+  --grey-300: #E2E8F0;
+  --grey-200: #F1F5F9;
+  --grey-100: #F8FAFC;
+  --white: #FFFFFF;
+
+  /* Status Colors */
+  --green-ok: #16A34A;
+  --green-bg: #ECFDF5;
+  --green-border: #A7F3D0;
+
+  --amber-tag: #D97706;
+  --amber-bg: #FFFBEB;
+  --amber-border: #FDE68A;
+
+  --rose-tag: #E11D48;
+  --rose-bg: #FFF1F2;
+  --rose-border: #FECDD3;
+
+  --blue-tag: #2563EB;
+  --blue-bg: #EFF6FF;
+  --blue-border: #BFDBFE;
+
+  --purple-primary: #6366F1;
+  --purple-light: #EEF2FF;
+
+  --teal-tag: #0D9488;
+  --teal-bg: #F0FDFA;
+  --teal-border: #99F6E4;
+
+  --error: #DC2626;
+  --error-bg: #FEF2F2;
+  --error-border: #FECACA;
+
+  /* Radii */
+  --radius-xl: 20px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --radius: 22px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px -2px rgba(15, 31, 66, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 12px 30px -4px rgba(15, 31, 66, 0.12), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 25px 60px -15px rgba(0, 0, 0, 0.55);
+
+  /* Transitions */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.16, 0.8, 0.24, 1);
+}
